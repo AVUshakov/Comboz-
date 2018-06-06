@@ -109,7 +109,8 @@ class ViewController: UIViewController {
                     options: [],
                     animations: { cardView.transform = CGAffineTransform.identity.scaledBy(x: 0.1, y: 0.1)
                                   cardView.alpha = 0 },
-                    completion: nil)
+                    completion: { position in
+                        cardView.transform = .identity })
 
 //                UIView.transition(with: cardView,
 //                                  duration: 0.5,
@@ -167,7 +168,7 @@ class ViewController: UIViewController {
         cardView.colorType = card.color.rawValue
         cardView.count = card.count.rawValue
         cardView.isSelected = game.selectedCards.contains(card)
-        cardView.isFaceUp = card.isFaceUp
+        //cardView.isFaceUp = card.isFaceUp
         
         if let setDetector = game.setDetector {
             if game.cardForMatching.contains(card) {
