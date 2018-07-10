@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		04B164F220CAB3F800535874 /* CardsAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B164F120CAB3F800535874 /* CardsAnimation.swift */; };
 		04F10A6120C7CE10006615AA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F10A6020C7CE10006615AA /* AppDelegate.swift */; };
 		04F10A6820C7CE11006615AA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04F10A6720C7CE11006615AA /* Assets.xcassets */; };
 		04F10A7A20C7CE64006615AA /* SetCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F10A7220C7CE63006615AA /* SetCardView.swift */; };
@@ -21,6 +22,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		04B164F120CAB3F800535874 /* CardsAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardsAnimation.swift; sourceTree = "<group>"; };
 		04F10A5D20C7CE10006615AA /* SetGame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SetGame.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		04F10A6020C7CE10006615AA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		04F10A6720C7CE11006615AA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -72,6 +74,7 @@
 				04F10A7920C7CE63006615AA /* Card.swift */,
 				04F10A8220C7CE9A006615AA /* Grid.swift */,
 				04F10A7220C7CE63006615AA /* SetCardView.swift */,
+				04B164F120CAB3F800535874 /* CardsAnimation.swift */,
 				04F10A7420C7CE63006615AA /* SetDeck.swift */,
 				04F10A7320C7CE63006615AA /* SetGameModel.swift */,
 				04F10A7520C7CE63006615AA /* ViewController.swift */,
@@ -163,6 +166,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				04F10A7D20C7CE64006615AA /* ViewController.swift in Sources */,
+				04B164F220CAB3F800535874 /* CardsAnimation.swift in Sources */,
 				04F10A6120C7CE10006615AA /* AppDelegate.swift in Sources */,
 				04F10A8120C7CE64006615AA /* Card.swift in Sources */,
 				04F10A8320C7CE9A006615AA /* Grid.swift in Sources */,
