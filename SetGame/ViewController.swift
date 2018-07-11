@@ -12,21 +12,48 @@ class ViewController: UIViewController {
 
     var game = SetGameModel()
     
-    private struct Colors {
-        static let selectedCards = #colorLiteral(red: 0.2196078449, green: 0.007843137719, blue: 0.8549019694, alpha: 1)
-        static let matchedCards = #colorLiteral(red: 0.3411764801, green: 0.6235294342, blue: 0.1686274558, alpha: 1)
-        static let missMatchedCards = #colorLiteral(red: 0.7450980544, green: 0.1568627506, blue: 0.07450980693, alpha: 1)
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+      
         updateViewFromModel()
-        
         
     }
     
+    
+    
     @IBOutlet weak var boardView: BoardView!
+
+    @IBOutlet weak var deckView: UIView!
+        {
+        didSet { deckView.backgroundColor = #colorLiteral(red: 0.1764705926, green: 0.4980392158, blue: 0.7568627596, alpha: 1)
+//                boardView.addSubview(deckView)
+//                deckView.frame.origin = boardView.bounds.origin
+                deckView.alpha = 0
+                
+                let tap = UITapGestureRecognizer(target: self, action: #selector(animation))
+                tap.numberOfTapsRequired = 1
+                tap.numberOfTouchesRequired = 1
+                deckView.addGestureRecognizer(tap)
+            }
+      }
+
+    @objc private func animation(){
+        print(boardView.cardViews[0].frame.origin)
+        print(deckView.frame.origin)
+        
+        UIView.transition(with: deckView, duration: 2, options: .transitionFlipFromLeft, animations: nil, completion: nil)
+//        UIViewPropertyAnimator.runningPropertyAnimator(
+//            withDuration: 1.0,
+//            delay: 0,
+//            options: [],
+//            animations: {
+//
+//                self.deckView.frame.origin.y = self.boardView.frame.maxY + 20
+//                 },
+//            completion: nil)
+
+    }
+   
     
     @IBOutlet var gameOverLabel: UILabel!
     @IBOutlet var deal3CardsButton: UIButton!
@@ -56,12 +83,15 @@ class ViewController: UIViewController {
                     game.choosenCard(index: boardView.cardViews.index(of: cardView)!)
                     game.matchingResult()
                     minimizeAndDeleteAnimation()
-                    deleteCardsFromView()
+                    if game.setDetector != nil && !game.setDetector! {
+                        deleteCardsFromView()
+                    }
                 }
             default:
                 break
         }
         updateViewFromModel()
+        
     }
     
     @IBAction func showHint() {
@@ -71,7 +101,6 @@ class ViewController: UIViewController {
         }
         game.matchingResult()
         minimizeAndDeleteAnimation()
-        deleteCardsFromView()
         updateViewFromModel()
     }
     
@@ -87,43 +116,57 @@ class ViewController: UIViewController {
             self.boardView.cardViews.forEach{ $0.alpha = 1}
             self.updateViewFromModel()
         })
+        
+    }
+    
+    private func animationOfDealCards(){
+       
     }
     
     private func minimizeAndDeleteAnimation() {
         
         var cardsForFlip = [SetCardView]()
-        
-        print(cardsForFlip.count)
+        var tmpCard = SetCardView()
         
         for index in game.cardsOnTable.indices {
             let card = game.cardsOnTable[index]
             if card.isFaceUp == false {
-                cardsForFlip.append(boardView.cardViews[index])
+                //cardsForFlip.append(boardView.cardViews[index]) }
+                tmpCard = boardView.cardViews[index].copyCard()
+                cardsForFlip.append(tmpCard)
+                boardView.addSubview(tmpCard)
+                boardView.cardViews[index].alpha = 0
+                //boardView.cardViews[index].isFaceUp = false
             }
         }
         
-        cardsForFlip.forEach { cardView in
-                UIViewPropertyAnimator.runningPropertyAnimator(
-                    withDuration: 1.0,
-                    delay: 0,
-                    options: [],
-                    animations: { cardView.transform = CGAffineTransform.identity.scaledBy(x: 0.1, y: 0.1)
-                                  cardView.alpha = 0 },
-                    completion: { position in
-                        cardView.transform = .identity })
-
-//                UIView.transition(with: cardView,
-//                                  duration: 0.5,
-//                                  options: [.transitionFlipFromTop],
-//                                  animations: {cardView.isFaceUp = !cardView.isFaceUp
-//                                    cardView.alpha = 0},
-//
-//                                  completion: nil)
+        for i in cardsForFlip.indices {
+            UIView.transition(with: cardsForFlip[i], duration: 1, options: .transitionFlipFromLeft, animations: { cardsForFlip[i].isFaceUp = !cardsForFlip[i].isFaceUp }, completion: nil)
         }
+        
+            cardsForFlip.forEach {cardView in
+                UIView.transition(with: cardView,
+                                  duration: 1,
+                                  options: .transitionFlipFromLeft,
+                                  animations: { cardView.isFaceUp = !cardView.isFaceUp } ,
+                                  completion: { finished in
+                                    UIViewPropertyAnimator.runningPropertyAnimator(
+                                        withDuration: 0.5,
+                                        delay: 0,
+                                        options: [],
+                                        animations: { cardView.transform = CGAffineTransform.identity.scaledBy(x: 0.1, y: 0.1)
+                                                          cardView.alpha = 0 },
+                                        completion: { position in
+                                                cardView.removeFromSuperview()
+                                                self.deleteCardsFromView()
+                                        })
+                                })
+            }
+        
     }
         
     
-    private func updateViewFromModel(){
+    private func updateViewFromModel() {
         updateCardsViewFromModel()
         
     }
@@ -141,9 +184,11 @@ class ViewController: UIViewController {
                 let cardView = SetCardView()
                 updateCardView(cardView, for: card)
                 addTapRecognizer(for: cardView)
+                
                 boardView.cardViews.append(cardView)
             } else {
                 let cardView = boardView.cardViews[index]
+               
                 updateCardView(cardView, for: card)
             }
         }

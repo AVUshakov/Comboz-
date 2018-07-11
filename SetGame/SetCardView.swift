@@ -243,6 +243,24 @@ class SetCardView: UIView {
 
     }
     
+    func copyCard() -> SetCardView {
+        let copy = SetCardView()
+        copy.colorType = colorType
+        copy.fillType = fillType
+        copy.count = count
+        copy.symbolType = symbolType
+        copy.isSelected = false
+        copy.isMatched = true
+        
+        copy.isFaceUp = isFaceUp
+        copy.bounds = bounds
+        copy.frame = frame
+        copy.alpha = 1
+        copy.isOpaque = isOpaque
+        
+        return copy
+    }
+    
     override func layoutSubviews() {
         super.layoutSubviews()
         contentMode = .redraw
