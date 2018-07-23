@@ -250,12 +250,11 @@ class SetCardView: UIView {
         copy.count = count
         copy.symbolType = symbolType
         copy.isSelected = false
-        copy.isMatched = true
         
         copy.isFaceUp = isFaceUp
         copy.bounds = bounds
         copy.frame = frame
-        copy.alpha = 1
+        copy.alpha = alpha
         copy.isOpaque = isOpaque
         
         return copy

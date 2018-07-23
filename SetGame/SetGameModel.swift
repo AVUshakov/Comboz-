@@ -14,6 +14,7 @@ class SetGameModel {
     private(set) var selectedCards = [Card]()
     private(set) var cardForMatching = [Card]()
     private(set) var removedCardFromTable = [Card]()
+
     var hintCards = [Int]()
     
     private var cardsDeck = SetDeck()
@@ -77,6 +78,7 @@ class SetGameModel {
     }
     
     func matchingResult() {
+        
         if setDetector != nil {
             if setDetector! {
                 for i in cardsOnTable.indices {
@@ -106,26 +108,34 @@ class SetGameModel {
             }
         return setDetected
     }
+    
+    func flipCards() {
+        for i in cardsOnTable.indices {
+            cardsOnTable[i].isFaceUp = true
+        }
+    }
         
     func removeCards() {
         if setDetector != nil {
             if setDetector!{
                 if !cardsDeck.cards.isEmpty && cardsOnTable.count < 13 {
-                    print("from removeCards: ok < 13")
+                    //print("from removeCards: ok < 13")
                     for i in cardsOnTable.indices {
                         if cardsOnTable[i].isFaceUp == false {
                             cardsOnTable.insert(cardsDeck.cards.remove(at: cardsDeck.cards.count.arc4random), at: i)
+                            cardsOnTable[i].isFaceUp = false
                             cardsOnTable.remove(at: i + 1)
                         }
                     }
                 } else {
-                    print("from removeCards: ok 13")
+                    //print("from removeCards: ok 13")
                     cardsOnTable.removeArray(elements: cardForMatching)
                 }
                 hintCards.removeAll()
             }
             setDetector = nil
         }
+       // print(cardsForAnimation.count)
     }
 
     init() {
