@@ -11,6 +11,7 @@ import UIKit
 class SetCardView: UIView {
     
     
+    var animationCompleted = 0
     
     @IBInspectable
     var cardBackgroundColor: UIColor = UIColor.white {
@@ -24,6 +25,8 @@ class SetCardView: UIView {
     var isMatched: Bool? {
         didSet { setNeedsDisplay(); setNeedsLayout() }
     }
+    
+    var newAddedCard: Bool = false
     
     var isFaceUp: Bool = true {
         didSet { setNeedsDisplay(); setNeedsLayout() }
@@ -79,8 +82,6 @@ class SetCardView: UIView {
         case stripe
         case empty
     }
-    
-    
     
     @IBInspectable
     var count: Int = 3 {
@@ -258,6 +259,27 @@ class SetCardView: UIView {
         copy.isOpaque = isOpaque
         
         return copy
+    }
+    
+    func dealCardsFromDeckAnimation(from deck: CGPoint, delay: TimeInterval) {
+        let currentCenter = center
+        let currentBounds = bounds
+        
+        center = deck
+        alpha = 1
+        isFaceUp = false
+        UIViewPropertyAnimator.runningPropertyAnimator(withDuration: 1,
+                                                       delay: delay,
+                                                       options:[.curveEaseInOut],
+                                                       animations: { self.bounds = currentBounds
+                                                        self.center = currentCenter },
+                                                       completion: {position in
+                                                        UIView.transition(with: self,
+                                                                          duration: 0.3,
+                                                                          options: [.transitionFlipFromLeft],
+                                                                          animations: {self.isFaceUp = true},
+                                                                          completion: nil)
+        })
     }
     
     override func layoutSubviews() {

@@ -62,6 +62,7 @@ class SetGameModel {
         if cardsOnTable.count < Constants.deckCount {
             for _ in 0...2 {
                 if let card = cardsDeck.showCard() {
+                    //card.isFaceUp = false
                     cardsOnTable += [card]
                 }
             }
@@ -86,7 +87,7 @@ class SetGameModel {
                         cardsOnTable[i].isFaceUp = false
                     }
                 }
-            }
+            } else {print("ok1")}
         }
     }
     
@@ -123,7 +124,7 @@ class SetGameModel {
                     for i in cardsOnTable.indices {
                         if cardsOnTable[i].isFaceUp == false {
                             cardsOnTable.insert(cardsDeck.cards.remove(at: cardsDeck.cards.count.arc4random), at: i)
-                            cardsOnTable[i].isFaceUp = false
+                            //cardsOnTable[i].isFaceUp = false
                             cardsOnTable.remove(at: i + 1)
                         }
                     }
