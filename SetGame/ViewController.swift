@@ -8,10 +8,39 @@
 
 import UIKit
 
+
 class ViewController: UIViewController {
 
     var game = SetGameModel()
     
+    let defaults = UserDefaults.standard
+    
+    var gameModelJSON: SetGameModel? {
+        get {
+            if  let savedGameModel = defaults.object(forKey: "SavedGameModel") as? Data {
+                let decoder = JSONDecoder()
+                if let loadedGameModel = try? decoder.decode(SetGameModel.self, from: savedGameModel) {
+                    return loadedGameModel
+                }
+            }
+            return nil
+        }
+        set {
+            if newValue != nil {
+                let encoder = JSONEncoder()
+                if let json = try? encoder.encode(newValue!) {
+                    defaults.set(json, forKey: "SavedGameModel")
+                }
+            }
+        }
+    }
+    
+    
+    
+    @IBOutlet weak var backgroundVIew: UIImageView!
+
+    @IBOutlet weak var score: UILabel!
+
     var matchedCardsSet: [SetCardView] {
         return boardView.cardViews.filter { $0.isFaceUp == false }
     }
@@ -20,64 +49,57 @@ class ViewController: UIViewController {
         return boardView.cardViews.filter { $0.alpha == 0 }
     }
 
+
     var dealCompleted = true
+    
+    override var prefersStatusBarHidden: Bool {
+        return true
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        gameModelJSON = game
+        print("ok")
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        print("ok1")
+        if let gameFROM = gameModelJSON {
+            game = gameFROM
+            updateViewFromModel()
+        } else {
+            game = SetGameModel()
+        }
+        addParallaxToView(view: backgroundVIew)
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         updateViewFromModel()
+        
     }
     
     lazy var animator = UIDynamicAnimator(referenceView: view)
     
-    @IBOutlet weak var boardView: BoardView! 
-
-    @IBOutlet weak var deckView: SetCardView!
-        {
-        didSet {
-                deckView.alpha = 0
-            
-                let tap = UITapGestureRecognizer(target: self, action: #selector(animation))
-                tap.numberOfTapsRequired = 1
-                tap.numberOfTouchesRequired = 1
-                deckView.addGestureRecognizer(tap)
-            }
-      }
-
-    @objc private func animation(){
-        print("touched")
-        UIViewPropertyAnimator.runningPropertyAnimator(
-            withDuration: 2.0,
-            delay: 0,
-            options: [],
-            animations: {
-               
-                
-                 },
-            completion: nil)
-
-    }
-   
+    @IBOutlet weak var boardView: BoardView!
     
     @IBOutlet var gameOverLabel: UILabel!
+    
     @IBOutlet var deal3CardsButton: UIButton!
+    
     @IBOutlet var hintButton: UIButton!
     
     @IBAction func resetGameButton() {
-//        game = SetGameModel()
-//        for i in boardView.cardViews.indices {
-//            boardView.cardViews[i].isHidden = false
-//        }
-//        gameOverLabel.isHidden = true
-//        hintButton.isEnabled = true
-//        updateViewFromModel()
-//
-//   flipCradAnimation(for: boardView.cardViews)
-//        game.flipCards()
-//        updateViewFromModel()
-    
+        defaults.removeSuite(named: "SavedGameModel")
+        gameModelJSON = nil
+        game = SetGameModel()
         
-        
-        
+        gameOverLabel.isHidden = true
+        hintButton.isEnabled = true
+        dealCompleted = true
+
+        updateViewFromModel()
+        if gameModelJSON == nil {
+            print("nil")}
     }
     
     private func addTapRecognizer(for cardView: SetCardView) {
@@ -104,7 +126,6 @@ class ViewController: UIViewController {
                 break
         }
         updateViewFromModel()
-        
     }
     
     @IBAction func showHint() {
@@ -117,56 +138,17 @@ class ViewController: UIViewController {
     }
     
     @IBAction func deal3cards(_ sender: UIButton) {
-        //game.takeCardsFromDeck()
-        //dealCompleted = true
-        snaping()
-        //updateViewFromModel()
-
+        game.takeCardsFromDeck()
+        dealCompleted = true
+        updateViewFromModel()
     }
     
     private func deleteCardsFromView() {
         game.removeCards()
-        
         updateViewFromModel()
     }
     
-    private func minimizeAndDeleteAnimation() {
-
-        var cardsForScale: [SetCardView] {
-            var cardsForScale = [SetCardView]()
-            var tmpCard = SetCardView()
-            for index in game.cardsOnTable.indices {
-                let card = game.cardsOnTable[index]
-                if !card.isFaceUp {
-                    tmpCard = boardView.cardViews[index].copyCard()
-                    tmpCard.isMatched = true
-                    tmpCard.isFaceUp = true
-                    cardsForScale.append(tmpCard)
-                    boardView.addSubview(tmpCard)
-                    boardView.cardViews[index].alpha = 0
-                }
-            }
-            return cardsForScale
-        }
-        cardsForScale.forEach { cardView in
-            UIViewPropertyAnimator.runningPropertyAnimator(
-                withDuration: 0.5,
-                delay: 0.7,
-                options: UIViewAnimationOptions.curveEaseInOut,
-                animations: { cardView.transform = CGAffineTransform.identity.scaledBy(x: 0.1, y: 0.1)
-                    cardView.alpha = 0
-                    
-            },
-                completion: { position in
-                    
-                    self.deleteCardsFromView()
-                    
-                    cardView.removeFromSuperview()
-                    self.dealCardsAnimation()
-                }
-            )
-        }
-    }
+    
     
   
     private func updateViewFromModel() {
@@ -187,7 +169,6 @@ class ViewController: UIViewController {
                 let cardView = SetCardView()
                 updateCardView(cardView, for: card)
                 cardView.alpha = 0
-                cardView.frame.origin = deckView.frame.origin
                 addTapRecognizer(for: cardView)
                 newCardViews += [cardView]
             } else {
@@ -196,30 +177,43 @@ class ViewController: UIViewController {
             }
         }
         boardView.addCardsView(newCardsView: newCardViews)
-
+        
         if matchedCardsSet.isEmpty && dealCompleted {
-            
             dealCardsAnimation()
         } else {
             minimizeAndDeleteAnimation()
-            
         }
-        
-        
         
         if game.endGameDetector {
             DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1), execute: {
-                
                 for i in self.boardView.cardViews.indices {
                     self.boardView.cardViews[i].isHidden = true
-                    //self.cardButtons[i].isEnabled = false
                 }
                 self.gameOverLabel.isHidden = false
                 self.hintButton.isEnabled = false
             })
         }
+        score.text = "Left: \(game.cardsDeckCount)"
+    }
+    
+    private func addParallaxToView(view: UIImageView) {
         
+        let screenSize = view.bounds.size
+        view.bounds.size = CGSize(width: screenSize.width * 1.2, height: screenSize.height * 1.2)
         
+        let amount = 20
+        
+        let horizontal = UIInterpolatingMotionEffect(keyPath: "center.x", type: .tiltAlongHorizontalAxis)
+        horizontal.minimumRelativeValue = -amount
+        horizontal.maximumRelativeValue = amount
+        
+        let vertical = UIInterpolatingMotionEffect(keyPath: "center.y", type: .tiltAlongVerticalAxis)
+        vertical.minimumRelativeValue = -amount
+        vertical.maximumRelativeValue = amount
+        
+        let group = UIMotionEffectGroup()
+        group.motionEffects = [horizontal, vertical]
+        view.addMotionEffect(group)
     }
     
     private func updateCardView(_ cardView: SetCardView, for card: Card) {
@@ -239,42 +233,60 @@ class ViewController: UIViewController {
             cardView.isMatched = nil
         }
     }
+    
+    private func minimizeAndDeleteAnimation() {
+        
+        var cardsForScale: [SetCardView] {
+            var cardsForScale = [SetCardView]()
+            var tmpCard = SetCardView()
+            for index in game.cardsOnTable.indices {
+                let card = game.cardsOnTable[index]
+                if !card.isFaceUp {
+                    tmpCard = boardView.cardViews[index].copyCard()
+                    tmpCard.isMatched = true
+                    tmpCard.isFaceUp = true
+                    cardsForScale.append(tmpCard)
+                    boardView.addSubview(tmpCard)
+                    boardView.cardViews[index].alpha = 0
+                }
+            }
+            return cardsForScale
+        }
+        cardsForScale.forEach { cardView in
+            UIViewPropertyAnimator.runningPropertyAnimator(
+                withDuration: 0.4,
+                delay: 0.7,
+                options: UIView.AnimationOptions.curveEaseInOut,
+                animations: { cardView.transform = CGAffineTransform.identity.scaledBy(x: 0.1, y: 0.1)
+                    cardView.alpha = 0
+            },
+                completion: { position in
+                    self.deleteCardsFromView()
+                    cardView.removeFromSuperview()
+                    self.dealCardsAnimation()
+            }
+            )
+        }
+    }
 
     private func dealCardsAnimation() {
         var currentCardsForDeal = 0
-        let dealInterval = 0.15 * Double(boardView.gridRows + 1)
+        let dealInterval = 0.03 * Double(boardView.gridRows + 1)
         Timer.scheduledTimer(withTimeInterval: dealInterval, repeats: false) {
             timer in
-            self.cardsForDeal.forEach{ cardView in
-                cardView.dealCardsFromDeckAnimation(from: self.deckView.center, delay: TimeInterval(currentCardsForDeal) * 0.25)
+            self.cardsForDeal.forEach { cardView in
+                let dealPoint = CGPoint(x: self.view.bounds.midX, y: self.view.bounds.maxY + cardView.bounds.height)
+                if self.gameModelJSON == nil {
+                cardView.dealCardsFromDeckAnimation(from: dealPoint,delay: TimeInterval(currentCardsForDeal) * 0.25)
+                } else {
+                    cardView.dealCardsFromDeckWithouAnimation(from: dealPoint)
+                }
                 currentCardsForDeal += 1
             }
         }
         dealCompleted = false
     }
-    
-    
-    
-    private func snaping(){
-        
-        
-        boardView.cardViews.forEach{ card in
-            var snapPoint: CGPoint {
-                return view.convert(card.frame.origin, to: boardView)
-            }
-            let snap = UISnapBehavior(item: card, snapTo: snapPoint)
-            snap.damping = 0.2
-            self.animator.addBehavior(snap)
-            
-        }
-
-        
-     
-        
-    }
 }
-
-
 
 extension Int {
     var arc4random: Int {

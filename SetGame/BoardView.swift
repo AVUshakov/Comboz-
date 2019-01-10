@@ -22,7 +22,7 @@ class BoardView: UIView {
                 for column in 0..<grid.dimensions.columnCount {
                     if cardViews.count > (row * grid.dimensions.columnCount + column) {
                         UIViewPropertyAnimator.runningPropertyAnimator(withDuration: 0.5,
-                                                                       delay: TimeInterval(column + row) * 0.2,
+                                                                       delay: TimeInterval(column + row) * 0.1,
                                                                        options: [.curveEaseInOut],
                                                                        animations: {
                                                                         self.cardViews[row * grid.dimensions.columnCount + column].frame = grid[row,column]!.insetBy(dx: Constants.spacingDx, dy: Constants.spacingDy)
@@ -45,6 +45,7 @@ class BoardView: UIView {
     func addCardsView(newCardsView: [SetCardView]) {
         cardViews += newCardsView
         newCardsView.forEach{ (cardView) in
+            cardView.center = CGPoint(x: bounds.midX, y: bounds.maxY + cardView.bounds.size.height)
             addSubview(cardView)
         }
         layoutIfNeeded()
@@ -65,11 +66,10 @@ class BoardView: UIView {
         layoutSetCard()
     }
 
-    
     struct Constants {
         static let cellRatio: CGFloat = 0.625
-        static let spacingDx: CGFloat = 2.0
-        static let spacingDy: CGFloat = 2.0
+        static let spacingDx: CGFloat = 4.0
+        static let spacingDy: CGFloat = 4.0
     }
 
 }

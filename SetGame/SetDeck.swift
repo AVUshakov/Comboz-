@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct SetDeck {
+struct SetDeck: Codable {
 
     var cards = [Card]()
     

@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct Card: Equatable {
+struct Card: Equatable, Codable {
     
     static func ==(lhs: Card, rhs:Card) -> Bool {
         return ((lhs.shape == rhs.shape) &&
@@ -23,7 +23,7 @@ struct Card: Equatable {
     let fill: CardType
     var isFaceUp = true
     
-    enum CardType: Int {
+    enum CardType: Int, Codable {
         case variant1 = 1
         case variant2
         case variant3

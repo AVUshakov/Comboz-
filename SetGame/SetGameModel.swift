@@ -8,7 +8,7 @@
 
 import Foundation
 
-class SetGameModel {
+class SetGameModel: Codable {
     
     private(set) var cardsOnTable = [Card]()
     private(set) var selectedCards = [Card]()
@@ -18,6 +18,7 @@ class SetGameModel {
     var hintCards = [Int]()
     
     private var cardsDeck = SetDeck()
+    
     var cardsDeckCount: Int {
         return cardsDeck.cards.count
     }

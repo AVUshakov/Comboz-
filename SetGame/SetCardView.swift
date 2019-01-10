@@ -151,7 +151,6 @@ class SetCardView: UIView {
         default:
             break
         }
-        
     }
     
     private func stripesDraw(_ rect:CGRect) {
@@ -261,14 +260,24 @@ class SetCardView: UIView {
         return copy
     }
     
+    func dealCardsFromDeckWithouAnimation(from deck: CGPoint) {
+        let currentCenter = center
+        let currentBounds = bounds
+        center = deck
+        alpha = 1
+        
+        self.bounds = currentBounds
+        self.center = currentCenter
+        isFaceUp = true
+    }
+    
     func dealCardsFromDeckAnimation(from deck: CGPoint, delay: TimeInterval) {
         let currentCenter = center
         let currentBounds = bounds
-        
         center = deck
         alpha = 1
         isFaceUp = false
-        UIViewPropertyAnimator.runningPropertyAnimator(withDuration: 1,
+        UIViewPropertyAnimator.runningPropertyAnimator(withDuration: 0.6,
                                                        delay: delay,
                                                        options:[.curveEaseInOut],
                                                        animations: { self.bounds = currentBounds
