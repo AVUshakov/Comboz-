@@ -10,34 +10,6 @@ import UIKit
 
 class MainMenuViewController: UIViewController {
     
-    var gameOptions = UserData()
-        
-    
-    
-    let defaults = UserDefaults.standard
-    
-    var gameModelJSON: UserData? {
-        get {
-            if  let savedGameModel = defaults.object(forKey: "SaveOptions") as? Data {
-                let decoder = JSONDecoder()
-                if let loadedGameModel = try? decoder.decode(UserData.self, from: savedGameModel) {
-                    return loadedGameModel
-                }
-            }
-            return nil
-        }
-        set {
-            if newValue != nil {
-                let encoder = JSONEncoder()
-                if let json = try? encoder.encode(newValue!) {
-                    defaults.set(json, forKey: "SaveOptions")
-                }
-            }
-        }
-    }
-    
-    var imageLabels = ["label1" : 772, "label2" : 904, "label3" : 1052]
-    
     var animator: UIDynamicAnimator!
     
     var snap: UISnapBehavior!
@@ -50,16 +22,10 @@ class MainMenuViewController: UIViewController {
     
     var helpView: HelpView?
     
-    var settingsView: SettingsView? {
-        didSet{
-//            settingsView?.music.isSelected = gameOptions.musicSet
-        }
-    }
+    var settingsView: SettingsView?
     
     override func viewWillAppear(_ animated: Bool) {
-        if gameModelJSON != nil {
-            gameOptions = gameModelJSON!
-        }
+         mainMenuLogo.center = CGPoint(x: view.bounds.midX, y: view.bounds.minY)
         
     }
 
@@ -67,12 +33,16 @@ class MainMenuViewController: UIViewController {
         ViewFrameParameters.width = view.frame.width * 0.8
         ViewFrameParameters.height = view.frame.height * 0.8
         ViewFrameParameters.origin = CGPoint(x: (view.frame.width - ViewFrameParameters.width) / 2, y: (view.frame.height - ViewFrameParameters.height) / 2)
-        
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        startVCMenuAnimation()
         animator = UIDynamicAnimator(referenceView: view)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        mainMenuLogo.center = CGPoint(x: view.bounds.midX, y: view.bounds.minY)
     }
     
     @IBOutlet weak var mainMenuLogo: UIImageView!
@@ -82,19 +52,38 @@ class MainMenuViewController: UIViewController {
     @IBOutlet weak var loadingBar: UIProgressView!
     
     @IBAction func playButton(_ sender: UIButton) {
-        menuAnimation()
+        UserDefaults.standard.removeObject(forKey: "SavedGameModel")
+        pushButtonMenuAnimation()
     }
     
     @IBAction func helpButton(_ sender: UIButton) {
         helpViewAdding()
     }
     
+    @IBAction func returnToMainMenuButton(_ sender: UIButton) {
+    }
     @IBAction func settingsButton(_ sender: UIButton) {
         settingsViewAdding()
     }
     
     
-    private func menuAnimation(){
+    @IBAction func resumeGame(_ sender: UIButton) {
+        pushButtonMenuAnimation()
+    }
+    
+    private func startVCMenuAnimation() {
+        
+        UIViewPropertyAnimator.runningPropertyAnimator(withDuration: 1,
+                                                       delay: 0,
+                                                       options:.curveEaseInOut,
+                                                       animations: {
+                                                        self.mainMenuLogo.center = self.view.center
+                                                        print("VC Loadede")
+        },
+                                                       completion: nil)
+    }
+    
+    private func pushButtonMenuAnimation() {
         let pointForStackButtonHidding = CGPoint(x: view.bounds.midX, y: view.bounds.maxY)
         UIViewPropertyAnimator.runningPropertyAnimator(withDuration: 0.3,
                                                        delay: 0,
@@ -102,26 +91,30 @@ class MainMenuViewController: UIViewController {
                                                        animations: {
                                                         self.stackMenuButtons.center = pointForStackButtonHidding
                                                         self.stackMenuButtons.alpha = 0
-        }, completion: nil)
+                                                        },
+                                                       completion: nil)
         
-        UIViewPropertyAnimator.runningPropertyAnimator(withDuration: 0.5, delay: 0, options:.curveEaseInOut,
-            animations: {
+        UIViewPropertyAnimator.runningPropertyAnimator(withDuration: 0.5,
+                                                       delay: 0,
+                                                       options:.curveEaseInOut,
+                                                       animations: {
                         self.mainMenuLogo.center = self.view.center
                         self.mainMenuLogo.transform = CGAffineTransform.identity.scaledBy(x: 1.1, y: 1.1)
                 self.loadingBar.center = CGPoint(x: self.mainMenuLogo.center.x, y: self.mainMenuLogo.bounds.maxY + 200)
                 self.loadingBar.alpha = 1
         },
-            completion: { finished in
-                Timer.scheduledTimer(timeInterval: 0.003, target: self, selector: #selector(MainMenuViewController.updateLoadingBar), userInfo: nil, repeats: true)
-                DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1), execute: {
-                        let gameVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "ViewController")
-                        gameVC.modalPresentationStyle = .fullScreen
-                        gameVC.modalTransitionStyle = .crossDissolve
-                        self.present(gameVC, animated: true, completion: nil)
-                    })
-                }
-            )
-        }
+                                                       completion: { finished in
+                Timer.scheduledTimer(timeInterval: 0.003,
+                                     target: self,
+                                     selector: #selector(MainMenuViewController.updateLoadingBar),
+                                     userInfo: nil,
+                                     repeats: true)
+                DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(Int(1.2)), execute: {
+                    self.transitionViews()
+                        })
+                    }
+                )
+            }
     
     @objc func updateLoadingBar() {
         if loadingBar.progress != 1 {
@@ -129,8 +122,14 @@ class MainMenuViewController: UIViewController {
         }
     }
     
+    private func transitionViews() {
+        let gameVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "ViewController")
+        gameVC.modalPresentationStyle = .fullScreen
+        gameVC.modalTransitionStyle = .crossDissolve
+        self.present(gameVC, animated: true, completion: nil)
+    }
+    
     private func addParallaxToView(view: UIImageView) {
-        
         let screenSize = view.bounds.size
         view.bounds.size = CGSize(width: screenSize.width * 1.2, height: screenSize.height * 1.2)
         
@@ -150,7 +149,6 @@ class MainMenuViewController: UIViewController {
     }
     
     private func helpViewAdding() {
-        
         if helpView == nil {
             helpView = HelpView(frame: CGRect(origin: ViewFrameParameters.origin, size: CGSize(width: ViewFrameParameters.width, height: ViewFrameParameters.height)))
             if helpView != nil {
@@ -159,11 +157,8 @@ class MainMenuViewController: UIViewController {
                 snap = UISnapBehavior(item: helpView!, snapTo: CGPoint(x: view.center.x, y: view.center.y + 2))
                 snap.damping = 0.1
                 animator.addBehavior(snap)
-
             }
         } else {
-           
-            
             helpView!.removeFromSuperview()
             helpView = nil
         }
@@ -174,24 +169,17 @@ class MainMenuViewController: UIViewController {
             settingsView = SettingsView(frame: CGRect(origin: ViewFrameParameters.origin, size: CGSize(width: ViewFrameParameters.width, height: ViewFrameParameters.height)))
             if settingsView != nil {
                 view.addSubview(settingsView!)
-                
                 snap = UISnapBehavior(item: settingsView!, snapTo: CGPoint(x: view.center.x, y: view.center.y + 2))
                 snap.damping = 0.1
                 animator.addBehavior(snap)
-                
-                settingsView?.music.isSelected = gameOptions.musicSet
-                settingsView?.parallaxButton.isSelected = gameOptions.paralaxFX
-                settingsView?.soundFX.isSelected = gameOptions.soundFXSet
             }
         } else {
-            gameOptions.musicSet = (settingsView?.music.isSelected)!
             settingsView!.removeFromSuperview()
             settingsView = nil
-            gameModelJSON = gameOptions
-            print(gameOptions.musicSet)
         }
     }
 }
+
 struct ImageLabels {
     static let label1: CGFloat = 0.625
     static let spacingDx: CGFloat = 4.0
@@ -204,9 +192,4 @@ struct ViewFrameParameters {
     static var origin = CGPoint()
 }
 
-struct SettingsParameters {
-    static var parallax = true
-    static var soundFX = true
-    static var music = true
-}
 

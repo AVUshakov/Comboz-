@@ -10,51 +10,13 @@ import UIKit
 
 class SettingsView: UIView {
     
-    var parallaxButton: UIButton = {
-        let button = UIButton()
-        button.setTitle(String("PARALAX : ON"), for: .normal)
-        button.setTitle(String("PARALAX : OFF"), for: .selected)
-        if button.isSelected {
-            button.backgroundColor = #colorLiteral(red: 0.2745098174, green: 0.4862745106, blue: 0.1411764771, alpha: 1) }
-        else {
-            button.backgroundColor = #colorLiteral(red: 0.7450980544, green: 0.1568627506, blue: 0.07450980693, alpha: 1)
-        }
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.addTarget(self, action: #selector(pushedButton), for: .touchUpInside)
-        return button
-    }()
+    var parallaxButton = UIButton()
+    var soundFX = UIButton()
+    var music = UIButton()
     
-    var soundFX: UIButton = {
-        let button = UIButton()
-        button.setTitle(String("FX : ON"), for: .normal)
-        button.setTitle(String("FX : OFF"), for: .selected)
-        if button.isSelected {
-            button.backgroundColor = #colorLiteral(red: 0.2745098174, green: 0.4862745106, blue: 0.1411764771, alpha: 1) }
-        else {
-            button.backgroundColor = #colorLiteral(red: 0.7450980544, green: 0.1568627506, blue: 0.07450980693, alpha: 1)
-        }
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.addTarget(self, action: #selector(pushedButton), for: .touchUpInside)
-        return button
-    }()
-    var music: UIButton = {
-        let button = UIButton()
-        button.setTitle(String("MUSIC : ON"), for: .normal)
-        button.setTitle(String("MUSIC : OFF"), for: .selected)
-        if button.isSelected {
-            button.backgroundColor = #colorLiteral(red: 0.2745098174, green: 0.4862745106, blue: 0.1411764771, alpha: 1) }
-        else {
-            button.backgroundColor = #colorLiteral(red: 0.7450980544, green: 0.1568627506, blue: 0.07450980693, alpha: 1)
-        }
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.addTarget(self, action: #selector(pushedButton), for: .touchUpInside)
-        return button
-    }()
-
     override init(frame: CGRect) {
         super.init(frame: frame)
         viewSetup()
-        
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -62,29 +24,35 @@ class SettingsView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func viewSetup() {
+    private func viewSetup() {
         self.backgroundColor = #colorLiteral(red: 0.1764705926, green: 0.4980392158, blue: 0.7568627596, alpha: 1)
+        
+        setButtons(button: music)
+        setButtons(button: parallaxButton)
+        setButtons(button: soundFX)
         
         self.addSubview(parallaxButton)
         self.addSubview(soundFX)
         self.addSubview(music)
 
-        buttonConstrainteParameters()
-
+        buttonsConstrainteParameters()
+    }
+    
+    private func setButtons(button: UIButton) {
+        button.setImage(UIImage(named: buttonsImage(button: button)[0]), for: .normal)
+        button.setImage(UIImage(named: buttonsImage(button: button)[1]), for: .selected)
+        button.isSelected =  UserDefaults.standard.bool(forKey: codingKeys(button: button))
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(pushedButton), for: .touchUpInside)
     }
     
     @objc func pushedButton(sender: UIButton) {
-        if  !sender.isSelected {
-            sender.isSelected = true
-            sender.backgroundColor = #colorLiteral(red: 0.7450980544, green: 0.1568627506, blue: 0.07450980693, alpha: 1)
-        } else {
-            sender.isSelected = false
-            sender.backgroundColor = #colorLiteral(red: 0.2745098174, green: 0.4862745106, blue: 0.1411764771, alpha: 1)
-        }
-        menuSettings(button: sender)
+        sender.isSelected = !sender.isSelected
+        saveOption(name: codingKeys(button: sender), button: sender)
+        print(codingKeys(button: sender))
     }
     
-    private func buttonConstrainteParameters() {
+    private func buttonsConstrainteParameters() {
         
         parallaxButton.leftAnchor.constraint(equalTo: self.leftAnchor, constant: self.bounds.width / 4).isActive = true
         parallaxButton.widthAnchor.constraint(equalToConstant: self.bounds.width / 6).isActive = true
@@ -105,29 +73,41 @@ class SettingsView: UIView {
         music.topAnchor.constraint(equalTo: soundFX.bottomAnchor, constant: 20).isActive = true
     }
     
-    func menuSettings(button: UIButton) {
+    private func codingKeys(button: UIButton) -> String {
+        var codingKey = String()
         switch button {
         case parallaxButton:
-            if button.isSelected {
-                print("Paralax off")
-           
-            } else {
-                print("Paralax on")
-            }
+            codingKey = "paralax"
         case music:
-            if button.isSelected {
-                print("Music off")
-            } else {
-                print("Music on")
-            }
+            codingKey = "music"
         case soundFX:
-            if button.isSelected {
-                print("SoundFX off")
-            } else {
-                print("SoundFX on")
-            }
+            codingKey = "soundFX"
         default:
             break
         }
+        return codingKey
+    }
+    
+    private func buttonsImage(button: UIButton) -> [String] {
+        var image = [String]()
+        switch button {
+        case parallaxButton:
+            image.append("bluebutton")
+            image.append("rosebutton")
+        case music:
+            image.append("bluebutton")
+            image.append("rosebutton")
+        case soundFX:
+            image.append("bluebutton")
+            image.append("rosebutton")
+        default:
+            break
+        }
+        return image
+    }
+    
+    private func saveOption(name: String, button: UIButton) {
+        let optionCase = UserDefaults.standard
+        optionCase.set(button.isSelected, forKey: name)
     }
 }

@@ -10,8 +10,7 @@ import UIKit
 
 class SetCardView: UIView {
     
-    
-    var animationCompleted = 0
+    var endDeal = 0
     
     @IBInspectable
     var cardBackgroundColor: UIColor = UIColor.white {
@@ -265,7 +264,6 @@ class SetCardView: UIView {
         let currentBounds = bounds
         center = deck
         alpha = 1
-        
         self.bounds = currentBounds
         self.center = currentCenter
         isFaceUp = true
@@ -287,7 +285,7 @@ class SetCardView: UIView {
                                                                           duration: 0.3,
                                                                           options: [.transitionFlipFromLeft],
                                                                           animations: {self.isFaceUp = true},
-                                                                          completion: nil)
+                                                                          completion: {finished in self.endDeal += 1})
         })
     }
     

@@ -11,6 +11,7 @@ import UIKit
 
 class ViewController: UIViewController {
 
+
     var game = SetGameModel()
     
     let defaults = UserDefaults.standard
@@ -35,11 +36,16 @@ class ViewController: UIViewController {
         }
     }
     
-    
-    
     @IBOutlet weak var backgroundVIew: UIImageView!
 
     @IBOutlet weak var score: UILabel!
+    
+    @IBAction func returnToMainMEnu(_ sender: UIButton) {
+        let mainMenuVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "MainMenuController")
+        mainMenuVC.modalPresentationStyle = .fullScreen
+        mainMenuVC.modalTransitionStyle = .crossDissolve
+        self.present(mainMenuVC, animated: true, completion: nil )
+    }
 
     var matchedCardsSet: [SetCardView] {
         return boardView.cardViews.filter { $0.isFaceUp == false }
@@ -49,8 +55,11 @@ class ViewController: UIViewController {
         return boardView.cardViews.filter { $0.alpha == 0 }
     }
 
-
     var dealCompleted = true
+    
+    var timer = Timer()
+    var timerIsRunnning = false
+    var counter = 0.0
     
     override var prefersStatusBarHidden: Bool {
         return true
@@ -58,11 +67,9 @@ class ViewController: UIViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         gameModelJSON = game
-        print("ok")
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        print("ok1")
         if let gameFROM = gameModelJSON {
             game = gameFROM
             updateViewFromModel()
@@ -74,6 +81,7 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         updateViewFromModel()
         
     }
@@ -87,6 +95,8 @@ class ViewController: UIViewController {
     @IBOutlet var deal3CardsButton: UIButton!
     
     @IBOutlet var hintButton: UIButton!
+    
+    
     
     @IBAction func resetGameButton() {
         defaults.removeSuite(named: "SavedGameModel")
@@ -143,14 +153,45 @@ class ViewController: UIViewController {
         updateViewFromModel()
     }
     
+    @IBOutlet weak var timerLabel: UILabel!
+    
+    private func startTimer() {
+        if !timerIsRunnning {
+            timer = Timer.scheduledTimer(timeInterval: 0.1,
+                                         target: self,
+                                         selector: #selector(runTimer),
+                                         userInfo: nil,
+                                         repeats: true)
+            timerIsRunnning = true
+        }
+    }
+    
+    @objc func runTimer() {
+        counter += 0.1
+        let flooredCounter = Int(floor(counter))
+        
+        let hour = flooredCounter / 3600
+        let minute = (flooredCounter % 3600) / 60
+        let second = (flooredCounter % 3600) % 60
+        
+        var minuteString = "\(minute)"
+        if minute < 10 {
+            minuteString = "0\(minute)"
+        }
+        
+        var secondString = "\(second)"
+        if second < 10 {
+                    secondString = "0\(second)"
+        }
+        
+        timerLabel.text = "\(hour):\(minuteString):\(secondString)"
+    }
+    
     private func deleteCardsFromView() {
         game.removeCards()
         updateViewFromModel()
     }
     
-    
-    
-  
     private func updateViewFromModel() {
         updateCardsViewFromModel()
     }
@@ -264,27 +305,32 @@ class ViewController: UIViewController {
                     self.deleteCardsFromView()
                     cardView.removeFromSuperview()
                     self.dealCardsAnimation()
-            }
-            )
+            })
         }
     }
 
     private func dealCardsAnimation() {
         var currentCardsForDeal = 0
+        
         let dealInterval = 0.03 * Double(boardView.gridRows + 1)
         Timer.scheduledTimer(withTimeInterval: dealInterval, repeats: false) {
             timer in
             self.cardsForDeal.forEach { cardView in
                 let dealPoint = CGPoint(x: self.view.bounds.midX, y: self.view.bounds.maxY + cardView.bounds.height)
                 if self.gameModelJSON == nil {
-                cardView.dealCardsFromDeckAnimation(from: dealPoint,delay: TimeInterval(currentCardsForDeal) * 0.25)
+                    cardView.dealCardsFromDeckAnimation(from: dealPoint,delay: TimeInterval(currentCardsForDeal) * 0.25)
                 } else {
                     cardView.dealCardsFromDeckWithouAnimation(from: dealPoint)
                 }
                 currentCardsForDeal += 1
+               
             }
         }
+        Timer.scheduledTimer(withTimeInterval: Double(cardsForDeal.count) * 0.25, repeats: false) {_ in
+            self.startTimer()
+        }
         dealCompleted = false
+        
     }
 }
 
@@ -300,4 +346,5 @@ extension Int {
         }
     }
 }
+
 
