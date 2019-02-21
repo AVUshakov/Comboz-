@@ -14,8 +14,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        
-//        music = try? decoder.decode(music, from: defaults.object(forKey: "Music") as! Data)
         // Override point for customization after application launch.
         return true
     }
