@@ -23,7 +23,18 @@ class PauseView: UIView {
     var animator: UIDynamicAnimator!
     var snap: UISnapBehavior!
 
-    var backgroundImage = UIImageView()
+    var backgroundImage = UIImageView() {
+        didSet {
+            if settingsView != nil {
+                backgroundImage.alpha = 0
+            } else {
+                backgroundImage.alpha = 1
+            }
+        }
+    }
+    
+    var restartAnswerView: AnswerView?
+    var backToMenuAnswerView: AnswerView?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -35,11 +46,6 @@ class PauseView: UIView {
         super.init(coder: aDecoder)
         fatalError("init(coder:) has not been implemented")
     }
-    
-    @objc func backToMainMenu() {
-        print("exit")
-    }
-    
     
     private func viewSetup() {
  
@@ -64,22 +70,20 @@ class PauseView: UIView {
         resumeGameButton.translatesAutoresizingMaskIntoConstraints = false
         backToMenu.translatesAutoresizingMaskIntoConstraints = false
 
+        restart.addTarget(self, action: #selector(openAnswerView), for: .touchUpInside)
         settings.addTarget(self, action: #selector(settingsViewAdding), for: .touchUpInside)
         resumeGameButton.addTarget(self, action: #selector(closePauseView), for: .touchUpInside)
-        
+        backToMenu.addTarget(self, action: #selector(openAnswerView), for: .touchUpInside)
         
         stackButtonsView.addArrangedSubview(resumeGameButton)
         stackButtonsView.addArrangedSubview(restart)
         stackButtonsView.addArrangedSubview(settings)
         stackButtonsView.addArrangedSubview(backToMenu)
         
-        constraintsParameters()
+        restartAnswerView = AnswerView(frame: self.bounds)
+        backToMenuAnswerView = AnswerView(frame: self.bounds)
         
-//        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(Int(0.9)), execute: {
-//            self.snap = UISnapBehavior(item: self.stackButtonsView, snapTo: CGPoint(x: self.center.x, y: self.center.y + 2))
-//            self.snap.damping = 0.1
-//            self.animator.addBehavior(self.snap)
-//        })
+        constraintsParameters()
     }
     
     @objc func closePauseView() {
@@ -95,6 +99,7 @@ class PauseView: UIView {
         } else {
             settingsView!.removeFromSuperview()
             settingsView = nil
+
         }
     }
     
@@ -109,7 +114,17 @@ class PauseView: UIView {
         settings.heightAnchor.constraint(equalToConstant: bounds.height / 6).isActive = true
         resumeGameButton.heightAnchor.constraint(equalToConstant: bounds.height / 6).isActive = true
         backToMenu.heightAnchor.constraint(equalToConstant: bounds.height / 6).isActive = true
-
+    }
+    
+    @objc func openAnswerView(button: UIButton){
+        switch button {
+        case restart:
+            addSubview(restartAnswerView!)
+        case backToMenu:
+            addSubview(backToMenuAnswerView!)
+        default:
+            break
+        }
     }
 
 }

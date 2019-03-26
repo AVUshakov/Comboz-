@@ -14,6 +14,8 @@ class MainMenuViewController: UIViewController {
     
     var snap: UISnapBehavior!
     
+    var inScreenViewRect: CGRect?
+    
     override var prefersStatusBarHidden: Bool {
         return true
     }
@@ -26,6 +28,7 @@ class MainMenuViewController: UIViewController {
     @IBOutlet weak var playButton: UIButton!
     
     @IBOutlet weak var settingsButton: UIButton!
+    
     var resumeButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(named: "resume_button"), for: .normal)
@@ -45,9 +48,13 @@ class MainMenuViewController: UIViewController {
     }
 
     override func viewDidAppear(_ animated: Bool) {
-        ViewFrameParameters.width = view.frame.width * 0.8
-        ViewFrameParameters.height = view.frame.height * 0.8
-        ViewFrameParameters.origin = CGPoint(x: (view.frame.width - ViewFrameParameters.width) / 2, y: (view.frame.height - ViewFrameParameters.height) / 2)
+        if view.window != nil {
+            inScreenViewRect = CGRect(x: (view.frame.width - view.frame.width * 0.8) / 2,
+                                      y: (view.frame.height - view.frame.height * 0.8) / 2,
+                                      width: view.frame.width * 0.8,
+                                      height: view.frame.height * 0.8)
+        }
+
     }
     
     override func viewDidLoad() {
@@ -55,10 +62,23 @@ class MainMenuViewController: UIViewController {
         setHiddenButtons()
         startVCMenuAnimation()
         animator = UIDynamicAnimator(referenceView: view)
+        if !UserDefaults.standard.bool(forKey: "music") {
+        AudioController.sharedController.playBackgroundMusic(file: AudioController.SoundFile.tapIn.rawValue)
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         mainMenuLogo.center = CGPoint(x: view.bounds.midX, y: view.bounds.minY)
+    }
+    
+    override func viewWillLayoutSubviews() {
+        if !((settingsView?.window) == nil) {
+            settingsView = nil
+        }
+        
+        if helpView?.window == nil {
+            helpView = nil
+        }
     }
     
     @IBOutlet weak var mainMenuLogo: UIImageView!
@@ -82,9 +102,11 @@ class MainMenuViewController: UIViewController {
             UserDefaults.standard.removeObject(forKey: "SavedTimer")
             pushButtonMenuAnimation()
         }
+        soundFXPlay(sound: AudioController.SoundFile.tapIn.rawValue)
     }
     
     @IBAction func settingsButton(_ sender: UIButton) {
+        soundFXPlay(sound: AudioController.SoundFile.tapIn.rawValue)
         settingsViewAdding()
     }
     
@@ -105,6 +127,7 @@ class MainMenuViewController: UIViewController {
     }
     
     @objc func startNewGame() {
+        soundFXPlay(sound: AudioController.SoundFile.tapIn.rawValue)
         UserDefaults.standard.removeObject(forKey: "SavedGameModel")
         UserDefaults.standard.removeObject(forKey: "SavedTimer")
         pushButtonMenuAnimation()
@@ -123,16 +146,15 @@ class MainMenuViewController: UIViewController {
                 self.settingsButton.isHidden = true
                 self.resumeButton.isHidden = false
                 self.newGameButton.isHidden = false
-            UIView.animate(withDuration: 0.3,
-                           animations: {
-                            self.resumeButton.alpha = 1
-                            self.newGameButton.alpha = 1
+                UIView.animate(withDuration: 0.3,
+                               animations: {
+                                self.resumeButton.alpha = 1
+                                self.newGameButton.alpha = 1
+                })
             })
-        })
     }
     
     private func startVCMenuAnimation() {
-        
         UIViewPropertyAnimator.runningPropertyAnimator(withDuration: 1,
                                                        delay: 0,
                                                        options:.curveEaseInOut,
@@ -142,6 +164,7 @@ class MainMenuViewController: UIViewController {
     }
     
     @objc func pushButtonMenuAnimation() {
+        soundFXPlay(sound: AudioController.SoundFile.tapIn.rawValue)
         let pointForStackButtonHidding = CGPoint(x: view.bounds.midX, y: view.bounds.maxY)
         UIViewPropertyAnimator.runningPropertyAnimator(withDuration: 0.3,
                                                        delay: 0,
@@ -157,7 +180,7 @@ class MainMenuViewController: UIViewController {
                                                        options:.curveEaseInOut,
                                                        animations: {
                         self.mainMenuLogo.center = self.view.center
-                        self.mainMenuLogo.transform = CGAffineTransform.identity.scaledBy(x: 1.1, y: 1.1)
+                        self.mainMenuLogo.transform = CGAffineTransform.identity.scaledBy(x: 1.05, y: 1.05)
                 self.loadingBar.center = CGPoint(x: self.mainMenuLogo.center.x, y: self.mainMenuLogo.bounds.maxY + 200)
                 self.loadingBar.alpha = 0.9
         },
@@ -168,6 +191,9 @@ class MainMenuViewController: UIViewController {
                                      userInfo: nil,
                                      repeats: true)
                 DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(Int(1.2)), execute: {
+                    self.mainMenuLogo.alpha = 0
+                    self.loadingBar.alpha = 0
+                    self.backgroundImage.alpha = 0
                     self.transitionViews()
                         })
                     }
@@ -206,39 +232,12 @@ class MainMenuViewController: UIViewController {
         view.addMotionEffect(group)
     }
     
-    private func helpViewAdding() {
-        if helpView == nil {
-            helpView = HelpView(frame: CGRect(origin: ViewFrameParameters.origin, size: CGSize(width: ViewFrameParameters.width, height: ViewFrameParameters.height)))
-            if helpView != nil {
-                view.addSubview(helpView!)
-                
-                snap = UISnapBehavior(item: helpView!, snapTo: CGPoint(x: view.center.x, y: view.center.y + 2))
-                snap.damping = 0.1
-                animator.addBehavior(snap)
-            }
-        } else {
-            helpView!.removeFromSuperview()
-            helpView = nil
-        }
-
-        if settingsView != nil {
-            settingsView?.removeFromSuperview()
-            settingsView = nil
-        }
-    }
-    
     private func settingsViewAdding() {
         if settingsView == nil {
-            settingsView = SettingsView(frame: CGRect(origin: ViewFrameParameters.origin, size: CGSize(width: ViewFrameParameters.width, height: ViewFrameParameters.height)))
+            settingsView = SettingsView(frame: inScreenViewRect!)
             if settingsView != nil {
                 view.addSubview(settingsView!)
-                snap = UISnapBehavior(item: settingsView!, snapTo: CGPoint(x: view.center.x, y: view.center.y + 2))
-                snap.damping = 0.1
-                animator.addBehavior(snap)
             }
-        } else {
-            settingsView!.removeFromSuperview()
-            settingsView = nil
         }
         if helpView != nil {
             helpView?.removeFromSuperview()
@@ -246,18 +245,17 @@ class MainMenuViewController: UIViewController {
         }
     }
     
+    private func soundFXPlay(sound: String) {
+        if !UserDefaults.standard.bool(forKey: "soundFX") {
+            AudioController.sharedController.playFXSound(file: sound)
+        }
     }
+}
 
 struct ImageLabels {
     static let label1: CGFloat = 0.625
     static let spacingDx: CGFloat = 4.0
     static let spacingDy: CGFloat = 4.0
-}
-
-struct ViewFrameParameters {
-    static var width = CGFloat()
-    static var height = CGFloat()
-    static var origin = CGPoint()
 }
 
 

@@ -23,6 +23,8 @@ class GameModel: Codable {
     var secondCounter = 0.0
     var bonusCounter = 0.0
     var gameIsResume = false
+    var hintUsed = false
+    var bonusTime = false
     
     var cardsDeckCount: Int {
         return cardsDeck.cards.count
@@ -41,9 +43,11 @@ class GameModel: Codable {
             } else {
                 cardForMatching.removeAll()
             }
+            bonusTime = false
+            hintCards.removeAll()
         }
     }
-    
+
     var endGameDetector: Bool {
         get {
             guard !checkMatchOnTable() && cardsDeckCount == 0 else {return false}
@@ -68,7 +72,6 @@ class GameModel: Codable {
         if cardsOnTable.count < Constants.deckCount {
             for _ in 0...2 {
                 if let card = cardsDeck.showCard() {
-                    //card.isFaceUp = false
                     cardsOnTable += [card]
                 }
             }
@@ -76,8 +79,9 @@ class GameModel: Codable {
     }
     
     func showHintCard() {
-        if !hintCards.isEmpty {
+        if !hintCards.isEmpty && selectedCards.count <= 2  {
             selectedCards.append(cardsOnTable[hintCards.remove(at: hintCards.count - 1)])
+            hintUsed = true
         }
         if selectedCards.count == 3 {
             matchDetector = Card.matchDetector(cards: selectedCards)
@@ -92,13 +96,24 @@ class GameModel: Codable {
                         cardsOnTable[i].isFaceUp = false
                     }
                 }
-                bonusCounter <= 5.0 ? (score += 5) : (score += 1)
+                guard hintUsed else {
+                    if bonusCounter <= 10.0 {
+                        bonusTime = true
+                        score += 5
+                    } else {
+                        bonusTime = false
+                        score += 1
+                    }
+                    return
+                }
             } else {
                 if score > 0 {
                     score -= 1
                 }
             }
+            hintUsed = false
         }
+        
     }
     
     private func checkMatchOnTable() -> Bool {
@@ -111,7 +126,6 @@ class GameModel: Codable {
                             if hintCards.isEmpty {
                                hintCards = [i, j, k]
                             }
-                            //print("\(i+1) \(j+1) \(k+1)")
                             matchDetected = true
                         }
                     }
@@ -130,16 +144,13 @@ class GameModel: Codable {
         if matchDetector != nil {
             if matchDetector!{
                 if !cardsDeck.cards.isEmpty && cardsOnTable.count < 13 {
-                    //print("from removeCards: ok < 13")
                     for i in cardsOnTable.indices {
                         if cardsOnTable[i].isFaceUp == false {
                             cardsOnTable.insert(cardsDeck.cards.remove(at: cardsDeck.cards.count.arc4random), at: i)
-                            //cardsOnTable[i].isFaceUp = false
                             cardsOnTable.remove(at: i + 1)
                         }
                     }
                 } else {
-                    //print("from removeCards: ok 13")
                     cardsOnTable.removeArray(elements: cardForMatching)
                 }
                 hintCards.removeAll()

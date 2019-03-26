@@ -12,12 +12,10 @@ class CardView: UIView {
     
     var endDeal = 0
     
-    @IBInspectable
     var cardBackgroundColor: UIColor = UIColor.white {
         didSet { setNeedsDisplay() }
     }
     
-    @IBInspectable
     var isSelected: Bool = false {
         didSet { setNeedsDisplay(); setNeedsLayout() }
     }
@@ -31,7 +29,6 @@ class CardView: UIView {
         didSet { setNeedsDisplay(); setNeedsLayout() }
     }
     
-    @IBInspectable
     var symbolType: Int = 1 {
         didSet {
             switch symbolType {
@@ -44,7 +41,6 @@ class CardView: UIView {
         }
     }
     
-    @IBInspectable
     var fillType: Int = 1 {
         didSet {
             switch fillType {
@@ -57,7 +53,6 @@ class CardView: UIView {
         }
     }
     
-    @IBInspectable
     var colorType: Int = 1 {
         didSet {
             switch colorType {
@@ -82,7 +77,6 @@ class CardView: UIView {
         case empty
     }
     
-    @IBInspectable
     var count: Int = 3 {
         didSet { setNeedsDisplay(); setNeedsLayout() }
     }
@@ -235,9 +229,9 @@ class CardView: UIView {
         }
         if let matched = isMatched {
             if matched {
-                layer.borderColor = Colors.matched
+                layer.blink(fromColor: #colorLiteral(red: 0, green: 0.9768045545, blue: 0, alpha: 1), toColor: #colorLiteral(red: 0.3411764801, green: 0.6235294342, blue: 0.1686274558, alpha: 1))
             } else {
-                layer.borderColor = Colors.miss
+                layer.blink(fromColor: #colorLiteral(red: 0.9254902005, green: 0.2352941185, blue: 0.1019607857, alpha: 1).cgColor, toColor: #colorLiteral(red: 0.7450980544, green: 0.1568627506, blue: 0.07450980693, alpha: 0))
             }
         }
 
@@ -268,6 +262,21 @@ class CardView: UIView {
         self.bounds = currentBounds
         self.center = currentCenter
         isFaceUp = true
+    }
+    
+    func endGameCardsAnimation(delay: TimeInterval) {
+        UIView.transition(with: self,
+                          duration: 0.4,
+                          options: [.transitionFlipFromLeft],
+                          animations: {self.isFaceUp = false},
+                          completion: { finished in
+        UIViewPropertyAnimator.runningPropertyAnimator(withDuration: 0.6,
+                                                       delay: delay,
+                                                       options:[.curveEaseInOut],
+                                                       animations: {
+                                                        self.alpha = 0
+                                                         },
+                                                       completion: nil ) })
     }
     
     func dealCardsFromDeckAnimation(from deck: CGPoint, delay: TimeInterval) {
@@ -347,5 +356,27 @@ extension CGRect {
         let newWidth = width * scale
         let newHeight = height * scale
         return insetBy(dx: (width - newWidth) / 2, dy: (height - newHeight) / 2)
+    }
+}
+
+extension CALayer {
+    func blink(fromColor: CGColor, toColor: CGColor) {
+        let blinkAnimation = CABasicAnimation(keyPath: "borderColor")
+        blinkAnimation.fromValue = fromColor
+        blinkAnimation.toValue = toColor
+        blinkAnimation.duration = 0.2
+        blinkAnimation.repeatCount = 5
+        self.borderColor = toColor
+        self.add(blinkAnimation, forKey: "BlinkAnimation")
+    }
+}
+
+extension UIView {
+    func blinkEffect() {
+        UIView.transition(with: self,
+                          duration: 0.2,
+                          options: [.transitionCrossDissolve, .repeat],
+                          animations: { [weak self] in self?.alpha = 1 },
+                          completion: nil )
     }
 }

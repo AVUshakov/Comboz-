@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import AVFoundation
 
 class SettingsView: UIView {
     
@@ -31,7 +32,6 @@ class SettingsView: UIView {
     var settigsImage = UIImageView()
     
     var stackButton = UIStackView()
-    
     
     var helpView: HelpView?
     
@@ -67,8 +67,6 @@ class SettingsView: UIView {
         
         rules.translatesAutoresizingMaskIntoConstraints = false
         backButton.translatesAutoresizingMaskIntoConstraints = false
-
-
         
         stackButton.addArrangedSubview(parallaxButton)
         stackButton.addArrangedSubview(soundFX)
@@ -76,9 +74,7 @@ class SettingsView: UIView {
         stackButton.addArrangedSubview(rules)
         stackButton.addArrangedSubview(backButton)
 
-        
         buttonsConstrainteParameters()
-
     }
     
     private func setButtons(button: UIButton) {
@@ -92,7 +88,7 @@ class SettingsView: UIView {
     @objc func pushedButton(sender: UIButton) {
         sender.isSelected = !sender.isSelected
         saveOption(name: codingKeys(button: sender), button: sender)
-        print(codingKeys(button: sender))
+        soundSetter(button: sender)
     }
     
     private func buttonsConstrainteParameters() {
@@ -113,6 +109,19 @@ class SettingsView: UIView {
         rules.heightAnchor.constraint(equalToConstant: self.bounds.height / 6).isActive = true
         backButton.heightAnchor.constraint(equalToConstant: self.bounds.height / 6).isActive = true
         
+    }
+    
+    private func soundSetter(button: UIButton){
+        switch button {
+        case music:
+            if !music.isSelected {
+                AudioController.sharedController.playBackgroundMusic(file: AudioController.SoundFile.tapIn.rawValue)
+            } else {
+                AudioController.sharedController.backgroundMusic.stop()
+            }
+        default:
+            break
+        }
     }
     
     private func codingKeys(button: UIButton) -> String {
@@ -153,10 +162,18 @@ class SettingsView: UIView {
         optionCase.set(button.isSelected, forKey: name)
     }
     
+    private func audioController(audioFile: AVAudioPlayer, button: UIButton) {
+        if !button.isSelected {
+            audioFile.play()
+        } else {
+            audioFile.stop()
+        }
+    }
+    
     @objc func closeView() {
         self.removeFromSuperview()
     }
-    
+        
     @objc func helpViewAdding() {
         if helpView == nil {
             helpView = HelpView(frame: self.bounds)

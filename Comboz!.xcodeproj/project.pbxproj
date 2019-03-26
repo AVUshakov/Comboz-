@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0431EA8122398693008074D3 /* EndGameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0431EA8022398693008074D3 /* EndGameView.swift */; };
+		0431EA832243AD07008074D3 /* AnswerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0431EA822243AD07008074D3 /* AnswerView.swift */; };
 		0484AE3421D14BE90076EBB2 /* HelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0484AE3321D14BE90076EBB2 /* HelpView.swift */; };
 		0484AE3621DA3F590076EBB2 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0484AE3521DA3F590076EBB2 /* SettingsView.swift */; };
 		048D0A492215EC0A00F23A12 /* junegull-regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 048D0A482215EC0A00F23A12 /* junegull-regular.ttf */; };
@@ -14,6 +16,8 @@
 		04C7F80820F887D7004D093C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 04C7F80720F887D7004D093C /* Main.storyboard */; };
 		04CAB79121F1008F00A1C60B /* ScreenGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04CAB79021F1008F00A1C60B /* ScreenGrid.swift */; };
 		04CAB79321F101FE00A1C60B /* PauseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04CAB79221F101FE00A1C60B /* PauseView.swift */; };
+		04E22F642227209E007BD48A /* tapInSound.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 04E22F632227209E007BD48A /* tapInSound.mp3 */; };
+		04E22F6622285B30007BD48A /* AudioController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E22F6522285B30007BD48A /* AudioController.swift */; };
 		04E56BDA21CAD8F80047E7ED /* rules.txt in Resources */ = {isa = PBXBuildFile; fileRef = 04E56BD921CAD8F80047E7ED /* rules.txt */; };
 		04E5D3DD21C2E5DC00F06525 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 04E5D3DC21C2E5DC00F06525 /* Default-568h@2x.png */; };
 		04F10A6120C7CE10006615AA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F10A6020C7CE10006615AA /* AppDelegate.swift */; };
@@ -28,6 +32,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0431EA8022398693008074D3 /* EndGameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndGameView.swift; sourceTree = "<group>"; };
+		0431EA822243AD07008074D3 /* AnswerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerView.swift; sourceTree = "<group>"; };
 		0484AE3321D14BE90076EBB2 /* HelpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpView.swift; sourceTree = "<group>"; };
 		0484AE3521DA3F590076EBB2 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		048D0A482215EC0A00F23A12 /* junegull-regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "junegull-regular.ttf"; sourceTree = "<group>"; };
@@ -35,9 +41,11 @@
 		04C7F80720F887D7004D093C /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Main.storyboard; path = "../../Trash folder/Main.storyboard"; sourceTree = "<group>"; };
 		04CAB79021F1008F00A1C60B /* ScreenGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenGrid.swift; sourceTree = "<group>"; };
 		04CAB79221F101FE00A1C60B /* PauseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PauseView.swift; sourceTree = "<group>"; };
+		04E22F632227209E007BD48A /* tapInSound.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = tapInSound.mp3; sourceTree = "<group>"; };
+		04E22F6522285B30007BD48A /* AudioController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioController.swift; sourceTree = "<group>"; };
 		04E56BD921CAD8F80047E7ED /* rules.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = rules.txt; sourceTree = "<group>"; };
 		04E5D3DC21C2E5DC00F06525 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
-		04F10A5D20C7CE10006615AA /* SetGame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SetGame.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		04F10A5D20C7CE10006615AA /* Comboz!.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Comboz!.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		04F10A6020C7CE10006615AA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		04F10A6720C7CE11006615AA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		04F10A6C20C7CE11006615AA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -77,6 +85,8 @@
 				04CAB79021F1008F00A1C60B /* ScreenGrid.swift */,
 				04F2BB5C20F689EC00442D80 /* CardView.swift */,
 				04CAB79221F101FE00A1C60B /* PauseView.swift */,
+				0431EA822243AD07008074D3 /* AnswerView.swift */,
+				0431EA8022398693008074D3 /* EndGameView.swift */,
 				04F2BB6120F689ED00442D80 /* BoardView.swift */,
 				04F2BB5B20F689EC00442D80 /* ViewController.swift */,
 			);
@@ -93,11 +103,20 @@
 			path = GameModel;
 			sourceTree = "<group>";
 		};
+		04E22F67222BBE77007BD48A /* Audio */ = {
+			isa = PBXGroup;
+			children = (
+				04E22F6522285B30007BD48A /* AudioController.swift */,
+				04E22F632227209E007BD48A /* tapInSound.mp3 */,
+			);
+			path = Audio;
+			sourceTree = "<group>";
+		};
 		04F10A5420C7CE10006615AA = {
 			isa = PBXGroup;
 			children = (
 				04E5D3DC21C2E5DC00F06525 /* Default-568h@2x.png */,
-				04F10A5F20C7CE10006615AA /* SetGame */,
+				04F10A5F20C7CE10006615AA /* Comboz! */,
 			);
 			sourceTree = "<group>";
 			usesTabs = 0;
@@ -105,13 +124,13 @@
 		04F10A5E20C7CE10006615AA /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				04F10A5D20C7CE10006615AA /* SetGame.app */,
+				04F10A5D20C7CE10006615AA /* Comboz!.app */,
 			);
 			name = Products;
 			path = ..;
 			sourceTree = "<group>";
 		};
-		04F10A5F20C7CE10006615AA /* SetGame */ = {
+		04F10A5F20C7CE10006615AA /* Comboz! */ = {
 			isa = PBXGroup;
 			children = (
 				04F10A5E20C7CE10006615AA /* Products */,
@@ -121,11 +140,12 @@
 				04C7F80720F887D7004D093C /* Main.storyboard */,
 				04F2BB5A20F689EC00442D80 /* LaunchScreen.storyboard */,
 				048D0A482215EC0A00F23A12 /* junegull-regular.ttf */,
+				04E22F67222BBE77007BD48A /* Audio */,
 				04E56BD921CAD8F80047E7ED /* rules.txt */,
 				04CAB78D21F0FFDB00A1C60B /* GameModel */,
 				04F10A6C20C7CE11006615AA /* Info.plist */,
 			);
-			path = SetGame;
+			path = "Comboz!";
 			sourceTree = "<group>";
 		};
 		04F10A8420C7CECE006615AA /* Supporting Files */ = {
@@ -140,9 +160,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		04F10A5C20C7CE10006615AA /* SetGame */ = {
+		04F10A5C20C7CE10006615AA /* Comboz! */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 04F10A6F20C7CE11006615AA /* Build configuration list for PBXNativeTarget "SetGame" */;
+			buildConfigurationList = 04F10A6F20C7CE11006615AA /* Build configuration list for PBXNativeTarget "Comboz!" */;
 			buildPhases = (
 				04F10A5920C7CE10006615AA /* Sources */,
 				04F10A5A20C7CE10006615AA /* Frameworks */,
@@ -152,9 +172,9 @@
 			);
 			dependencies = (
 			);
-			name = SetGame;
+			name = "Comboz!";
 			productName = SetGame;
-			productReference = 04F10A5D20C7CE10006615AA /* SetGame.app */;
+			productReference = 04F10A5D20C7CE10006615AA /* Comboz!.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -173,7 +193,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 04F10A5820C7CE10006615AA /* Build configuration list for PBXProject "SetGame" */;
+			buildConfigurationList = 04F10A5820C7CE10006615AA /* Build configuration list for PBXProject "Comboz!" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -186,7 +206,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				04F10A5C20C7CE10006615AA /* SetGame */,
+				04F10A5C20C7CE10006615AA /* Comboz! */,
 			);
 		};
 /* End PBXProject section */
@@ -197,6 +217,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				048D0A492215EC0A00F23A12 /* junegull-regular.ttf in Resources */,
+				04E22F642227209E007BD48A /* tapInSound.mp3 in Resources */,
 				04C7F80820F887D7004D093C /* Main.storyboard in Resources */,
 				04E5D3DD21C2E5DC00F06525 /* Default-568h@2x.png in Resources */,
 				04F2BB6220F689ED00442D80 /* LaunchScreen.storyboard in Resources */,
@@ -214,9 +235,12 @@
 			files = (
 				048D9B6C21BD50F300865182 /* MainMenuViewController.swift in Sources */,
 				04F2BB6420F689ED00442D80 /* CardView.swift in Sources */,
+				0431EA832243AD07008074D3 /* AnswerView.swift in Sources */,
 				04F2BB6320F689ED00442D80 /* ViewController.swift in Sources */,
 				04CAB79321F101FE00A1C60B /* PauseView.swift in Sources */,
 				0484AE3421D14BE90076EBB2 /* HelpView.swift in Sources */,
+				04E22F6622285B30007BD48A /* AudioController.swift in Sources */,
+				0431EA8122398693008074D3 /* EndGameView.swift in Sources */,
 				04F2BB6720F689ED00442D80 /* GameModel.swift in Sources */,
 				04F10A6120C7CE10006615AA /* AppDelegate.swift in Sources */,
 				04F2BB6620F689ED00442D80 /* CardsDeck.swift in Sources */,
@@ -350,12 +374,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = D95RMNNPA6;
-				INFOPLIST_FILE = SetGame/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/Comboz!/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = AlexanderUshakov.SetGame;
+				PRODUCT_BUNDLE_IDENTIFIER = AlexanderUshakov.Comboz;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -368,12 +392,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = D95RMNNPA6;
-				INFOPLIST_FILE = SetGame/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/Comboz!/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = AlexanderUshakov.SetGame;
+				PRODUCT_BUNDLE_IDENTIFIER = AlexanderUshakov.Comboz;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -383,7 +407,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		04F10A5820C7CE10006615AA /* Build configuration list for PBXProject "SetGame" */ = {
+		04F10A5820C7CE10006615AA /* Build configuration list for PBXProject "Comboz!" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				04F10A6D20C7CE11006615AA /* Debug */,
@@ -392,7 +416,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		04F10A6F20C7CE11006615AA /* Build configuration list for PBXNativeTarget "SetGame" */ = {
+		04F10A6F20C7CE11006615AA /* Build configuration list for PBXNativeTarget "Comboz!" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				04F10A7020C7CE11006615AA /* Debug */,

@@ -7,12 +7,18 @@
 //
 
 import UIKit
+import AVFoundation
 
 class ViewController: UIViewController {
 
+    
     var game = GameModel()
     
+    var inScreenViewRect: CGRect?
+    
     var pauseView: PauseView?
+    
+    var endGameView: EndGameView?
     
     var blurEffectView: UIVisualEffectView = {
         let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.dark)
@@ -43,12 +49,30 @@ class ViewController: UIViewController {
         }
     }
     
-    @IBOutlet weak var backgroundVIew: UIImageView!
-
+    @IBOutlet weak var backgroundView: UIImageView!
     @IBOutlet weak var score: UILabel!
     
     @IBAction func pauseButton(_ sender: UIButton) {
         pauseViewAdding()
+    }
+    
+    @IBOutlet weak var timeBonusLabel: UILabel!
+    
+    private func timeBonusAnimation() {
+        let point = timeBonusLabel.center
+        timeBonusLabel.center = CGPoint(x: view.center.x, y: view.frame.minY - score.frame.height)
+        timeBonusLabel.isHidden = false
+        timeBonusLabel.blinkEffect()
+        UIViewPropertyAnimator.runningPropertyAnimator(withDuration: 0.5,
+                                                       delay: 0,
+                                                       options: [.curveEaseInOut],
+                                                       animations: { self.timeBonusLabel.center = point },
+                                                       completion: {finished in
+            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(Int(1.6)), execute:
+                { self.timeBonusLabel.isHidden = true
+                    self.timeBonusLabel.alpha = 0
+            })
+        })
     }
     
     var matchedCardsSet: [CardView] {
@@ -58,7 +82,11 @@ class ViewController: UIViewController {
     var cardsForDeal: [CardView] {
         return boardView.cardViews.filter { $0.alpha == 0 }
     }
-
+    
+    var cardsForDelete: [CardView] {
+        return boardView.cardViews.filter {$0.isFaceUp == true}
+    }
+    
     var dealCompleted = true
 
     var timer = Timer()
@@ -71,6 +99,7 @@ class ViewController: UIViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         gameModelJSON = game
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -79,19 +108,32 @@ class ViewController: UIViewController {
             game.gameIsResume = true
             updateViewFromModel()
         }
-        addParallaxToView(view: backgroundVIew)
+        addParallaxToView(view: backgroundView)
         blurEffectView.frame = view.bounds
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        if view.window != nil {
+            inScreenViewRect = CGRect(x: (view.frame.width - view.frame.width * 0.8) / 2,
+                                      y: (view.frame.height - view.frame.height * 0.8) / 2,
+                                      width: view.frame.width * 0.8,
+                                      height: view.frame.height * 0.8)
+        }
     }
     
     override func viewWillLayoutSubviews() {
         blurController()
-
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         updateViewFromModel()
         
+        NotificationCenter.default.addObserver(self, selector: #selector(backgroundPauseView), name: NSNotification.Name("goToBackground"), object: nil)
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+       
     }
     
     
@@ -99,11 +141,14 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var boardView: BoardView!
     
-    @IBOutlet var gameOverLabel: UILabel!
-    
     @IBOutlet var deal3CardsButton: UIButton!
     
-    @IBOutlet var hintButton: UIButton!
+    @IBOutlet var hintButton: UIButton! {
+        didSet {
+            hintButton.setTitleColor(#colorLiteral(red: 0.9254902005, green: 0.2352941185, blue: 0.1019607857, alpha: 0.2529698202), for: .disabled)
+            hintButton.setTitleColor(#colorLiteral(red: 0.9997687936, green: 0.6423431039, blue: 0.009596501477, alpha: 1), for: .normal)
+        }
+    }
     
     private func addTapRecognizer(for cardView: CardView) {
         let tap = UITapGestureRecognizer(target: self, action: #selector(tapCard(recognizedBy:)))
@@ -116,12 +161,16 @@ class ViewController: UIViewController {
         switch recognizer.state {
             case .ended:
                 if let cardView = recognizer.view! as? CardView {
+                    hintButton.isEnabled = false
                     game.choosenCard(index: boardView.cardViews.index(of: cardView)!)
                     game.matchingResult()
-                    self.hintButton.isEnabled = true
+                    if game.bonusTime {
+                        timeBonusAnimation()
+                    }
                     if game.matchDetector != nil && !game.matchDetector! {
                         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1), execute: {
                             self.deleteCardsFromView()
+                            self.hintButton.isEnabled = true
                         })
                     }
                 }
@@ -149,13 +198,13 @@ class ViewController: UIViewController {
     @IBOutlet weak var timerLabel: UILabel! 
     
     private func startTimer() {
-            if !self.timerIsRunnning {
-                self.timer = Timer.scheduledTimer(timeInterval: 0.1,
+            if !timerIsRunnning {
+                timer = Timer.scheduledTimer(timeInterval: 0.1,
                                              target: self,
-                                             selector: #selector(self.runTimer),
+                                             selector: #selector(runTimer),
                                              userInfo: nil,
                                              repeats: true)
-                self.timerIsRunnning = true
+                timerIsRunnning = true
                 timerLabel.isHidden = false
             }
     }
@@ -220,14 +269,10 @@ class ViewController: UIViewController {
             score.text = "Score: \(game.score)"
         }
         
+//        if !game.endGameDetector && game.selectedCards.count == 2 {
         if game.endGameDetector {
-            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1), execute: {
-                for i in self.boardView.cardViews.indices {
-                    self.boardView.cardViews[i].isHidden = true
-                }
-                self.gameOverLabel.isHidden = false
-                self.hintButton.isEnabled = false
-            })
+            print(game.score)
+            endGameViewAdding()
         }
     }
     
@@ -237,7 +282,7 @@ class ViewController: UIViewController {
                 view.addSubview(blurEffectView)
                 view.bringSubviewToFront(pauseView!)
                 timer.invalidate()
-                self.timerIsRunnning = false
+                timerIsRunnning = false
             } else {
                 blurEffectView.removeFromSuperview()
                 pauseView = nil
@@ -246,10 +291,19 @@ class ViewController: UIViewController {
         }
     }
     
-    weak var backToMenuButton: UIButton?
-    weak var restartGameButton: UIButton?
+    weak var backToMenuButton: UIButton? {
+        didSet {
+            backToMenuButton?.addTarget(self, action: #selector(presentMainMenuController), for: .touchUpInside)
+        }
+    }
+    weak var restartGameButton: UIButton? {
+        didSet {
+            restartGameButton?.addTarget(self, action: #selector(restartGame), for: .touchUpInside)
+        }
+    }
     
     @objc func presentMainMenuController(){
+        
         let mainMenuVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "MainMenuController")
         mainMenuVC.modalPresentationStyle = .fullScreen
         mainMenuVC.modalTransitionStyle = .crossDissolve
@@ -257,26 +311,61 @@ class ViewController: UIViewController {
     }
     
     @objc func restartGame(){
-        
+        if endGameView != nil {
+            endGameView?.removeFromSuperview()
+            endGameView = nil
+            timerLabel.alpha = 1
+            score.alpha = 1
+        }
+        if pauseView != nil {
+            pauseView?.removeFromSuperview()
+            blurController()
+
+        }
         boardView.resetAllCards()
-        pauseView?.removeFromSuperview()
-        blurController()
         game = GameModel()
         dealCardsAnimation()
         updateViewFromModel()
+
     }
   
     private func pauseViewAdding() {
         if pauseView == nil {
-            pauseView = PauseView(frame: CGRect(origin: ViewFrameParameters.origin, size: CGSize(width: ViewFrameParameters.width, height: ViewFrameParameters.height)))
-            backToMenuButton = pauseView!.backToMenu
-            restartGameButton = pauseView!.restart
-            backToMenuButton!.addTarget(self, action: #selector(presentMainMenuController), for: .touchUpInside)
-            restartGameButton?.addTarget(self, action: #selector(restartGame), for: .touchUpInside)
+            pauseView = PauseView(frame: inScreenViewRect!)
+            backToMenuButton = pauseView!.backToMenuAnswerView?.accept
+            restartGameButton = pauseView!.restartAnswerView?.accept
             view.addSubview(pauseView!)
         } else {
             view.addSubview(pauseView!)
         }
+    }
+    
+    private func endGameViewAdding() {
+        timer.invalidate()
+        var currentCardsForDelete = 0
+        let dealInterval = 0.03 * Double(boardView.gridRows + 1)
+        Timer.scheduledTimer(withTimeInterval: dealInterval, repeats: false) { timer in
+            self.cardsForDelete.forEach { cardView in
+                cardView.endGameCardsAnimation(delay: TimeInterval(currentCardsForDelete) * 0.25)
+                currentCardsForDelete += 1
+            }
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(3), execute: {
+            if self.endGameView == nil {
+                self.endGameView = EndGameView(frame: self.inScreenViewRect!)
+                self.endGameView?.score = self.game.score
+                self.endGameView?.time = self.timerLabel.text!
+                self.restartGameButton = self.endGameView!.restart
+                self.backToMenuButton = self.endGameView!.backToMenu
+                self.timerIsRunnning = false
+                self.view.addSubview(self.endGameView!)
+            }
+            UIView.animate(withDuration: 0.3,
+                           animations: { self.score.alpha = 0
+                                         self.timerLabel.alpha = 0 })
+            self.hintButton.isEnabled = false
+        })
         
         
     }
@@ -285,6 +374,8 @@ class ViewController: UIViewController {
         
         let screenSize = view.bounds.size
         view.bounds.size = CGSize(width: screenSize.width * 1.2, height: screenSize.height * 1.2)
+        backgroundView.frame.size = view.bounds.size
+        print( backgroundView.frame.size )
         
         let amount = 20
         
@@ -320,7 +411,7 @@ class ViewController: UIViewController {
     }
     
     private func minimizeAndDeleteAnimation() {
-        
+ 
         var cardsForScale: [CardView] {
             var cardsForScale = [CardView]()
             var tmpCard = CardView()
@@ -364,6 +455,7 @@ class ViewController: UIViewController {
                 if self.game.gameIsResume {
                     cardView.dealCardsFromDeckWithouAnimation(from: dealPoint)
                     self.startTimer()
+                    
                 } else {
                     cardView.dealCardsFromDeckAnimation(from: dealPoint,delay: TimeInterval(currentCardsForDeal) * 0.25)
                 }
@@ -378,6 +470,15 @@ class ViewController: UIViewController {
             self.game.gameIsResume = false
         }
     }
+    
+    @objc func backgroundPauseView() {
+        if pauseView == nil {
+            pauseViewAdding()
+            gameModelJSON = game
+        }
+        
+    }
+
 }
 
 extension Int {
@@ -392,5 +493,7 @@ extension Int {
         }
     }
 }
+
+
 
 
