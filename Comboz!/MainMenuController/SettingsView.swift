@@ -1,6 +1,6 @@
 //
 //  SettingsView.swift
-//  SetGame
+//  Comboz!
 //
 //  Created by Alexander Ushakov on 31/12/2018.
 //  Copyright © 2018 Alexander Ushakov. All rights reserved.
@@ -17,13 +17,13 @@ class SettingsView: UIView {
     
     var rules: UIButton = {
         let button = UIButton()
-        button.setImage(UIImage(named: "rules_button"), for: .normal)
+        button.setBackgroundImage(UIImage(named: "rules_button"), for: .normal)
         button.addTarget(self, action: #selector(helpViewAdding), for: .touchUpInside)
         return button
     }()
     var backButton: UIButton = {
         let button = UIButton()
-        button.setImage(UIImage(named: "back_button"), for: .normal)
+        button.setBackgroundImage(UIImage(named: "back_button"), for: .normal)
         button.addTarget(self, action: #selector(closeView), for: .touchUpInside)
         return button
     }()
@@ -43,6 +43,12 @@ class SettingsView: UIView {
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func layoutSubviews() {
+        if helpView?.window == nil {
+            helpView = nil
+        }
     }
     
     private func viewSetup() {
@@ -78,8 +84,8 @@ class SettingsView: UIView {
     }
     
     private func setButtons(button: UIButton) {
-        button.setImage(UIImage(named: buttonsImage(button: button)[0]), for: .normal)
-        button.setImage(UIImage(named: buttonsImage(button: button)[1]), for: .selected)
+        button.setBackgroundImage(UIImage(named: buttonsImage(button: button)[0]), for: .normal)
+        button.setBackgroundImage(UIImage(named: buttonsImage(button: button)[1]), for: .selected)
         button.isSelected =  UserDefaults.standard.bool(forKey: codingKeys(button: button))
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(pushedButton), for: .touchUpInside)
@@ -171,7 +177,7 @@ class SettingsView: UIView {
     }
     
     @objc func closeView() {
-        self.removeFromSuperview()
+        self.animatedRemove()
     }
         
     @objc func helpViewAdding() {
@@ -179,10 +185,8 @@ class SettingsView: UIView {
             helpView = HelpView(frame: self.bounds)
             if helpView != nil {
                 addSubview(helpView!)
+                helpView?.animatedAdd()
             }
-        } else {
-            helpView!.removeFromSuperview()
-            helpView = nil
         }
     }
 }

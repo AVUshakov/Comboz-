@@ -1,6 +1,6 @@
 //
 //  HelpView.swift
-//  SetGame
+//  Comboz!
 //
 //  Created by Alexander Ushakov on 24/12/2018.
 //  Copyright © 2018 Alexander Ushakov. All rights reserved.
@@ -31,7 +31,7 @@ class HelpView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func viewSetup() {
+    private func viewSetup() {
         
         self.backgroundColor = #colorLiteral(red: 0.1764705926, green: 0.4980392158, blue: 0.7568627596, alpha: 1)
         textView.isSelectable = false
@@ -69,7 +69,7 @@ class HelpView: UIView {
     }
     
     @objc func closeView() {
-        self.removeFromSuperview()
+        self.animatedRemove()
     }
     
     func load(file name:String) -> String {

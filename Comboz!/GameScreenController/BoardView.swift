@@ -1,6 +1,6 @@
 //
 //  BoardView.swift
-//  Set: Table Game
+//  Comboz!
 //
 //  Created by Alexander Ushakov on 19.05.2018.
 //  Copyright © 2018 Alexander Ushakov. All rights reserved.

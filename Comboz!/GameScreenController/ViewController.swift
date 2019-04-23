@@ -1,6 +1,6 @@
 //
 //  ViewController.swift
-//  Set: Table Game
+//  Comboz!
 //
 //  Created by Alexander Ushakov on 15.04.2018.
 //  Copyright © 2018 Alexander Ushakov. All rights reserved.
@@ -27,11 +27,9 @@ class ViewController: UIViewController {
         return view
     }()
     
-    let defaults = UserDefaults.standard
-    
     var gameModelJSON: GameModel? {
         get {
-            if  let savedGameModel = defaults.object(forKey: "SavedGameModel") as? Data {
+            if  let savedGameModel = UserDefaults.standard.object(forKey: "SavedGameModel") as? Data {
                 let decoder = JSONDecoder()
                 if let loadedGameModel = try? decoder.decode(GameModel.self, from: savedGameModel) {
                     return loadedGameModel
@@ -43,7 +41,7 @@ class ViewController: UIViewController {
             if newValue != nil {
                 let encoder = JSONEncoder()
                 if let json = try? encoder.encode(newValue!) {
-                    defaults.set(json, forKey: "SavedGameModel")
+                    UserDefaults.standard.set(json, forKey: "SavedGameModel")
                 }
             }
         }
@@ -98,8 +96,11 @@ class ViewController: UIViewController {
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        gameModelJSON = game
-        
+        if !game.endGameDetector {
+            gameModelJSON = game
+        } else {
+            UserDefaults.standard.removeObject(forKey: "SavedGameModel")
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -162,7 +163,7 @@ class ViewController: UIViewController {
             case .ended:
                 if let cardView = recognizer.view! as? CardView {
                     hintButton.isEnabled = false
-                    game.choosenCard(index: boardView.cardViews.index(of: cardView)!)
+                    game.choosenCard(index: boardView.cardViews.firstIndex(of: cardView)!)
                     game.matchingResult()
                     if game.bonusTime {
                         timeBonusAnimation()
@@ -195,7 +196,10 @@ class ViewController: UIViewController {
         updateViewFromModel()
     }
     
-    @IBOutlet weak var timerLabel: UILabel! 
+    @IBOutlet weak var timerLabel: UILabel!
+    
+    var timerArray = [Int]()
+    var timeRecord = String()
     
     private func startTimer() {
             if !timerIsRunnning {
@@ -229,6 +233,12 @@ class ViewController: UIViewController {
                     secondString = "0\(second)"
         }
         timerLabel.text = "\(hour):\(minuteString):\(secondString)"
+        
+        timerArray.insert(hour, at: 0)
+        timerArray.insert(minute, at: 1)
+        timerArray.insert(second, at: 2)
+        
+       
     }
     
     private func deleteCardsFromView() {
@@ -271,7 +281,6 @@ class ViewController: UIViewController {
         
 //        if !game.endGameDetector && game.selectedCards.count == 2 {
         if game.endGameDetector {
-            print(game.score)
             endGameViewAdding()
         }
     }
@@ -312,13 +321,13 @@ class ViewController: UIViewController {
     
     @objc func restartGame(){
         if endGameView != nil {
-            endGameView?.removeFromSuperview()
+            endGameView?.animatedRemove()
             endGameView = nil
             timerLabel.alpha = 1
             score.alpha = 1
         }
         if pauseView != nil {
-            pauseView?.removeFromSuperview()
+            pauseView?.animatedRemove()
             blurController()
 
         }
@@ -335,6 +344,7 @@ class ViewController: UIViewController {
             backToMenuButton = pauseView!.backToMenuAnswerView?.accept
             restartGameButton = pauseView!.restartAnswerView?.accept
             view.addSubview(pauseView!)
+            pauseView?.animatedAdd()
         } else {
             view.addSubview(pauseView!)
         }
@@ -350,6 +360,23 @@ class ViewController: UIViewController {
                 currentCardsForDelete += 1
             }
         }
+        if UserDefaults.standard.object(forKey: "HiScore") != nil {
+            let hiScore = UserDefaults.standard.object(forKey: "HiScore") as! Int
+            if game.score > hiScore {
+                UserDefaults.standard.set(game.score, forKey: "HiScore")
+            }
+        } else {
+            UserDefaults.standard.set(game.score, forKey: "HiScore")
+        }
+        
+        if UserDefaults.standard.object(forKey: "TimeRecord") != nil {
+            let timerRecord = UserDefaults.standard.object(forKey: "TimeRecord") as! [Int]
+            if timerRecordChecker(arrayFaster: timerArray , arraySlower: timerRecord) {
+                UserDefaults.standard.set(timerArray, forKey: "TimeRecord")
+            }
+        } else {
+                UserDefaults.standard.set(timerArray, forKey: "TimeRecord")
+        }
         
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(3), execute: {
             if self.endGameView == nil {
@@ -360,14 +387,13 @@ class ViewController: UIViewController {
                 self.backToMenuButton = self.endGameView!.backToMenu
                 self.timerIsRunnning = false
                 self.view.addSubview(self.endGameView!)
+                self.endGameView?.animatedAdd()
             }
             UIView.animate(withDuration: 0.3,
                            animations: { self.score.alpha = 0
                                          self.timerLabel.alpha = 0 })
             self.hintButton.isEnabled = false
         })
-        
-        
     }
 
     private func addParallaxToView(view: UIImageView) {
@@ -476,7 +502,20 @@ class ViewController: UIViewController {
             pauseViewAdding()
             gameModelJSON = game
         }
-        
+    }
+    
+    private func timerRecordChecker(arrayFaster: [Int], arraySlower: [Int]) -> Bool  {
+        var returnBool = false
+        if arrayFaster[0] <= arraySlower [0] {
+            if arrayFaster[1] <= arraySlower [1] {
+                if arrayFaster[2] < arraySlower [2] {
+                    returnBool = true
+                }
+            }
+        } else {
+            returnBool = false
+        }
+        return returnBool
     }
 
 }
@@ -492,6 +531,36 @@ extension Int {
             return 0
         }
     }
+}
+
+extension UIView {
+    
+    func animatedAdd() {
+        self.transform = CGAffineTransform.identity.scaledBy(x: 0.1, y: 0.1)
+        self.alpha = 0.3
+        UIView.animate(withDuration: 0.1,
+                       delay: 0,
+                       options: .curveEaseInOut,
+                       animations: { self.transform = CGAffineTransform.identity.scaledBy(x: 1.04, y: 1.04)
+                                     self.alpha = 1},
+                       completion: { _ in
+        UIView.animate(withDuration: 0.1,
+                       delay: 0,
+                       options: .curveEaseInOut,
+                       animations: { self.transform = CGAffineTransform.identity.scaledBy(x: 1, y: 1)},
+                       completion: nil)
+        })
+    }
+    
+    func animatedRemove() {
+        UIView.animate(withDuration: 0.2,
+                       delay: 0,
+                       options: .curveEaseInOut,
+                       animations: { self.transform = CGAffineTransform.identity.scaledBy(x: 0.1, y: 0.1)
+                                     self.alpha = 0},
+                       completion: { _ in self.removeFromSuperview()})
+    }
+    
 }
 
 

@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  Set: Table Game
+//  GameModel.swift
+//  Comboz!
 //
 //  Created by Alexander Ushakov on 23.04.2018.
 //  Copyright © 2018 Alexander Ushakov. All rights reserved.
@@ -170,7 +170,7 @@ class GameModel: Codable {
 
 extension Array where Element: Equatable {
     mutating func inOut(element: Element) {
-        if let from = self.index(of: element) {
+        if let from = self.firstIndex(of: element) {
             self.remove(at: from)
         } else {
             self.append(element)

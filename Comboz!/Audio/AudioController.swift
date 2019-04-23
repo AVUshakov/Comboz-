@@ -1,6 +1,6 @@
 //
 //  AudioFile.swift
-//  SetGame
+//  Comboz!
 //
 //  Created by Alexander Ushakov on 28/02/2019.
 //  Copyright © 2019 Alexander Ushakov. All rights reserved.

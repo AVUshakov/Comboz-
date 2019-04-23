@@ -1,6 +1,6 @@
 //
 //  MainMenuViewController.swift
-//  SetGame
+//  Comboz!
 //
 //  Created by Alexander Ushakov on 09/12/2018.
 //  Copyright © 2018 Alexander Ushakov. All rights reserved.
@@ -20,10 +20,11 @@ class MainMenuViewController: UIViewController {
         return true
     }
     
+    @IBOutlet weak var bottomView: UIView!
+    
     @IBOutlet weak var backgroundImage: UIImageView!
     
-    var helpView: HelpView?
-    var settingsView: SettingsView?
+    var settingsView: SettingsView!
     
     @IBOutlet weak var playButton: UIButton!
     
@@ -44,7 +45,6 @@ class MainMenuViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         mainMenuLogo.center = CGPoint(x: view.bounds.midX, y: view.bounds.minY)
-       
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -72,18 +72,41 @@ class MainMenuViewController: UIViewController {
     }
     
     override func viewWillLayoutSubviews() {
-        if !((settingsView?.window) == nil) {
+        if settingsView?.window == nil {
             settingsView = nil
-        }
-        
-        if helpView?.window == nil {
-            helpView = nil
+            print("ok")
         }
     }
     
     @IBOutlet weak var mainMenuLogo: UIImageView!
     
     @IBOutlet weak var stackMenuButtons: UIStackView!
+    
+    @IBOutlet weak var bestTimeLabel: UILabel! {
+        didSet {
+            if let timerArray = UserDefaults.standard.object(forKey: "TimeRecord") as? [Int] {
+                
+                var minuteString = "\(timerArray[1])"
+                if timerArray[1] < 10 {
+                    minuteString = "0\(timerArray[1])"
+                }
+                
+                var secondString = "\(timerArray[2])"
+                if timerArray[2] < 10 {
+                    secondString = "0\(timerArray[2])"
+                }
+                bestTimeLabel.text = "\(timerArray[0]):\(minuteString):\(secondString)"
+            }
+        }
+    }
+    
+    @IBOutlet weak var hiscoreLabel: UILabel! {
+        didSet {
+            if let hiScore = UserDefaults.standard.object(forKey: "HiScore") {
+                hiscoreLabel.text = "\(hiScore)"
+            }
+        }
+    }
     
     @IBOutlet weak var loadingBar: UIProgressView! {
         didSet {
@@ -108,10 +131,10 @@ class MainMenuViewController: UIViewController {
     @IBAction func settingsButton(_ sender: UIButton) {
         soundFXPlay(sound: AudioController.SoundFile.tapIn.rawValue)
         settingsViewAdding()
+//        stackMenuButtons.animatedRemove()
     }
     
     private func setHiddenButtons() {
-
         stackMenuButtons.addArrangedSubview(resumeButton)
         stackMenuButtons.addArrangedSubview(newGameButton)
         resumeButton.imageView?.contentMode = .scaleAspectFill
@@ -237,11 +260,11 @@ class MainMenuViewController: UIViewController {
             settingsView = SettingsView(frame: inScreenViewRect!)
             if settingsView != nil {
                 view.addSubview(settingsView!)
+                settingsView?.animatedAdd()
             }
-        }
-        if helpView != nil {
-            helpView?.removeFromSuperview()
-            helpView = nil
+        } else {
+            settingsView?.animatedRemove()
+            settingsView = nil
         }
     }
     

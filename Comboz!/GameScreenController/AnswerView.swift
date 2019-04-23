@@ -1,6 +1,6 @@
 //
 //  AnswerView.swift
-//  SetGame
+//  Comboz!
 //
 //  Created by Alexander Ushakov on 21/03/2019.
 //  Copyright © 2019 Alexander Ushakov. All rights reserved.
@@ -28,8 +28,6 @@ class AnswerView: UIView {
     }
     
     private func viewSetup() {
-
-//        addSubview(backgroundImage)
         
         rectView.frame.size = CGSize(width: bounds.width * 0.8, height: bounds.height * 0.3)
         rectView.center = center
@@ -74,7 +72,7 @@ class AnswerView: UIView {
     }
     
     @objc func closeView() {
-        self.removeFromSuperview()
+        self.animatedRemove()
     }
     
     private func constraintsParameters() {

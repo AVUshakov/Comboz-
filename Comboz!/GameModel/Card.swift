@@ -1,6 +1,6 @@
 //
 //  Card.swift
-//  Set: Table Game
+//  Comboz!
 //
 //  Created by Alexander Ushakov on 16.04.2018.
 //  Copyright © 2018 Alexander Ushakov. All rights reserved.

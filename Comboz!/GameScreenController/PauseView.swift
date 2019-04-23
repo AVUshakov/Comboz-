@@ -1,6 +1,6 @@
 //
 //  PauseView.swift
-//  SetGame
+//  Comboz!
 //
 //  Created by Alexander Ushakov on 17/01/2019.
 //  Copyright © 2019 Alexander Ushakov. All rights reserved.
@@ -17,7 +17,6 @@ class PauseView: UIView {
     
     var stackButtonsView = UIStackView()
     
-    var helpView: HelpView?
     var settingsView: SettingsView?
     
     var animator: UIDynamicAnimator!
@@ -47,6 +46,12 @@ class PauseView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func layoutSubviews() {
+        if settingsView?.window == nil {
+            settingsView = nil
+        }
+    }
+    
     private func viewSetup() {
  
         backgroundImage.frame.size = bounds.size
@@ -60,10 +65,10 @@ class PauseView: UIView {
         stackButtonsView.alignment = .top
         addSubview(stackButtonsView)
         
-        restart.setImage(UIImage(named: "restart_button"), for: .normal)
-        settings.setImage(UIImage(named: "settings_button"), for: .normal)
-        resumeGameButton.setImage(UIImage(named: "resume_button"), for: .normal)
-        backToMenu.setImage(UIImage(named: "main_menu_button"), for: .normal)
+        restart.setBackgroundImage(UIImage(named: "restart_button"), for: .normal)
+        settings.setBackgroundImage(UIImage(named: "settings_button"), for: .normal)
+        resumeGameButton.setBackgroundImage(UIImage(named: "resume_button"), for: .normal)
+        backToMenu.setBackgroundImage(UIImage(named: "main_menu_button"), for: .normal)
 
         restart.translatesAutoresizingMaskIntoConstraints = false
         settings.translatesAutoresizingMaskIntoConstraints = false
@@ -87,7 +92,7 @@ class PauseView: UIView {
     }
     
     @objc func closePauseView() {
-        self.removeFromSuperview()
+        self.animatedRemove()
     }
     
     @objc func settingsViewAdding() {
@@ -95,9 +100,10 @@ class PauseView: UIView {
             settingsView = SettingsView(frame: self.bounds)
             if settingsView != nil {
                 addSubview(settingsView!)
+                settingsView?.animatedAdd()
             }
         } else {
-            settingsView!.removeFromSuperview()
+            settingsView!.animatedRemove()
             settingsView = nil
 
         }
@@ -120,8 +126,10 @@ class PauseView: UIView {
         switch button {
         case restart:
             addSubview(restartAnswerView!)
+            restartAnswerView?.animatedAdd()
         case backToMenu:
             addSubview(backToMenuAnswerView!)
+            backToMenuAnswerView?.animatedAdd()
         default:
             break
         }

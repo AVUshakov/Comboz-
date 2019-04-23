@@ -1,6 +1,6 @@
 //
 //  SetCardView.swift
-//  Set: Table Game
+//  Comboz!
 //
 //  Created by Alexander Ushakov on 19.05.2018.
 //  Copyright © 2018 Alexander Ushakov. All rights reserved.
@@ -234,7 +234,6 @@ class CardView: UIView {
                 layer.blink(fromColor: #colorLiteral(red: 0.9254902005, green: 0.2352941185, blue: 0.1019607857, alpha: 1).cgColor, toColor: #colorLiteral(red: 0.7450980544, green: 0.1568627506, blue: 0.07450980693, alpha: 0))
             }
         }
-
     }
     
     func copyCard() -> CardView {
