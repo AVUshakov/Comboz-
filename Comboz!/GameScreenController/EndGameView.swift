@@ -35,33 +35,36 @@ class EndGameView: UIView {
         backgroundImage.image = UIImage(named: "frame_view")
         addSubview(backgroundImage)
         
-        setAttribute(label: scoreText, string: "Score", variant: 1)
+        scoreText.attributedText = TextFont.AttributeText(_size: bounds.width * 0.15, color: #colorLiteral(red: 0.9997687936, green: 0.6423431039, blue: 0.009596501477, alpha: 1), text: "Score")
         scoreText.translatesAutoresizingMaskIntoConstraints = false
         scoreText.alpha = 0
         addSubview(scoreText)
         
-        setAttribute(label: scoreNumbers, string: "\(score)", variant: 2)
+        scoreNumbers.attributedText = TextFont.AttributeText(_size: bounds.width * 0.12, color: #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0), text: "\(score)")
         scoreNumbers.translatesAutoresizingMaskIntoConstraints = false
         scoreNumbers.alpha = 0
         addSubview(scoreNumbers)
         
-        setAttribute(label: timeText, string: "Time", variant: 1)
+        timeText.attributedText = TextFont.AttributeText(_size: bounds.width * 0.15, color: #colorLiteral(red: 0.9997687936, green: 0.6423431039, blue: 0.009596501477, alpha: 1), text: "Time")
         timeText.translatesAutoresizingMaskIntoConstraints = false
         timeText.alpha = 0
         addSubview(timeText)
         
-        setAttribute(label: timeNumbers, string: "0:00:00", variant: 2)
+        timeNumbers.attributedText = TextFont.AttributeText(_size: bounds.width * 0.12, color: #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0), text: "0:00:00")
         timeNumbers.translatesAutoresizingMaskIntoConstraints = false
         timeNumbers.alpha = 0
         addSubview(timeNumbers)
         
-        restart.setImage(UIImage(named: "restart_button"), for: .normal)
+        restart.setBackgroundImage(UIImage(named: "restart_button"), for: .normal)
+        restart.setAttributedTitle(TextFont.AttributeText(_size: bounds.width * 0.11, color: #colorLiteral(red: 0.9997687936, green: 0.6423431039, blue: 0.009596501477, alpha: 1), text: "RESTART"), for: .normal)
         restart.translatesAutoresizingMaskIntoConstraints = false
         restart.alpha = 0
         restart.isEnabled = true
         addSubview(restart)
       
-        backToMenu.setImage(UIImage(named: "main_menu_button"), for: .normal)
+        backToMenu.setBackgroundImage(UIImage(named: "main_menu_button"), for: .normal)
+        backToMenu.setAttributedTitle(TextFont.AttributeText(_size: bounds.width * 0.11, color: #colorLiteral(red: 0.9997687936, green: 0.6423431039, blue: 0.009596501477, alpha: 1), text: "MAIN MENU"), for: .normal)
+
         backToMenu.translatesAutoresizingMaskIntoConstraints = false
         backToMenu.alpha = 0
         backToMenu.isEnabled = true
@@ -72,11 +75,7 @@ class EndGameView: UIView {
         animation()
         
     }
-    
-    @objc func tap() {
-        print("tap ok")
-    }
-    
+
     private func constraintsParameters() {
         
         scoreText.topAnchor.constraint(equalTo: topAnchor, constant: bounds.height * 0.1).isActive = true
@@ -100,27 +99,6 @@ class EndGameView: UIView {
         
     }
     
-    private func setAttribute(label: UILabel, string: String, variant: Int) {
-        let shadow = NSShadow()
-        shadow.shadowBlurRadius = 1
-        shadow.shadowColor = UIColor.black
-        shadow.shadowOffset = CGSize(width: 2, height: 2)
-      
-        let stringAttributeText = [NSAttributedString.Key.font : UIFont(name: "junegull-regular", size: bounds.width * 0.15)!,
-                                   NSAttributedString.Key.shadow: shadow,
-                                   NSAttributedString.Key.foregroundColor: #colorLiteral(red: 0.9997687936, green: 0.6423431039, blue: 0.009596501477, alpha: 1)]
-        let stringAttributeNumbers = [NSAttributedString.Key.font : UIFont(name: "junegull-regular", size: bounds.width * 0.12)!,
-                                      NSAttributedString.Key.shadow: shadow,
-                                      NSAttributedString.Key.foregroundColor: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)]
-        switch variant {
-        case 1:
-            label.attributedText = NSAttributedString(string: string, attributes: stringAttributeText)
-        default:
-            label.attributedText = NSAttributedString(string: string, attributes: stringAttributeNumbers)
-        }
-        
-    }
-    
     private func animation() {
         UIView.animate(withDuration: 0.3,
                        delay: 0,
@@ -130,10 +108,7 @@ class EndGameView: UIView {
         UIView.animate(withDuration: 0.5,
                        delay: 0,
                        options: .curveEaseInOut,
-                       animations: { self.scoreNumbers.alpha = 1
-                                     self.setAttribute(label: self.scoreNumbers,
-                                                       string: "\(self.score)",
-                                                       variant: 2) },
+                       animations: { self.scoreNumbers.alpha = 1 },
                        completion: { finished in
         UIView.animate(withDuration: 0.3,
                        delay: 0,
@@ -143,10 +118,7 @@ class EndGameView: UIView {
         UIView.animate(withDuration: 0.2,
                        delay: 0,
                        options: .curveEaseInOut,
-                       animations: { self.timeNumbers.alpha = 1
-                                     self.setAttribute(label: self.timeNumbers,
-                                                       string: self.time,
-                                                       variant: 2) },
+                       animations: { self.timeNumbers.alpha = 1 },
                        completion: { finished in
                                     self.backToMenu.center.y +=  self.backToMenu.bounds.height * 0.5
                                     self.restart.center.y +=  self.restart.bounds.height * 0.5

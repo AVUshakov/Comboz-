@@ -74,7 +74,6 @@ class MainMenuViewController: UIViewController {
     override func viewWillLayoutSubviews() {
         if settingsView?.window == nil {
             settingsView = nil
-            print("ok")
         }
     }
     

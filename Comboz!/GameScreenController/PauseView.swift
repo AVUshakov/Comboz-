@@ -69,6 +69,11 @@ class PauseView: UIView {
         settings.setBackgroundImage(UIImage(named: "settings_button"), for: .normal)
         resumeGameButton.setBackgroundImage(UIImage(named: "resume_button"), for: .normal)
         backToMenu.setBackgroundImage(UIImage(named: "main_menu_button"), for: .normal)
+        
+        restart.setAttributedTitle(TextFont.AttributeText(_size: bounds.width * 0.11, color: #colorLiteral(red: 0.9997687936, green: 0.6423431039, blue: 0.009596501477, alpha: 1), text: "RESTART"), for: .normal)
+        settings.setAttributedTitle(TextFont.AttributeText(_size: bounds.width * 0.11, color: #colorLiteral(red: 0.9997687936, green: 0.6423431039, blue: 0.009596501477, alpha: 1), text: "SETTINGS"), for: .normal)
+        resumeGameButton.setAttributedTitle(TextFont.AttributeText(_size: bounds.width * 0.11, color: #colorLiteral(red: 0.9997687936, green: 0.6423431039, blue: 0.009596501477, alpha: 1), text: "RESUME"), for: .normal)
+        backToMenu.setAttributedTitle(TextFont.AttributeText(_size: bounds.width * 0.11, color: #colorLiteral(red: 0.9997687936, green: 0.6423431039, blue: 0.009596501477, alpha: 1), text: "MAIN MENU"), for: .normal)
 
         restart.translatesAutoresizingMaskIntoConstraints = false
         settings.translatesAutoresizingMaskIntoConstraints = false

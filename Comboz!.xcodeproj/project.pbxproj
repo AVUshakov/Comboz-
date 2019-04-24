@@ -11,9 +11,11 @@
 		0431EA832243AD07008074D3 /* AnswerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0431EA822243AD07008074D3 /* AnswerView.swift */; };
 		0484AE3421D14BE90076EBB2 /* HelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0484AE3321D14BE90076EBB2 /* HelpView.swift */; };
 		0484AE3621DA3F590076EBB2 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0484AE3521DA3F590076EBB2 /* SettingsView.swift */; };
+		04888115226F0FF900FB0D5B /* FontAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04888114226F0FF900FB0D5B /* FontAttributes.swift */; };
+		0488811722705E0B00FB0D5B /* rulesRU.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0488811622705E0B00FB0D5B /* rulesRU.txt */; };
+		04888118227068E300FB0D5B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0488811A227068E300FB0D5B /* Main.storyboard */; };
 		048D0A492215EC0A00F23A12 /* junegull-regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 048D0A482215EC0A00F23A12 /* junegull-regular.ttf */; };
 		048D9B6C21BD50F300865182 /* MainMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 048D9B6B21BD50F300865182 /* MainMenuViewController.swift */; };
-		04C7F80820F887D7004D093C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 04C7F80720F887D7004D093C /* Main.storyboard */; };
 		04CAB79121F1008F00A1C60B /* ScreenGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04CAB79021F1008F00A1C60B /* ScreenGrid.swift */; };
 		04CAB79321F101FE00A1C60B /* PauseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04CAB79221F101FE00A1C60B /* PauseView.swift */; };
 		04E22F642227209E007BD48A /* tapInSound.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 04E22F632227209E007BD48A /* tapInSound.mp3 */; };
@@ -36,9 +38,12 @@
 		0431EA822243AD07008074D3 /* AnswerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerView.swift; sourceTree = "<group>"; };
 		0484AE3321D14BE90076EBB2 /* HelpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpView.swift; sourceTree = "<group>"; };
 		0484AE3521DA3F590076EBB2 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		04888114226F0FF900FB0D5B /* FontAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontAttributes.swift; sourceTree = "<group>"; };
+		0488811622705E0B00FB0D5B /* rulesRU.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = rulesRU.txt; sourceTree = "<group>"; };
+		04888119227068E300FB0D5B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		0488811B22706C1D00FB0D5B /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Main.strings; sourceTree = "<group>"; };
 		048D0A482215EC0A00F23A12 /* junegull-regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "junegull-regular.ttf"; sourceTree = "<group>"; };
 		048D9B6B21BD50F300865182 /* MainMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMenuViewController.swift; sourceTree = "<group>"; };
-		04C7F80720F887D7004D093C /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Main.storyboard; path = "../../Trash folder/Main.storyboard"; sourceTree = "<group>"; };
 		04CAB79021F1008F00A1C60B /* ScreenGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenGrid.swift; sourceTree = "<group>"; };
 		04CAB79221F101FE00A1C60B /* PauseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PauseView.swift; sourceTree = "<group>"; };
 		04E22F632227209E007BD48A /* tapInSound.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = tapInSound.mp3; sourceTree = "<group>"; };
@@ -89,6 +94,7 @@
 				0431EA8022398693008074D3 /* EndGameView.swift */,
 				04F2BB6120F689ED00442D80 /* BoardView.swift */,
 				04F2BB5B20F689EC00442D80 /* ViewController.swift */,
+				04888114226F0FF900FB0D5B /* FontAttributes.swift */,
 			);
 			path = GameScreenController;
 			sourceTree = "<group>";
@@ -137,11 +143,12 @@
 				04F10A8420C7CECE006615AA /* Supporting Files */,
 				04CAB78B21F0FF7500A1C60B /* GameScreenController */,
 				04CAB78A21F0FF0D00A1C60B /* MainMenuController */,
-				04C7F80720F887D7004D093C /* Main.storyboard */,
+				0488811A227068E300FB0D5B /* Main.storyboard */,
 				04F2BB5A20F689EC00442D80 /* LaunchScreen.storyboard */,
 				048D0A482215EC0A00F23A12 /* junegull-regular.ttf */,
 				04E22F67222BBE77007BD48A /* Audio */,
 				04E56BD921CAD8F80047E7ED /* rules.txt */,
+				0488811622705E0B00FB0D5B /* rulesRU.txt */,
 				04CAB78D21F0FFDB00A1C60B /* GameModel */,
 				04F10A6C20C7CE11006615AA /* Info.plist */,
 			);
@@ -200,6 +207,7 @@
 			knownRegions = (
 				en,
 				Base,
+				ru,
 			);
 			mainGroup = 04F10A5420C7CE10006615AA;
 			productRefGroup = 04F10A5E20C7CE10006615AA /* Products */;
@@ -218,7 +226,8 @@
 			files = (
 				048D0A492215EC0A00F23A12 /* junegull-regular.ttf in Resources */,
 				04E22F642227209E007BD48A /* tapInSound.mp3 in Resources */,
-				04C7F80820F887D7004D093C /* Main.storyboard in Resources */,
+				04888118227068E300FB0D5B /* Main.storyboard in Resources */,
+				0488811722705E0B00FB0D5B /* rulesRU.txt in Resources */,
 				04E5D3DD21C2E5DC00F06525 /* Default-568h@2x.png in Resources */,
 				04F2BB6220F689ED00442D80 /* LaunchScreen.storyboard in Resources */,
 				04F10A6820C7CE11006615AA /* Assets.xcassets in Resources */,
@@ -246,6 +255,7 @@
 				04F2BB6620F689ED00442D80 /* CardsDeck.swift in Sources */,
 				04F2BB6520F689ED00442D80 /* Card.swift in Sources */,
 				04F2BB6920F689ED00442D80 /* BoardView.swift in Sources */,
+				04888115226F0FF900FB0D5B /* FontAttributes.swift in Sources */,
 				0484AE3621DA3F590076EBB2 /* SettingsView.swift in Sources */,
 				04CAB79121F1008F00A1C60B /* ScreenGrid.swift in Sources */,
 			);
@@ -253,11 +263,24 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXVariantGroup section */
+		0488811A227068E300FB0D5B /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				04888119227068E300FB0D5B /* Base */,
+				0488811B22706C1D00FB0D5B /* ru */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
 /* Begin XCBuildConfiguration section */
 		04F10A6D20C7CE11006615AA /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -318,6 +341,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";

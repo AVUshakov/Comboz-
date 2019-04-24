@@ -45,26 +45,19 @@ class AnswerView: UIView {
         stackButton.addArrangedSubview(cancel)
         rectView.addSubview(stackButton)
         
-        let shadow = NSShadow()
-        shadow.shadowBlurRadius = 1
-        shadow.shadowColor = UIColor.black
-        shadow.shadowOffset = CGSize(width: 2, height: 2)
-        
-        let stringAttributeText = [NSAttributedString.Key.font : UIFont(name: "junegull-regular", size: bounds.width * 0.05)!,
-                                   NSAttributedString.Key.shadow: shadow,
-                                   NSAttributedString.Key.foregroundColor: #colorLiteral(red: 0.9997687936, green: 0.6423431039, blue: 0.009596501477, alpha: 1)]
-        
-        textLabel.attributedText = NSAttributedString(string: "Are you sure?", attributes: stringAttributeText)
+        textLabel.attributedText = TextFont.AttributeText(_size: bounds.width * 0.07, color: #colorLiteral(red: 0.9997687936, green: 0.6423431039, blue: 0.009596501477, alpha: 1), text: "Are you sure?")
         textLabel.translatesAutoresizingMaskIntoConstraints = false
         textLabel.alpha = 1
         rectView.addSubview(textLabel)
         
-        cancel.setImage(UIImage(named: "no_btn"), for: .normal)
+        cancel.setBackgroundImage(UIImage(named: "no_btn"), for: .normal)
+        cancel.setAttributedTitle(TextFont.AttributeText(_size: bounds.width * 0.08, color: #colorLiteral(red: 0.9997687936, green: 0.6423431039, blue: 0.009596501477, alpha: 1), text: "No"), for: .normal)
         cancel.translatesAutoresizingMaskIntoConstraints = false
         cancel.imageView?.contentMode = .scaleAspectFill
         cancel.addTarget(self, action: #selector(closeView), for: .touchUpInside)
         
-        accept.setImage(UIImage(named: "yes_btn"), for: .normal)
+        accept.setBackgroundImage(UIImage(named: "yes_btn"), for: .normal)
+        accept.setAttributedTitle(TextFont.AttributeText(_size: bounds.width * 0.08, color: #colorLiteral(red: 0.9997687936, green: 0.6423431039, blue: 0.009596501477, alpha: 1), text: "Yes"), for: .normal)
         accept.translatesAutoresizingMaskIntoConstraints = false
         accept.imageView?.contentMode = .scaleAspectFill
 

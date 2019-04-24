@@ -15,21 +15,11 @@ class SettingsView: UIView {
     var soundFX = UIButton()
     var music = UIButton()
     
-    var rules: UIButton = {
-        let button = UIButton()
-        button.setBackgroundImage(UIImage(named: "rules_button"), for: .normal)
-        button.addTarget(self, action: #selector(helpViewAdding), for: .touchUpInside)
-        return button
-    }()
-    var backButton: UIButton = {
-        let button = UIButton()
-        button.setBackgroundImage(UIImage(named: "back_button"), for: .normal)
-        button.addTarget(self, action: #selector(closeView), for: .touchUpInside)
-        return button
-    }()
+    var rules = UIButton()
+    var backButton = UIButton()
     
     var backgroundImage = UIImageView()
-    var settigsImage = UIImageView()
+    var settigsLable = UILabel()
     
     var stackButton = UIStackView()
     
@@ -61,17 +51,22 @@ class SettingsView: UIView {
         stackButton.spacing = -10
         addSubview(stackButton)
         
-        settigsImage.image = UIImage(named: "settings_image")
-        settigsImage.translatesAutoresizingMaskIntoConstraints = false
-        settigsImage.contentMode = .scaleAspectFill
-        
-        addSubview(settigsImage)
+        settigsLable.attributedText = TextFont.AttributeText(_size: bounds.width * 0.11, color: #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0), text: "SETTINGS")
+        settigsLable.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(settigsLable)
         
         setButtons(button: music)
         setButtons(button: parallaxButton)
         setButtons(button: soundFX)
         
+        rules.setBackgroundImage(UIImage(named: "rules_button"), for: .normal)
+        rules.setAttributedTitle(TextFont.AttributeText(_size: bounds.width * 0.11, color: #colorLiteral(red: 0.9997687936, green: 0.6423431039, blue: 0.009596501477, alpha: 1), text: "Rules"), for: .normal)
+        rules.addTarget(self, action: #selector(helpViewAdding), for: .touchUpInside)
         rules.translatesAutoresizingMaskIntoConstraints = false
+        
+        backButton.setBackgroundImage(UIImage(named: "back_button"), for: .normal)
+        backButton.setAttributedTitle(TextFont.AttributeText(_size: bounds.width * 0.11, color: #colorLiteral(red: 0.9997687936, green: 0.6423431039, blue: 0.009596501477, alpha: 1), text: "BACK"), for: .normal)
+        backButton.addTarget(self, action: #selector(closeView), for: .touchUpInside)
         backButton.translatesAutoresizingMaskIntoConstraints = false
         
         stackButton.addArrangedSubview(parallaxButton)
@@ -86,6 +81,8 @@ class SettingsView: UIView {
     private func setButtons(button: UIButton) {
         button.setBackgroundImage(UIImage(named: buttonsImage(button: button)[0]), for: .normal)
         button.setBackgroundImage(UIImage(named: buttonsImage(button: button)[1]), for: .selected)
+        button.setAttributedTitle(TextFont.AttributeText(_size: bounds.width * 0.11, color: #colorLiteral(red: 0.9997687936, green: 0.6423431039, blue: 0.009596501477, alpha: 1), text: "\(buttonsTitle(button: button))"), for: .normal)
+        button.setAttributedTitle(TextFont.AttributeText(_size: bounds.width * 0.11, color: #colorLiteral(red: 0.9997687936, green: 0.6423431039, blue: 0.009596501477, alpha: 1), text: "\(buttonsTitle(button: button))"), for: .selected)
         button.isSelected =  UserDefaults.standard.bool(forKey: codingKeys(button: button))
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(pushedButton), for: .touchUpInside)
@@ -99,14 +96,14 @@ class SettingsView: UIView {
     
     private func buttonsConstrainteParameters() {
         
-        settigsImage.heightAnchor.constraint(lessThanOrEqualToConstant: bounds.height * 0.06).isActive = true
-        settigsImage.widthAnchor.constraint(lessThanOrEqualToConstant: bounds.width * 0.5).isActive = true
-        settigsImage.topAnchor.constraint(equalTo: topAnchor, constant: bounds.height * 0.1).isActive = true
-        settigsImage.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        settigsLable.heightAnchor.constraint(lessThanOrEqualToConstant: bounds.height * 0.06).isActive = true
+        settigsLable.widthAnchor.constraint(lessThanOrEqualToConstant: bounds.width * 0.5).isActive = true
+        settigsLable.topAnchor.constraint(equalTo: topAnchor, constant: bounds.height * 0.07).isActive = true
+        settigsLable.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         
         stackButton.heightAnchor.constraint(lessThanOrEqualToConstant: bounds.height).isActive = true
         stackButton.widthAnchor.constraint(lessThanOrEqualToConstant: bounds.width * 0.8).isActive = true
-        stackButton.topAnchor.constraint(equalTo: settigsImage.bottomAnchor, constant: bounds.height * 0.03).isActive = true
+        stackButton.topAnchor.constraint(equalTo: settigsLable.bottomAnchor, constant: bounds.height * 0.03).isActive = true
         stackButton.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         
         parallaxButton.heightAnchor.constraint(equalToConstant: self.bounds.height / 6).isActive = true
@@ -161,6 +158,25 @@ class SettingsView: UIView {
             break
         }
         return image
+    }
+    
+    private func buttonsTitle(button: UIButton) -> String {
+        var text = String()
+        switch button {
+        case parallaxButton:
+            text = "PARALLAX"
+        case music:
+            text = "MUSIC"
+        case soundFX:
+            text = "SOUND FX"
+        case rules:
+            text = "RULES"
+        case backButton:
+            text = "BACK"
+        default:
+            break
+        }
+        return text
     }
     
     private func saveOption(name: String, button: UIButton) {

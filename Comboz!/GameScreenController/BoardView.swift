@@ -12,7 +12,7 @@ class BoardView: UIView {
     
     var cardViews = [CardView]()
 
-    var gridRows:Int { return gridCards?.dimensions.rowCount ?? 0 }
+    var gridRows: Int { return gridCards?.dimensions.rowCount ?? 0 }
     private var gridCards: ScreenGrid?
     
     private func layoutSetCard() {
@@ -26,14 +26,14 @@ class BoardView: UIView {
                                                                        options: [.curveEaseInOut],
                                                                        animations: {
                                                                         self.cardViews[row * grid.dimensions.columnCount + column].frame = grid[row,column]!.insetBy(dx: Constants.spacingDx, dy: Constants.spacingDy)
-
-                    },completion: nil)
+                                                                    },completion: nil)
                         }
                     }
                 }
             }
         }
     }
+    
     func removeCardsView(cardsViewForRemove: [CardView]) {
         cardsViewForRemove.forEach{ (cardView) in
             cardViews.removeArray(elements: [cardView])

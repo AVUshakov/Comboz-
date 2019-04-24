@@ -1,0 +1,21 @@
+
+/* Class = "UILabel"; text = "time  bonus !"; ObjectID = "43h-pR-Z99"; */
+"43h-pR-Z99.text" = "time  bonus !";
+
+/* Class = "UIButton"; normalTitle = "Pause"; ObjectID = "4L4-JD-A2n"; */
+"4L4-JD-A2n.normalTitle" = "ПАУЗА";
+
+/* Class = "UILabel"; text = "0000"; ObjectID = "7EI-KV-DkH"; */
+"7EI-KV-DkH.text" = "0000";
+
+/* Class = "UILabel"; text = "Score: 0"; ObjectID = "CFx-r4-MPU"; */
+"CFx-r4-MPU.text" = "СЧЕТ: 0";
+
+/* Class = "UIButton"; normalTitle = "HINT"; ObjectID = "FN7-cq-bOr"; */
+"FN7-cq-bOr.normalTitle" = "ПОДСКАЗКА";
+
+/* Class = "UILabel"; text = "0:00:00"; ObjectID = "d3b-RF-LXL"; */
+"d3b-RF-LXL.text" = "0:00:00";
+
+/* Class = "UILabel"; text = "0000"; ObjectID = "f7G-34-ziz"; */
+"f7G-34-ziz.text" = "0000";

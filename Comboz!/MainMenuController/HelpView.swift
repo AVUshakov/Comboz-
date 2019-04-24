@@ -43,7 +43,20 @@ class HelpView: UIView {
         textView.backgroundColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0)
         textView.textColor = #colorLiteral(red: 0.9998916984, green: 1, blue: 0.9998809695, alpha: 1)
 
-        let attributedString = NSMutableAttributedString(string: load(file: "rules"))
+        var attributedString = NSMutableAttributedString()
+        
+        let langStr = Locale.current.languageCode
+        
+        print(langStr!)
+        
+        switch langStr {
+        case "en":
+            attributedString = NSMutableAttributedString(string: load(file: "rules"))
+        case "ru":
+            attributedString = NSMutableAttributedString(string: load(file: "rulesRU"))
+        default:
+            break
+        }
 
         let textAtachment = NSTextAttachment()
         textAtachment.image = UIImage(named: "label1")
