@@ -9,6 +9,13 @@
 /* Begin PBXBuildFile section */
 		0431EA8122398693008074D3 /* EndGameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0431EA8022398693008074D3 /* EndGameView.swift */; };
 		0431EA832243AD07008074D3 /* AnswerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0431EA822243AD07008074D3 /* AnswerView.swift */; };
+		044089FB22A51A8A00CFB2B7 /* AnimatedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044089FA22A51A8A00CFB2B7 /* AnimatedView.swift */; };
+		04614A67227B276100FADE36 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 04614A65227B276100FADE36 /* InfoPlist.strings */; };
+		04614A6A227B276100FADE36 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 04614A68227B276100FADE36 /* Localizable.strings */; };
+		04614A6F227E19DF00FADE36 /* nanopb.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04614A6B227E19DE00FADE36 /* nanopb.framework */; };
+		04614A70227E19DF00FADE36 /* GoogleUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04614A6C227E19DF00FADE36 /* GoogleUtilities.framework */; };
+		04614A71227E19DF00FADE36 /* GoogleMobileAds.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04614A6D227E19DF00FADE36 /* GoogleMobileAds.framework */; };
+		04614A72227E19DF00FADE36 /* GoogleAppMeasurement.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04614A6E227E19DF00FADE36 /* GoogleAppMeasurement.framework */; };
 		0484AE3421D14BE90076EBB2 /* HelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0484AE3321D14BE90076EBB2 /* HelpView.swift */; };
 		0484AE3621DA3F590076EBB2 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0484AE3521DA3F590076EBB2 /* SettingsView.swift */; };
 		04888115226F0FF900FB0D5B /* FontAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04888114226F0FF900FB0D5B /* FontAttributes.swift */; };
@@ -36,12 +43,19 @@
 /* Begin PBXFileReference section */
 		0431EA8022398693008074D3 /* EndGameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndGameView.swift; sourceTree = "<group>"; };
 		0431EA822243AD07008074D3 /* AnswerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerView.swift; sourceTree = "<group>"; };
+		044089FA22A51A8A00CFB2B7 /* AnimatedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimatedView.swift; sourceTree = "<group>"; };
+		04614A64227B274700FADE36 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Main.strings; sourceTree = "<group>"; };
+		04614A66227B276100FADE36 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		04614A69227B276100FADE36 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
+		04614A6B227E19DE00FADE36 /* nanopb.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = nanopb.framework; sourceTree = "<group>"; };
+		04614A6C227E19DF00FADE36 /* GoogleUtilities.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleUtilities.framework; sourceTree = "<group>"; };
+		04614A6D227E19DF00FADE36 /* GoogleMobileAds.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleMobileAds.framework; sourceTree = "<group>"; };
+		04614A6E227E19DF00FADE36 /* GoogleAppMeasurement.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleAppMeasurement.framework; sourceTree = "<group>"; };
 		0484AE3321D14BE90076EBB2 /* HelpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpView.swift; sourceTree = "<group>"; };
 		0484AE3521DA3F590076EBB2 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		04888114226F0FF900FB0D5B /* FontAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontAttributes.swift; sourceTree = "<group>"; };
 		0488811622705E0B00FB0D5B /* rulesRU.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = rulesRU.txt; sourceTree = "<group>"; };
 		04888119227068E300FB0D5B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		0488811B22706C1D00FB0D5B /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Main.strings; sourceTree = "<group>"; };
 		048D0A482215EC0A00F23A12 /* junegull-regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "junegull-regular.ttf"; sourceTree = "<group>"; };
 		048D9B6B21BD50F300865182 /* MainMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMenuViewController.swift; sourceTree = "<group>"; };
 		04CAB79021F1008F00A1C60B /* ScreenGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenGrid.swift; sourceTree = "<group>"; };
@@ -68,16 +82,32 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				04614A71227E19DF00FADE36 /* GoogleMobileAds.framework in Frameworks */,
+				04614A70227E19DF00FADE36 /* GoogleUtilities.framework in Frameworks */,
+				04614A72227E19DF00FADE36 /* GoogleAppMeasurement.framework in Frameworks */,
+				04614A6F227E19DF00FADE36 /* nanopb.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		04774F24227E1F4600458D1A /* GoogleMobileAds */ = {
+			isa = PBXGroup;
+			children = (
+				04614A6E227E19DF00FADE36 /* GoogleAppMeasurement.framework */,
+				04614A6D227E19DF00FADE36 /* GoogleMobileAds.framework */,
+				04614A6C227E19DF00FADE36 /* GoogleUtilities.framework */,
+				04614A6B227E19DE00FADE36 /* nanopb.framework */,
+			);
+			path = GoogleMobileAds;
+			sourceTree = "<group>";
+		};
 		04CAB78A21F0FF0D00A1C60B /* MainMenuController */ = {
 			isa = PBXGroup;
 			children = (
 				048D9B6B21BD50F300865182 /* MainMenuViewController.swift */,
+				044089FA22A51A8A00CFB2B7 /* AnimatedView.swift */,
 				0484AE3521DA3F590076EBB2 /* SettingsView.swift */,
 				0484AE3321D14BE90076EBB2 /* HelpView.swift */,
 			);
@@ -94,7 +124,6 @@
 				0431EA8022398693008074D3 /* EndGameView.swift */,
 				04F2BB6120F689ED00442D80 /* BoardView.swift */,
 				04F2BB5B20F689EC00442D80 /* ViewController.swift */,
-				04888114226F0FF900FB0D5B /* FontAttributes.swift */,
 			);
 			path = GameScreenController;
 			sourceTree = "<group>";
@@ -147,10 +176,13 @@
 				04F2BB5A20F689EC00442D80 /* LaunchScreen.storyboard */,
 				048D0A482215EC0A00F23A12 /* junegull-regular.ttf */,
 				04E22F67222BBE77007BD48A /* Audio */,
+				04774F24227E1F4600458D1A /* GoogleMobileAds */,
 				04E56BD921CAD8F80047E7ED /* rules.txt */,
 				0488811622705E0B00FB0D5B /* rulesRU.txt */,
 				04CAB78D21F0FFDB00A1C60B /* GameModel */,
 				04F10A6C20C7CE11006615AA /* Info.plist */,
+				04614A68227B276100FADE36 /* Localizable.strings */,
+				04614A65227B276100FADE36 /* InfoPlist.strings */,
 			);
 			path = "Comboz!";
 			sourceTree = "<group>";
@@ -160,6 +192,7 @@
 			children = (
 				04F10A6720C7CE11006615AA /* Assets.xcassets */,
 				04F10A6020C7CE10006615AA /* AppDelegate.swift */,
+				04888114226F0FF900FB0D5B /* FontAttributes.swift */,
 			);
 			path = "Supporting Files";
 			sourceTree = "<group>";
@@ -229,8 +262,10 @@
 				04888118227068E300FB0D5B /* Main.storyboard in Resources */,
 				0488811722705E0B00FB0D5B /* rulesRU.txt in Resources */,
 				04E5D3DD21C2E5DC00F06525 /* Default-568h@2x.png in Resources */,
+				04614A6A227B276100FADE36 /* Localizable.strings in Resources */,
 				04F2BB6220F689ED00442D80 /* LaunchScreen.storyboard in Resources */,
 				04F10A6820C7CE11006615AA /* Assets.xcassets in Resources */,
+				04614A67227B276100FADE36 /* InfoPlist.strings in Resources */,
 				04E56BDA21CAD8F80047E7ED /* rules.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -257,6 +292,7 @@
 				04F2BB6920F689ED00442D80 /* BoardView.swift in Sources */,
 				04888115226F0FF900FB0D5B /* FontAttributes.swift in Sources */,
 				0484AE3621DA3F590076EBB2 /* SettingsView.swift in Sources */,
+				044089FB22A51A8A00CFB2B7 /* AnimatedView.swift in Sources */,
 				04CAB79121F1008F00A1C60B /* ScreenGrid.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -264,11 +300,27 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
+		04614A65227B276100FADE36 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				04614A66227B276100FADE36 /* ru */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		04614A68227B276100FADE36 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				04614A69227B276100FADE36 /* ru */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
 		0488811A227068E300FB0D5B /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
 				04888119227068E300FB0D5B /* Base */,
-				0488811B22706C1D00FB0D5B /* ru */,
+				04614A64227B274700FADE36 /* ru */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -279,7 +331,7 @@
 		04F10A6D20C7CE11006615AA /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -312,8 +364,10 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_BITCODE = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				FRAMEWORK_SEARCH_PATHS = "/Users/mac/Desktop/Comboz!/Comboz!/GoogleMobileAds";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -340,7 +394,7 @@
 		04F10A6E20C7CE11006615AA /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -373,8 +427,10 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_BITCODE = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				FRAMEWORK_SEARCH_PATHS = "/Users/mac/Desktop/Comboz!/Comboz!/GoogleMobileAds";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -398,11 +454,16 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = D95RMNNPA6;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Comboz!/GameScreenController",
+				);
 				INFOPLIST_FILE = "$(SRCROOT)/Comboz!/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = AlexanderUshakov.Comboz;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -416,11 +477,16 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = D95RMNNPA6;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Comboz!/GameScreenController",
+				);
 				INFOPLIST_FILE = "$(SRCROOT)/Comboz!/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = AlexanderUshakov.Comboz;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;

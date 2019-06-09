@@ -11,7 +11,7 @@ import AVFoundation
 
 class SettingsView: UIView {
     
-    var parallaxButton = UIButton()
+    var vibration = UIButton()
     var soundFX = UIButton()
     var music = UIButton()
     
@@ -19,11 +19,24 @@ class SettingsView: UIView {
     var backButton = UIButton()
     
     var backgroundImage = UIImageView()
-    var settigsLable = UILabel()
+    var settingsLable = UILabel()
+    
+    let scaleRatio : CGFloat = 0.12
     
     var stackButton = UIStackView()
     
     var helpView: HelpView?
+    
+    var oldRect = CGRect()
+    
+    struct LocalizedText {
+        static let parallaxButton  = NSLocalizedString("VIBRATION", comment: "vibration_button")
+        static let soundFX         = NSLocalizedString("SOUND FX", comment: "soundFX_button")
+        static let music           = NSLocalizedString("MUSIC", comment: "music_button")
+        static let rules           = NSLocalizedString("RULES", comment: "rules_button")
+        static let backButton      = NSLocalizedString("BACK", comment: "backButton_button")
+        static let settigsLable    = NSLocalizedString("SETTINGS", comment: "settigsLable_button")
+    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -36,40 +49,48 @@ class SettingsView: UIView {
     }
     
     override func layoutSubviews() {
-        if helpView?.window == nil {
+        if helpView?.window == nil && helpView != nil {
             helpView = nil
         }
     }
     
     private func viewSetup() {
-        backgroundImage.frame.size = bounds.size
-        backgroundImage.image = UIImage(named: "frame_view")
+                
+        backgroundImage.frame.size = CGSize(width: frame.width * 0.8, height: frame.height * 0.6)
+        backgroundImage.center = center
+        backgroundImage.image = UIImage(named: "Menu")
         addSubview(backgroundImage)
         
+        stackButton.frame = backgroundImage.frame
         stackButton.axis = .vertical
         stackButton.translatesAutoresizingMaskIntoConstraints = false
-        stackButton.spacing = -10
+        stackButton.spacing = 10
         addSubview(stackButton)
         
-        settigsLable.attributedText = TextFont.AttributeText(_size: bounds.width * 0.11, color: #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0), text: "SETTINGS")
-        settigsLable.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(settigsLable)
+        settingsLable.attributedText = TextFont.AttributeText(_size: bounds.width * 1.4, color: #colorLiteral(red: 0.9997687936, green: 0.6423431039, blue: 0.009596501477, alpha: 1), text: LocalizedText.settigsLable)
+        settingsLable.adjustsFontSizeToFitWidth = true
+        settingsLable.translatesAutoresizingMaskIntoConstraints = false
+        settingsLable.textAlignment = .center
         
         setButtons(button: music)
-        setButtons(button: parallaxButton)
+        setButtons(button: vibration)
         setButtons(button: soundFX)
         
-        rules.setBackgroundImage(UIImage(named: "rules_button"), for: .normal)
-        rules.setAttributedTitle(TextFont.AttributeText(_size: bounds.width * 0.11, color: #colorLiteral(red: 0.9997687936, green: 0.6423431039, blue: 0.009596501477, alpha: 1), text: "Rules"), for: .normal)
+        rules.setBackgroundImage(UIImage(named: "Def_button"), for: .normal)
+        rules.setAttributedTitle(TextFont.AttributeText(_size: bounds.width, color: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), text: LocalizedText.rules), for: .normal)
         rules.addTarget(self, action: #selector(helpViewAdding), for: .touchUpInside)
         rules.translatesAutoresizingMaskIntoConstraints = false
+        rules.titleLabel?.adjustsFontSizeToFitWidth = true
         
-        backButton.setBackgroundImage(UIImage(named: "back_button"), for: .normal)
-        backButton.setAttributedTitle(TextFont.AttributeText(_size: bounds.width * 0.11, color: #colorLiteral(red: 0.9997687936, green: 0.6423431039, blue: 0.009596501477, alpha: 1), text: "BACK"), for: .normal)
+        backButton.setBackgroundImage(UIImage(named: "Back_button"), for: .normal)
+        backButton.setAttributedTitle(TextFont.AttributeText(_size: bounds.width, color: #colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1), text: LocalizedText.backButton), for: .normal)
         backButton.addTarget(self, action: #selector(closeView), for: .touchUpInside)
         backButton.translatesAutoresizingMaskIntoConstraints = false
+        backButton.titleLabel?.adjustsFontSizeToFitWidth = true
+
         
-        stackButton.addArrangedSubview(parallaxButton)
+        stackButton.addArrangedSubview(settingsLable)
+        stackButton.addArrangedSubview(vibration)
         stackButton.addArrangedSubview(soundFX)
         stackButton.addArrangedSubview(music)
         stackButton.addArrangedSubview(rules)
@@ -81,36 +102,34 @@ class SettingsView: UIView {
     private func setButtons(button: UIButton) {
         button.setBackgroundImage(UIImage(named: buttonsImage(button: button)[0]), for: .normal)
         button.setBackgroundImage(UIImage(named: buttonsImage(button: button)[1]), for: .selected)
-        button.setAttributedTitle(TextFont.AttributeText(_size: bounds.width * 0.11, color: #colorLiteral(red: 0.9997687936, green: 0.6423431039, blue: 0.009596501477, alpha: 1), text: "\(buttonsTitle(button: button))"), for: .normal)
-        button.setAttributedTitle(TextFont.AttributeText(_size: bounds.width * 0.11, color: #colorLiteral(red: 0.9997687936, green: 0.6423431039, blue: 0.009596501477, alpha: 1), text: "\(buttonsTitle(button: button))"), for: .selected)
+        button.setAttributedTitle(TextFont.AttributeText(_size: bounds.width, color: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), text: "\(buttonsTitle(button: button))"), for: .normal)
+        button.setAttributedTitle(TextFont.AttributeText(_size: bounds.width, color: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), text: "\(buttonsTitle(button: button))"), for: .selected)
         button.isSelected =  UserDefaults.standard.bool(forKey: codingKeys(button: button))
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(pushedButton), for: .touchUpInside)
+        button.titleLabel?.adjustsFontSizeToFitWidth = true
     }
     
     @objc func pushedButton(sender: UIButton) {
         sender.isSelected = !sender.isSelected
         saveOption(name: codingKeys(button: sender), button: sender)
         soundSetter(button: sender)
+        soundFXPlay(sound: AudioController.SoundFile.tapIn.rawValue)
     }
     
     private func buttonsConstrainteParameters() {
         
-        settigsLable.heightAnchor.constraint(lessThanOrEqualToConstant: bounds.height * 0.06).isActive = true
-        settigsLable.widthAnchor.constraint(lessThanOrEqualToConstant: bounds.width * 0.5).isActive = true
-        settigsLable.topAnchor.constraint(equalTo: topAnchor, constant: bounds.height * 0.07).isActive = true
-        settigsLable.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
-        
-        stackButton.heightAnchor.constraint(lessThanOrEqualToConstant: bounds.height).isActive = true
-        stackButton.widthAnchor.constraint(lessThanOrEqualToConstant: bounds.width * 0.8).isActive = true
-        stackButton.topAnchor.constraint(equalTo: settigsLable.bottomAnchor, constant: bounds.height * 0.03).isActive = true
         stackButton.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        stackButton.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
         
-        parallaxButton.heightAnchor.constraint(equalToConstant: self.bounds.height / 6).isActive = true
-        soundFX.heightAnchor.constraint(equalToConstant: self.bounds.height / 6).isActive = true
-        music.heightAnchor.constraint(equalToConstant: self.bounds.height / 6).isActive = true
-        rules.heightAnchor.constraint(equalToConstant: self.bounds.height / 6).isActive = true
-        backButton.heightAnchor.constraint(equalToConstant: self.bounds.height / 6).isActive = true
+        settingsLable.heightAnchor.constraint(equalToConstant: (stackButton.bounds.height + 15) * scaleRatio).isActive = true
+        settingsLable.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        vibration.heightAnchor.constraint(equalToConstant: stackButton.bounds.height * scaleRatio).isActive = true
+        vibration.widthAnchor.constraint(equalToConstant: stackButton.bounds.width * 0.6).isActive = true
+        soundFX.heightAnchor.constraint(equalToConstant: stackButton.bounds.height * scaleRatio).isActive = true
+        music.heightAnchor.constraint(equalToConstant: stackButton.bounds.height * scaleRatio).isActive = true
+        rules.heightAnchor.constraint(equalToConstant: stackButton.bounds.height * scaleRatio).isActive = true
+        backButton.heightAnchor.constraint(equalToConstant: stackButton.bounds.height * scaleRatio).isActive = true
         
     }
     
@@ -130,8 +149,8 @@ class SettingsView: UIView {
     private func codingKeys(button: UIButton) -> String {
         var codingKey = String()
         switch button {
-        case parallaxButton:
-            codingKey = "paralax"
+        case vibration:
+            codingKey = "vibration"
         case music:
             codingKey = "music"
         case soundFX:
@@ -145,15 +164,15 @@ class SettingsView: UIView {
     private func buttonsImage(button: UIButton) -> [String] {
         var image = [String]()
         switch button {
-        case parallaxButton:
-            image.append("parallax_on_button")
-            image.append("parallax_off_button")
+        case vibration:
+            image.append("On_button")
+            image.append("Off_button")
         case music:
-            image.append("music_on_button")
-            image.append("music_off_button")
+            image.append("On_button")
+            image.append("Off_button")
         case soundFX:
-            image.append("soundfx_on_button")
-            image.append("soundfx_off_button")
+            image.append("On_button")
+            image.append("Off_button")
         default:
             break
         }
@@ -163,16 +182,12 @@ class SettingsView: UIView {
     private func buttonsTitle(button: UIButton) -> String {
         var text = String()
         switch button {
-        case parallaxButton:
-            text = "PARALLAX"
+        case vibration:
+            text = LocalizedText.parallaxButton
         case music:
-            text = "MUSIC"
+            text = LocalizedText.music
         case soundFX:
-            text = "SOUND FX"
-        case rules:
-            text = "RULES"
-        case backButton:
-            text = "BACK"
+            text = LocalizedText.soundFX
         default:
             break
         }
@@ -194,15 +209,39 @@ class SettingsView: UIView {
     
     @objc func closeView() {
         self.animatedRemove()
+        soundFXPlay(sound: AudioController.SoundFile.tapIn.rawValue)
+    }
+    
+    @objc func deleteHelpView(){
+            helpView?.animatedRemove()
+            helpView = nil
     }
         
     @objc func helpViewAdding() {
         if helpView == nil {
-            helpView = HelpView(frame: self.bounds)
-            if helpView != nil {
-                addSubview(helpView!)
-                helpView?.animatedAdd()
-            }
+            
+            helpView = HelpView(frame: CGRect(x: 0,
+                                              y: 0,
+                                              width: bounds.width * 0.9,
+                                              height: bounds.height * 0.8))
+            helpView?.center = center
+            addSubview(helpView!)
+            helpView?.animatedAdd()
+            soundFXPlay(sound: AudioController.SoundFile.tapIn.rawValue)
+        }
+    }
+    
+    override var intrinsicContentSize: CGSize {
+        var size = CGSize()
+        if helpView != nil {
+            size = helpView!.frame.size
+        }
+        return size
+    }
+    
+    private func soundFXPlay(sound: String) {
+        if !UserDefaults.standard.bool(forKey: "soundFX") {
+            AudioController.sharedController.playFXSound(file: sound)
         }
     }
 }

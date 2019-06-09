@@ -8,13 +8,11 @@
 
 import UIKit
 import AVFoundation
+import GoogleMobileAds
 
-class ViewController: UIViewController {
-
+class ViewController: UIViewController, GADInterstitialDelegate {
     
     var game = GameModel()
-    
-    var inScreenViewRect: CGRect?
     
     var pauseView: PauseView?
     
@@ -48,14 +46,21 @@ class ViewController: UIViewController {
     }
     
     @IBOutlet weak var backgroundView: UIImageView!
-    @IBOutlet weak var score: UILabel!
+    @IBOutlet weak var score: UILabel! {
+        didSet {
+            score.adjustsFontSizeToFitWidth = true
+        }
+    }
     
     @IBAction func pauseButton(_ sender: UIButton) {
+        showGADModView()
         pauseViewAdding()
+        soundFXPlay(sound: AudioController.SoundFile.tapIn.rawValue)
     }
     
     @IBOutlet weak var timeBonusLabel: UILabel!
     
+    @IBOutlet weak var pauseButton: UIButton!
     private func timeBonusAnimation() {
         let point = timeBonusLabel.center
         timeBonusLabel.center = CGPoint(x: view.center.x, y: view.frame.minY - score.frame.height)
@@ -96,54 +101,67 @@ class ViewController: UIViewController {
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        if !game.endGameDetector {
+        if  endGameView == nil {
             gameModelJSON = game
+            print(game.endGameDetector)
         } else {
             UserDefaults.standard.removeObject(forKey: "SavedGameModel")
+            print("saved")
         }
     }
     
     override func viewWillAppear(_ animated: Bool) {
         if let gameFROM = gameModelJSON {
             game = gameFROM
-            game.gameIsResume = true
             updateViewFromModel()
         }
-        addParallaxToView(view: backgroundView)
         blurEffectView.frame = view.bounds
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        if view.window != nil {
-            inScreenViewRect = CGRect(x: (view.frame.width - view.frame.width * 0.8) / 2,
-                                      y: (view.frame.height - view.frame.height * 0.8) / 2,
-                                      width: view.frame.width * 0.8,
-                                      height: view.frame.height * 0.8)
-        }
     }
     
     override func viewWillLayoutSubviews() {
         blurController()
+        scoreLableUpdate()
     }
+    
+    var interstitial: GADInterstitial!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         updateViewFromModel()
-        
+        interstitial = createAndLoadInterstitial()
+    
         NotificationCenter.default.addObserver(self, selector: #selector(backgroundPauseView), name: NSNotification.Name("goToBackground"), object: nil)
+    }
+    
+    func createAndLoadInterstitial() -> GADInterstitial {
+        let interstitial = GADInterstitial(adUnitID: "ca-app-pub-3940256099942544/4411468910")
+        interstitial.delegate = self
+        interstitial.load(GADRequest())
+        return interstitial
+    }
+    
+    func  interstitialDidDismissScreen (_ ad: GADInterstitial) {
+        interstitial = createAndLoadInterstitial()
+    }
+    
+    func showGADModView() {
+        if interstitial.isReady {
+            interstitial.present(fromRootViewController: self)
+        } else {
+            print("Ad not ready")
+        }
     }
     
     override func viewDidDisappear(_ animated: Bool) {
        
     }
     
-    
     lazy var animator = UIDynamicAnimator(referenceView: view)
     
     @IBOutlet weak var boardView: BoardView!
     
-    @IBOutlet var deal3CardsButton: UIButton!
-    
+    @IBOutlet var deal3CardsButton: UIButton! 
+
     @IBOutlet var hintButton: UIButton! {
         didSet {
             hintButton.setTitleColor(#colorLiteral(red: 0.9254902005, green: 0.2352941185, blue: 0.1019607857, alpha: 0.2529698202), for: .disabled)
@@ -161,8 +179,10 @@ class ViewController: UIViewController {
     @objc private func tapCard(recognizedBy recognizer: UITapGestureRecognizer){
         switch recognizer.state {
             case .ended:
+                soundFXPlay(sound: AudioController.SoundFile.tapIn.rawValue)
                 if let cardView = recognizer.view! as? CardView {
                     hintButton.isEnabled = false
+                    deal3CardsButton.isEnabled = false
                     game.choosenCard(index: boardView.cardViews.firstIndex(of: cardView)!)
                     game.matchingResult()
                     if game.bonusTime {
@@ -172,6 +192,7 @@ class ViewController: UIViewController {
                         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1), execute: {
                             self.deleteCardsFromView()
                             self.hintButton.isEnabled = true
+                            self.deal3CardsButton.isEnabled = true
                         })
                     }
                 }
@@ -183,17 +204,26 @@ class ViewController: UIViewController {
     
     @IBAction func showHint() {
         game.showHintCard()
+        if game.hintCards.isEmpty {
+            deal3CardsButton.isEnabled = true
+        } else {
+            deal3CardsButton.isEnabled = false
+        }
         if game.hintCards.isEmpty && !dealCompleted {
             hintButton.isEnabled = false
         }
         game.matchingResult()
         updateViewFromModel()
+        soundFXPlay(sound: AudioController.SoundFile.tapIn.rawValue)
     }
     
     @IBAction func deal3cards(_ sender: UIButton) {
         game.takeCardsFromDeck()
         dealCompleted = true
+        deal3CardsButton.isEnabled = false
+        hintButton.isEnabled = false
         updateViewFromModel()
+        soundFXPlay(sound: AudioController.SoundFile.tapIn.rawValue)
     }
     
     @IBOutlet weak var timerLabel: UILabel!
@@ -237,8 +267,6 @@ class ViewController: UIViewController {
         timerArray.insert(hour, at: 0)
         timerArray.insert(minute, at: 1)
         timerArray.insert(second, at: 2)
-        
-       
     }
     
     private func deleteCardsFromView() {
@@ -251,7 +279,7 @@ class ViewController: UIViewController {
     }
     
     private func updateCardsViewFromModel() {
-        var newCardViews = [CardView] ()
+        var newCardViews = [CardView]()
         if boardView.cardViews.count - game.cardsOnTable.count > 0 {
             boardView.removeCardsView(cardsViewForRemove: matchedCardsSet)
         }
@@ -276,12 +304,21 @@ class ViewController: UIViewController {
             dealCardsAnimation()
         } else {
             minimizeAndDeleteAnimation()
-            score.text = "Score: \(game.score)"
         }
         
 //        if !game.endGameDetector && game.selectedCards.count == 2 {
         if game.endGameDetector {
             endGameViewAdding()
+        }
+        
+        guard game.matchDetector == nil else {
+            if game.matchDetector! {
+                typeFeedback(type: .success)
+                deal3CardsButton.isEnabled = false
+            } else {
+                typeFeedback(type: .error)
+            }
+            return
         }
     }
     
@@ -312,11 +349,11 @@ class ViewController: UIViewController {
     }
     
     @objc func presentMainMenuController(){
-        
         let mainMenuVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "MainMenuController")
         mainMenuVC.modalPresentationStyle = .fullScreen
         mainMenuVC.modalTransitionStyle = .crossDissolve
         self.present(mainMenuVC, animated: true, completion: nil )
+        soundFXPlay(sound: AudioController.SoundFile.tapIn.rawValue)
     }
     
     @objc func restartGame(){
@@ -325,22 +362,25 @@ class ViewController: UIViewController {
             endGameView = nil
             timerLabel.alpha = 1
             score.alpha = 1
+            hintButton.alpha = 1
+            deal3CardsButton.alpha = 1
+            pauseButton.alpha = 1
         }
         if pauseView != nil {
             pauseView?.animatedRemove()
             blurController()
-
         }
         boardView.resetAllCards()
         game = GameModel()
         dealCardsAnimation()
         updateViewFromModel()
-
+        soundFXPlay(sound: AudioController.SoundFile.tapIn.rawValue)
+        print(game.cardsDeckCount)
     }
   
     private func pauseViewAdding() {
         if pauseView == nil {
-            pauseView = PauseView(frame: inScreenViewRect!)
+            pauseView = PauseView(frame: view.frame)
             backToMenuButton = pauseView!.backToMenuAnswerView?.accept
             restartGameButton = pauseView!.restartAnswerView?.accept
             view.addSubview(pauseView!)
@@ -348,12 +388,25 @@ class ViewController: UIViewController {
         } else {
             view.addSubview(pauseView!)
         }
+        soundFXPlay(sound: AudioController.SoundFile.tapIn.rawValue)
     }
     
     private func endGameViewAdding() {
-        timer.invalidate()
+        
         var currentCardsForDelete = 0
         let dealInterval = 0.03 * Double(boardView.gridRows + 1)
+        
+        timer.invalidate()
+        
+        UIView.animate(withDuration: 0.3,
+                       animations: {
+                        self.score.alpha = 0
+                        self.timerLabel.alpha = 0
+                        self.hintButton.alpha = 0
+                        self.deal3CardsButton.alpha = 0
+                        self.pauseButton.alpha = 0
+        })
+ 
         Timer.scheduledTimer(withTimeInterval: dealInterval, repeats: false) { timer in
             self.cardsForDelete.forEach { cardView in
                 cardView.endGameCardsAnimation(delay: TimeInterval(currentCardsForDelete) * 0.25)
@@ -380,42 +433,18 @@ class ViewController: UIViewController {
         
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(3), execute: {
             if self.endGameView == nil {
-                self.endGameView = EndGameView(frame: self.inScreenViewRect!)
-                self.endGameView?.score = self.game.score
-                self.endGameView?.time = self.timerLabel.text!
+                self.endGameView = EndGameView(frame: self.view.frame)
+                self.endGameView!.labelsSet(_score: self.game.score, _time: self.timerLabel.text!)
                 self.restartGameButton = self.endGameView!.restart
                 self.backToMenuButton = self.endGameView!.backToMenu
                 self.timerIsRunnning = false
                 self.view.addSubview(self.endGameView!)
                 self.endGameView?.animatedAdd()
             }
-            UIView.animate(withDuration: 0.3,
-                           animations: { self.score.alpha = 0
-                                         self.timerLabel.alpha = 0 })
-            self.hintButton.isEnabled = false
         })
-    }
-
-    private func addParallaxToView(view: UIImageView) {
-        
-        let screenSize = view.bounds.size
-        view.bounds.size = CGSize(width: screenSize.width * 1.2, height: screenSize.height * 1.2)
-        backgroundView.frame.size = view.bounds.size
-        print( backgroundView.frame.size )
-        
-        let amount = 20
-        
-        let horizontal = UIInterpolatingMotionEffect(keyPath: "center.x", type: .tiltAlongHorizontalAxis)
-        horizontal.minimumRelativeValue = -amount
-        horizontal.maximumRelativeValue = amount
-        
-        let vertical = UIInterpolatingMotionEffect(keyPath: "center.y", type: .tiltAlongVerticalAxis)
-        vertical.minimumRelativeValue = -amount
-        vertical.maximumRelativeValue = amount
-        
-        let group = UIMotionEffectGroup()
-        group.motionEffects = [horizontal, vertical]
-        view.addMotionEffect(group)
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(5), execute: {
+            self.showGADModView()
+        })
     }
     
     private func updateCardView(_ cardView: CardView, for card: Card) {
@@ -437,7 +466,8 @@ class ViewController: UIViewController {
     }
     
     private func minimizeAndDeleteAnimation() {
- 
+      
+
         var cardsForScale: [CardView] {
             var cardsForScale = [CardView]()
             var tmpCard = CardView()
@@ -459,7 +489,9 @@ class ViewController: UIViewController {
                 withDuration: 0.4,
                 delay: 0.7,
                 options: UIView.AnimationOptions.curveEaseInOut,
-                animations: { cardView.transform = CGAffineTransform.identity.scaledBy(x: 0.1, y: 0.1)
+                animations: {
+                    self.boardView.isUserInteractionEnabled = false
+                    cardView.transform = CGAffineTransform.identity.scaledBy(x: 0.1, y: 0.1)
                     cardView.alpha = 0
                 },
                 completion: { position in
@@ -472,28 +504,28 @@ class ViewController: UIViewController {
 
     private func dealCardsAnimation() {
         var currentCardsForDeal = 0
-        
+        self.boardView.isUserInteractionEnabled = false
+
         let dealInterval = 0.03 * Double(boardView.gridRows + 1)
         Timer.scheduledTimer(withTimeInterval: dealInterval, repeats: false) {
             timer in
             self.cardsForDeal.forEach { cardView in
                 let dealPoint = CGPoint(x: self.view.bounds.midX, y: self.view.bounds.maxY + cardView.bounds.height)
-                if self.game.gameIsResume {
-                    cardView.dealCardsFromDeckWithouAnimation(from: dealPoint)
-                    self.startTimer()
-                    
-                } else {
-                    cardView.dealCardsFromDeckAnimation(from: dealPoint,delay: TimeInterval(currentCardsForDeal) * 0.25)
-                }
+
+                cardView.dealCardsFromDeckAnimation(from: dealPoint,delay: TimeInterval(currentCardsForDeal) * 0.25)
                 currentCardsForDeal += 1
             }
         }
+            
         Timer.scheduledTimer(withTimeInterval: Double(self.cardsForDeal.count) * 0.35, repeats: false) {_ in
             self.hintButton.isEnabled = true
+            self.boardView.isUserInteractionEnabled = true
+            if !(self.game.cardsOnTable.count > 20) {
+                self.deal3CardsButton.isEnabled = true
+            }
             self.startTimer()
             self.game.bonusCounter = 0.0
             self.dealCompleted = false
-            self.game.gameIsResume = false
         }
     }
     
@@ -501,6 +533,9 @@ class ViewController: UIViewController {
         if pauseView == nil {
             pauseViewAdding()
             gameModelJSON = game
+        } else if endGameView != nil {
+            UserDefaults.standard.removeObject(forKey: "SavedGameModel")
+            
         }
     }
     
@@ -517,7 +552,26 @@ class ViewController: UIViewController {
         }
         return returnBool
     }
-
+    
+    private func scoreLableUpdate() {
+        let index = score.text!.firstIndex(of: ":")!
+        let tmpScore = score.text![...index]
+        score.text = "\(tmpScore) \(game.score)"
+    }
+    
+    private func soundFXPlay(sound: String) {
+        if !UserDefaults.standard.bool(forKey: "soundFX") {
+            AudioController.sharedController.playFXSound(file: sound)
+        }
+    }
+    
+    private func typeFeedback(type: UINotificationFeedbackGenerator.FeedbackType) {
+        let tapticGenerator = UINotificationFeedbackGenerator()
+        let savedSwitcher = UserDefaults.standard.bool(forKey: "vibration")
+        guard savedSwitcher else { tapticGenerator.notificationOccurred(type)
+            return
+        }
+    }
 }
 
 extension Int {
@@ -561,6 +615,13 @@ extension UIView {
                        completion: { _ in self.removeFromSuperview()})
     }
     
+    func blinkEffect() {
+        UIView.transition(with: self,
+                          duration: 0.2,
+                          options: [.transitionCrossDissolve, .repeat],
+                          animations: { [weak self] in self?.alpha = 1 },
+                          completion: nil )
+    }
 }
 
 

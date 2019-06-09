@@ -17,8 +17,29 @@ class EndGameView: UIView {
     var timeNumbers = UILabel()
     var backToMenu = UIButton()
     var restart = UIButton()
-    var score = Int()
-    var time = String()
+    var score = Int() {
+        didSet {
+            scoreNumbers.attributedText = TextFont.AttributeText(_size: bounds.width * 1.2 ,
+                                                                 color: #colorLiteral(red: 0.9997687936, green: 0.6423431039, blue: 0.009596501477, alpha: 1),
+                                                                 text: "\(score)")
+        }
+    }
+    var time = String() {
+        didSet {
+            timeNumbers.attributedText = TextFont.AttributeText(_size: bounds.width * 1.2,
+                                                                color: #colorLiteral(red: 0.9997687936, green: 0.6423431039, blue: 0.009596501477, alpha: 1),
+                                                                text: "\(time)")
+        }
+    }
+    
+    var scaleRatio : CGFloat = 0.12
+    
+    struct LocalizedText {
+        static let scoreText  = NSLocalizedString("SCORE", comment: "scoreText_button")
+        static let backToMenu = NSLocalizedString("MAIN MENU", comment: "backToMenu_button")
+        static let timeText   = NSLocalizedString("TIME", comment: "timeText_button")
+        static let restart    = NSLocalizedString("RESTART", comment: "restart_button")
+    }
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -31,40 +52,40 @@ class EndGameView: UIView {
     }
     
     private func viewSetup() {
-        backgroundImage.frame.size = bounds.size
-        backgroundImage.image = UIImage(named: "frame_view")
+        backgroundImage.frame.size = CGSize(width: frame.width * 0.8, height: frame.height * 0.6)
+        backgroundImage.image = UIImage(named: "Menu")
+        backgroundImage.center = center
         addSubview(backgroundImage)
         
-        scoreText.attributedText = TextFont.AttributeText(_size: bounds.width * 0.15, color: #colorLiteral(red: 0.9997687936, green: 0.6423431039, blue: 0.009596501477, alpha: 1), text: "Score")
+        scoreText.attributedText = TextFont.AttributeText(_size: bounds.width * 1.5, color: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), text: LocalizedText.scoreText)
         scoreText.translatesAutoresizingMaskIntoConstraints = false
         scoreText.alpha = 0
         addSubview(scoreText)
         
-        scoreNumbers.attributedText = TextFont.AttributeText(_size: bounds.width * 0.12, color: #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0), text: "\(score)")
         scoreNumbers.translatesAutoresizingMaskIntoConstraints = false
         scoreNumbers.alpha = 0
         addSubview(scoreNumbers)
         
-        timeText.attributedText = TextFont.AttributeText(_size: bounds.width * 0.15, color: #colorLiteral(red: 0.9997687936, green: 0.6423431039, blue: 0.009596501477, alpha: 1), text: "Time")
+        timeText.attributedText = TextFont.AttributeText(_size: bounds.width * 1.5, color: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), text: LocalizedText.timeText)
         timeText.translatesAutoresizingMaskIntoConstraints = false
         timeText.alpha = 0
         addSubview(timeText)
         
-        timeNumbers.attributedText = TextFont.AttributeText(_size: bounds.width * 0.12, color: #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0), text: "0:00:00")
         timeNumbers.translatesAutoresizingMaskIntoConstraints = false
         timeNumbers.alpha = 0
         addSubview(timeNumbers)
         
-        restart.setBackgroundImage(UIImage(named: "restart_button"), for: .normal)
-        restart.setAttributedTitle(TextFont.AttributeText(_size: bounds.width * 0.11, color: #colorLiteral(red: 0.9997687936, green: 0.6423431039, blue: 0.009596501477, alpha: 1), text: "RESTART"), for: .normal)
+        restart.setBackgroundImage(UIImage(named: "On_button"), for: .normal)
+        restart.setAttributedTitle(TextFont.AttributeText(_size: bounds.width, color: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), text: LocalizedText.restart), for: .normal)
         restart.translatesAutoresizingMaskIntoConstraints = false
+        restart.titleLabel?.adjustsFontSizeToFitWidth = true
         restart.alpha = 0
         restart.isEnabled = true
         addSubview(restart)
       
-        backToMenu.setBackgroundImage(UIImage(named: "main_menu_button"), for: .normal)
-        backToMenu.setAttributedTitle(TextFont.AttributeText(_size: bounds.width * 0.11, color: #colorLiteral(red: 0.9997687936, green: 0.6423431039, blue: 0.009596501477, alpha: 1), text: "MAIN MENU"), for: .normal)
-
+        backToMenu.setBackgroundImage(UIImage(named: "Back_button"), for: .normal)
+        backToMenu.setAttributedTitle(TextFont.AttributeText(_size: bounds.width, color: #colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1), text: LocalizedText.backToMenu), for: .normal)
+        backToMenu.titleLabel?.adjustsFontSizeToFitWidth = true
         backToMenu.translatesAutoresizingMaskIntoConstraints = false
         backToMenu.alpha = 0
         backToMenu.isEnabled = true
@@ -73,28 +94,32 @@ class EndGameView: UIView {
         constraintsParameters()
         
         animation()
-        
+    }
+    
+    func labelsSet(_score: Int, _time: String) {
+        score = _score
+        time = _time
     }
 
     private func constraintsParameters() {
         
-        scoreText.topAnchor.constraint(equalTo: topAnchor, constant: bounds.height * 0.1).isActive = true
+        scoreText.topAnchor.constraint(equalTo: backgroundImage.topAnchor, constant: backgroundImage.bounds.height * 0.1).isActive = true
         scoreText.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
-        scoreNumbers.topAnchor.constraint(equalTo: scoreText.bottomAnchor, constant: bounds.height * 0.01).isActive = true
+        scoreNumbers.topAnchor.constraint(equalTo: scoreText.bottomAnchor, constant: backgroundImage.bounds.height * 0.01).isActive = true
         scoreNumbers.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
-        timeText.topAnchor.constraint(equalTo: scoreNumbers.bottomAnchor, constant: bounds.height * 0.015).isActive = true
+        timeText.topAnchor.constraint(equalTo: scoreNumbers.bottomAnchor, constant: backgroundImage.bounds.height * 0.015).isActive = true
         timeText.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
-        timeNumbers.topAnchor.constraint(equalTo: timeText.bottomAnchor, constant: bounds.height * 0.01).isActive = true
+        timeNumbers.topAnchor.constraint(equalTo: timeText.bottomAnchor, constant: backgroundImage.bounds.height * 0.01).isActive = true
         timeNumbers.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         
-        restart.widthAnchor.constraint(equalToConstant: bounds.width * 0.8).isActive = true
-        restart.heightAnchor.constraint(equalToConstant: bounds.height / 6 ).isActive = true
-        restart.topAnchor.constraint(equalTo: timeNumbers.bottomAnchor, constant: bounds.height * 0.1).isActive = true
+        restart.widthAnchor.constraint(equalToConstant: backgroundImage.bounds.width * 0.6).isActive = true
+        restart.heightAnchor.constraint(equalToConstant: backgroundImage.bounds.height * scaleRatio ).isActive = true
+        restart.topAnchor.constraint(equalTo: timeNumbers.bottomAnchor, constant: backgroundImage.bounds.height * 0.03).isActive = true
         restart.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         
-        backToMenu.widthAnchor.constraint(equalToConstant: bounds.width * 0.8).isActive = true
-        backToMenu.heightAnchor.constraint(equalToConstant: bounds.height / 6 ).isActive = true
-        backToMenu.topAnchor.constraint(equalTo: restart.bottomAnchor, constant: bounds.height * 0.01).isActive = true
+        backToMenu.widthAnchor.constraint(equalToConstant: backgroundImage.bounds.width * 0.6).isActive = true
+        backToMenu.heightAnchor.constraint(equalToConstant: backgroundImage.bounds.height * scaleRatio ).isActive = true
+        backToMenu.topAnchor.constraint(equalTo: restart.bottomAnchor, constant: 10).isActive = true
         backToMenu.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         
     }
@@ -135,6 +160,12 @@ class EndGameView: UIView {
                 })
             })
         })
+    }
+    
+    private func soundFXPlay(sound: String) {
+        if !UserDefaults.standard.bool(forKey: "soundFX") {
+            AudioController.sharedController.playFXSound(file: sound)
+        }
     }
 
 }

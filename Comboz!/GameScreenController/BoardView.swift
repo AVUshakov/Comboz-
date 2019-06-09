@@ -13,6 +13,7 @@ class BoardView: UIView {
     var cardViews = [CardView]()
 
     var gridRows: Int { return gridCards?.dimensions.rowCount ?? 0 }
+   
     private var gridCards: ScreenGrid?
     
     private func layoutSetCard() {
@@ -53,7 +54,8 @@ class BoardView: UIView {
     
     func resetAllCards() {
         cardViews.forEach{ (cardView) in
-            cardView.removeFromSuperview()
+//            cardView.removeFromSuperview()
+            cardView.alpha = 0
         }
         cardViews = []
         layoutIfNeeded()

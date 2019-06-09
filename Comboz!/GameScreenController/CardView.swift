@@ -32,11 +32,11 @@ class CardView: UIView {
     var symbolType: Int = 1 {
         didSet {
             switch symbolType {
-                case 1: symbol = .romb
-                case 2: symbol = .flash
-                case 3: symbol = .oval
-                default:
-                    break
+            case 1: symbol = .romb
+            case 2: symbol = .flash
+            case 3: symbol = .oval
+            default:
+                break
             }
         }
     }
@@ -44,11 +44,11 @@ class CardView: UIView {
     var fillType: Int = 1 {
         didSet {
             switch fillType {
-                case 1: fill = .solid
-                case 2: fill = .stripe
-                case 3: fill = .empty
-                default:
-                    break
+            case 1: fill = .solid
+            case 2: fill = .stripe
+            case 3: fill = .empty
+            default:
+                break
             }
         }
     }
@@ -56,10 +56,11 @@ class CardView: UIView {
     var colorType: Int = 1 {
         didSet {
             switch colorType {
-                case 1: color = Colors.blue
-                case 2: color = Colors.green
-                case 3: color = Colors.red
-                default:
+            case 1: color = Colors.blue
+            case 2: color = Colors.green
+            case 3: color = Colors.red
+            case 4: color = Colors.white
+            default:
                     break
             }
         }
@@ -288,14 +289,23 @@ class CardView: UIView {
                                                        delay: delay,
                                                        options:[.curveEaseInOut],
                                                        animations: { self.bounds = currentBounds
+                                                        self.isUserInteractionEnabled = false
                                                         self.center = currentCenter },
                                                        completion: {position in
                                                         UIView.transition(with: self,
                                                                           duration: 0.3,
                                                                           options: [.transitionFlipFromLeft],
                                                                           animations: {self.isFaceUp = true},
-                                                                          completion: {finished in self.endDeal += 1})
+                                                        completion: {finished in      self.isUserInteractionEnabled = true})
         })
+    }
+    
+    func inviseView(delay: TimeInterval) {
+        UIView.animate(withDuration: 3,
+                       delay: delay,
+                       options: [.curveEaseInOut, .repeat, .autoreverse],
+                       animations: { self.alpha = 0 },
+                       completion: nil)
     }
     
     override func layoutSubviews() {
@@ -312,6 +322,8 @@ class CardView: UIView {
         static let selected = #colorLiteral(red: 0.9997687936, green: 0.6423431039, blue: 0.009596501477, alpha: 1).cgColor
         static let matched = #colorLiteral(red: 0.3411764801, green: 0.6235294342, blue: 0.1686274558, alpha: 1).cgColor
         static let miss = #colorLiteral(red: 0.9254902005, green: 0.2352941185, blue: 0.1019607857, alpha: 1).cgColor
+        
+        static let white = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
     }
     
     private struct SizeRatio {
@@ -325,7 +337,7 @@ class CardView: UIView {
     }
     
     private var maxCardFrame: CGRect {
-        return bounds.zoomed(by: SizeRatio.maxCardSizeToBoundSize)
+        return bounds.zoomed(by: SizeRatio.maxCardSizeToBoundSize * 1.15)
     }
     
     private var cardFrame: CGRect {
@@ -370,12 +382,3 @@ extension CALayer {
     }
 }
 
-extension UIView {
-    func blinkEffect() {
-        UIView.transition(with: self,
-                          duration: 0.2,
-                          options: [.transitionCrossDissolve, .repeat],
-                          animations: { [weak self] in self?.alpha = 1 },
-                          completion: nil )
-    }
-}

@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 class GameModel: Codable {
     
@@ -22,7 +23,6 @@ class GameModel: Codable {
     var score = 0
     var secondCounter = 0.0
     var bonusCounter = 0.0
-    var gameIsResume = false
     var hintUsed = false
     var bonusTime = false
     
@@ -53,7 +53,7 @@ class GameModel: Codable {
             guard !checkMatchOnTable() && cardsDeckCount == 0 else {return false}
             return true
         }
-    }
+    }    
     
     func choosenCard(index: Int) {
         let choosenCard = cardsOnTable[index]
@@ -114,6 +114,15 @@ class GameModel: Codable {
             hintUsed = false
         }
         
+    }
+    
+    private func typeFeedback(type: UINotificationFeedbackGenerator.FeedbackType) {
+        let tapticGenerator = UINotificationFeedbackGenerator()
+        let savedSwitcher = UserDefaults.standard.bool(forKey: "vibration")
+        print(savedSwitcher)
+        guard savedSwitcher else { tapticGenerator.notificationOccurred(type)
+            return
+        }
     }
     
     private func checkMatchOnTable() -> Bool {
@@ -186,6 +195,8 @@ struct  Constants {
     static let deckCount = 81
     static let cardOnBoard = 12
 }
+
+
 
     
  

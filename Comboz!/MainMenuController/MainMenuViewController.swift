@@ -10,55 +10,81 @@ import UIKit
 
 class MainMenuViewController: UIViewController {
     
+    struct LocalizedText {
+        static let newGameButton  = NSLocalizedString("NEW GAME", comment: "newGameButton")
+        static let resumeButton   = NSLocalizedString("RESUME", comment: "resumeButton")
+    }
+    
     var animator: UIDynamicAnimator!
-    
-    var snap: UISnapBehavior!
-    
-    var inScreenViewRect: CGRect?
-    
+        
     override var prefersStatusBarHidden: Bool {
         return true
     }
+    
+    @IBOutlet weak var animatedView: AnimatedView!
+    
+    @IBOutlet weak var topView: UIView!
     
     @IBOutlet weak var bottomView: UIView!
     
     @IBOutlet weak var backgroundImage: UIImageView!
     
+    var blurEffectView: UIVisualEffectView = {
+        let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.dark)
+        let view = UIVisualEffectView(effect: blurEffect)
+        view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        return view
+    }()
+    
     var settingsView: SettingsView!
     
-    @IBOutlet weak var playButton: UIButton!
+    @IBOutlet weak var playButton: UIButton! {
+        didSet {
+            playButton.titleLabel?.adjustsFontSizeToFitWidth = true
+        }
+    }
     
-    @IBOutlet weak var settingsButton: UIButton!
+    @IBOutlet weak var settingsButton: UIButton! {
+        didSet {
+            settingsButton.titleLabel?.adjustsFontSizeToFitWidth = true
+        }
+    }
     
     var resumeButton: UIButton = {
         let button = UIButton()
-        button.setImage(UIImage(named: "resume_button"), for: .normal)
+        button.setBackgroundImage(UIImage(named: "On_button"), for: .normal)
         button.addTarget(self, action: #selector(pushButtonMenuAnimation), for: .touchUpInside)
+        button.titleLabel?.adjustsFontSizeToFitWidth = true
         return button
     }()
     var newGameButton: UIButton = {
         let button = UIButton()
-        button.setImage(UIImage(named: "newgame_button"), for: .normal)
+        button.setBackgroundImage(UIImage(named: "Play_button"), for: .normal)
         button.addTarget(self, action: #selector(startNewGame), for: .touchUpInside)
+        button.titleLabel?.adjustsFontSizeToFitWidth = true
         return button
     }()
     
+    
+    
     override func viewWillAppear(_ animated: Bool) {
         mainMenuLogo.center = CGPoint(x: view.bounds.midX, y: view.bounds.minY)
+        blurEffectView.frame = view.bounds
+//        animatedView.addView()
+//        animatedView.animationBackground()
     }
-
-    override func viewDidAppear(_ animated: Bool) {
-        if view.window != nil {
-            inScreenViewRect = CGRect(x: (view.frame.width - view.frame.width * 0.8) / 2,
-                                      y: (view.frame.height - view.frame.height * 0.8) / 2,
-                                      width: view.frame.width * 0.8,
-                                      height: view.frame.height * 0.8)
+    
+    override func viewDidLayoutSubviews() {
+        if settingsView?.helpView?.window == nil && settingsView != nil {
+            settingsView!.helpView = nil
         }
-
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        animatedView.backgroundColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0)
+        
+        
         setHiddenButtons()
         startVCMenuAnimation()
         animator = UIDynamicAnimator(referenceView: view)
@@ -72,8 +98,19 @@ class MainMenuViewController: UIViewController {
     }
     
     override func viewWillLayoutSubviews() {
-        if settingsView?.window == nil {
+        if settingsView?.window == nil  {
             settingsView = nil
+            blurEffectView.removeFromSuperview()
+        }
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        if let touch = touches.first {
+            if settingsView != nil && settingsView?.helpView == nil{
+                if touch.view != settingsView {
+                    settingsView.animatedRemove()
+                }
+            }
         }
     }
     
@@ -128,20 +165,16 @@ class MainMenuViewController: UIViewController {
     }
     
     @IBAction func settingsButton(_ sender: UIButton) {
-        soundFXPlay(sound: AudioController.SoundFile.tapIn.rawValue)
         settingsViewAdding()
-//        stackMenuButtons.animatedRemove()
+        soundFXPlay(sound: AudioController.SoundFile.tapIn.rawValue)
+
     }
     
     private func setHiddenButtons() {
+        newGameButton.setAttributedTitle(TextFont.AttributeText(_size: view.bounds.width * 0.8, color: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), text: LocalizedText.newGameButton), for: .normal)
+        resumeButton.setAttributedTitle(TextFont.AttributeText(_size: view.bounds.width * 0.8, color: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), text: LocalizedText.resumeButton), for: .normal)
         stackMenuButtons.addArrangedSubview(resumeButton)
         stackMenuButtons.addArrangedSubview(newGameButton)
-        resumeButton.imageView?.contentMode = .scaleAspectFill
-        newGameButton.imageView?.contentMode = .scaleAspectFill
-        resumeButton.heightAnchor.constraint(equalToConstant: 88).isActive = true
-        newGameButton.heightAnchor.constraint(equalToConstant: 88).isActive = true
-        resumeButton.imageView?.contentMode = .scaleAspectFit
-        newGameButton.imageView?.contentMode = .scaleAspectFit
         resumeButton.alpha = 0
         newGameButton.alpha = 0
         resumeButton.isHidden = true
@@ -187,13 +220,14 @@ class MainMenuViewController: UIViewController {
     
     @objc func pushButtonMenuAnimation() {
         soundFXPlay(sound: AudioController.SoundFile.tapIn.rawValue)
-        let pointForStackButtonHidding = CGPoint(x: view.bounds.midX, y: view.bounds.maxY)
+        let pointForStackButtonHidding = CGPoint(x: view.bounds.midX, y: view.bounds.maxY - view.bounds.height * 0.2)
         UIViewPropertyAnimator.runningPropertyAnimator(withDuration: 0.3,
                                                        delay: 0,
                                                        options:.curveEaseInOut,
                                                        animations: {
                                                         self.stackMenuButtons.center = pointForStackButtonHidding
                                                         self.stackMenuButtons.alpha = 0
+                                                        self.topView.alpha = 0
                                                         },
                                                        completion: nil)
         
@@ -201,9 +235,9 @@ class MainMenuViewController: UIViewController {
                                                        delay: 0,
                                                        options:.curveEaseInOut,
                                                        animations: {
-                        self.mainMenuLogo.center = self.view.center
+                                                        self.mainMenuLogo.center = CGPoint(x: self.view.bounds.midX, y: self.view.bounds.midY - self.view.bounds.height * 0.1)
                         self.mainMenuLogo.transform = CGAffineTransform.identity.scaledBy(x: 1.05, y: 1.05)
-                self.loadingBar.center = CGPoint(x: self.mainMenuLogo.center.x, y: self.mainMenuLogo.bounds.maxY + 200)
+                self.loadingBar.center = CGPoint(x: self.mainMenuLogo.center.x, y: self.mainMenuLogo.bounds.maxY + self.view.bounds.height * 0.2)
                 self.loadingBar.alpha = 0.9
         },
                                                        completion: { finished in
@@ -215,7 +249,8 @@ class MainMenuViewController: UIViewController {
                 DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(Int(1.2)), execute: {
                     self.mainMenuLogo.alpha = 0
                     self.loadingBar.alpha = 0
-                    self.backgroundImage.alpha = 0
+                    self.topView.alpha = 0
+                    self.hiscoreLabel.alpha = 0
                     self.transitionViews()
                         })
                     }
@@ -256,12 +291,15 @@ class MainMenuViewController: UIViewController {
     
     private func settingsViewAdding() {
         if settingsView == nil {
-            settingsView = SettingsView(frame: inScreenViewRect!)
+            settingsView = SettingsView(frame: view.frame)
             if settingsView != nil {
                 view.addSubview(settingsView!)
+                view.addSubview(blurEffectView)
+                view.bringSubviewToFront(settingsView!)
                 settingsView?.animatedAdd()
             }
         } else {
+            blurEffectView.removeFromSuperview()
             settingsView?.animatedRemove()
             settingsView = nil
         }
