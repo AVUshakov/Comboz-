@@ -2,7 +2,7 @@
 "4L4-JD-A2n.normalTitle" = "ПАУЗА";
 
 /* Class = "UILabel"; text = "0000"; ObjectID = "7EI-KV-DkH"; */
-"7EI-KV-DkH.text" = "0000";
+"7EI-KV-DkH.text" = "0";
 
 /* Class = "UILabel"; text = "time  bonus !"; ObjectID = "43h-pR-Z99"; */
 "43h-pR-Z99.text" = "time  bonus !";
@@ -14,7 +14,7 @@
 "d3b-RF-LXL.text" = "0:00:00";
 
 /* Class = "UILabel"; text = "0000"; ObjectID = "f7G-34-ziz"; */
-"f7G-34-ziz.text" = "0000";
+"f7G-34-ziz.text" = "0";
 
 /* Class = "UIButton"; normalTitle = "HINT"; ObjectID = "FN7-cq-bOr"; */
 "FN7-cq-bOr.normalTitle" = "ПОДСКАЗКА";

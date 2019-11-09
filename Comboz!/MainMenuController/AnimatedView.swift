@@ -9,66 +9,56 @@
 import UIKit
 
 class AnimatedView: UIView {
-
-    var imageViews = [CardView]()
     
-    var gridRows: Int { return gridViews?.dimensions.rowCount ?? 0 }
+    var image = String()
+    var backgroundView1 = UIImageView()
+    var backgroundView2 = UIImageView()
     
-    private var gridViews: ScreenGrid?
     
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        addView()
-        animationBackground()
-    }
     
-    func animationBackground() {
-        self.imageViews.forEach { view in
-            let rand = self.imageViews.count.arc4random
-            view.inviseView(delay: TimeInterval(rand))
-        }
-    }
+    func setBackgrounds() {
+        print("height \(UIScreen.main.bounds.height)")
         
-    
-    func addView() -> () {
-        for _ in 0...14 {
-            var array = [CardView]()
-            for i in 0...2 {
-                let shape = CardView()
-                shape.cardBackgroundColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0)
-                shape.colorType = 4
-                shape.fillType = 3
-                shape.count = 1
-                shape.isFaceUp = true
-                shape.alpha = 0.2
-                shape.symbolType = i + 1
-                array.append(shape)
+        if UIDevice().userInterfaceIdiom == .phone
+        {
+            switch UIScreen.main.bounds.height {
+            case 812: //iphoneX
+                image = "animate_bg_iphoneX"
+            case 896: //iphoneXS
+                image = "animate_bg_iphonePlus"
+            case 736: //iphonePlus
+                image = "animate_bg_iphonePlus"
+                print("IPHONE+")
+            case 667: //iphone4.7
+                image = "animate_bg_iphone"
+            default:
+                image = "animate_bg_iphoneSE"
             }
-            imageViews += array
+        } else if UIDevice().userInterfaceIdiom == .pad {
+                image = "symbols_ipad"
         }
-        imageViews.forEach{ (view) in
-            view.center = CGPoint(x: bounds.midX, y: bounds.maxY + view.bounds.size.height)
-            addSubview(view)
-        }
-        layoutIfNeeded()
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        gridViews = ScreenGrid(layout: ScreenGrid.Layout.aspectRatio(Constants.cellRatio), frame: bounds)
-        gridViews!.cellCount = imageViews.count
-        for row in 0..<gridRows {
-            for column in 0..<gridViews!.dimensions.columnCount {
-                if imageViews.count > (row * gridViews!.dimensions.columnCount + column) {
-                    imageViews[row * gridViews!.dimensions.columnCount + column].frame = gridViews![row,column]!.insetBy(dx: Constants.spacingDx, dy: Constants.spacingDy)
-                }
-            }
+        
+        if let background = UIImage(named: image) {
+            backgroundView1 = UIImageView(image: background)
+            backgroundView2 = UIImageView(image: background)
+            backgroundView1.contentMode = .scaleAspectFill
+            backgroundView2.contentMode = .scaleAspectFill
+            self.addSubview(backgroundView1)
+            self.addSubview(backgroundView2)
         }
     }
     
-    struct Constants {
-        static let cellRatio: CGFloat = 0.9
-        static let spacingDx: CGFloat = 1.0
-        static let spacingDy: CGFloat = 1.0
+    func animateBackground() {
+        
+//        backgroundView1.frame = frame
+//        backgroundView2.frame = CGRect(x: frame.origin.x, y: backgroundView1.frame.size.height, width: frame.width, height: frame.height)
+//
+//        UIView.animate(withDuration: 80.0, delay: 0.0,
+//                       options: [.repeat, .curveLinear],
+//                       animations: {
+//                        self.backgroundView1.frame = self.backgroundView1.frame.offsetBy(dx: 0.0, dy: -1 * self.backgroundView1.frame.size.height)
+//                        self.backgroundView2.frame = self.backgroundView2.frame.offsetBy(dx: 0.0, dy: -1 * self.backgroundView2.frame.size.height)
+//                        },
+//                       completion: nil)
     }
 }

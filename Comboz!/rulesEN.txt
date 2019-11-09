@@ -1,0 +1,36 @@
+Welcome to Comboz!
+
+The goal of the game is to find a combination of Comboz. In the beginning you are dealt 12 cards. There are 81 cards in the deck. Each card has four features:
+
+1) Color: red, green, or blue.
+
+2) Symbol: square, zigzag, or triangle.
+
+3) Quantity: one, two, or three characters.
+
+4) Filling: filled out completely, not painted over, or striped.
+
+The Comboz combination consists of three cards, in which, each of the signs is either the same for all cards or different for all cards!
+
+Check out what Comboz options can be:
+
+1) Color: all different, Symbol: all the same (zigzag), Quantity: all the same (two), filling: all the same (filled out completely)
+
+
+
+
+2) Color: all different, Symbol: all different, Quantity: all different, Filling: all different
+
+
+
+
+3) Color: all have the same (blue), Symbol: all have the same (square), Quantity: all have different, Filling: all have different
+
+
+
+
+Found Comboz you get 1 point, if the combination is not correct, then you lose one point. If you think that Comboz is not on the table, then press the Deal button, and you will receive 3 more cards, if there are 21 cards on the table, then there is definitely a Comboz among them, so the Deal button becomes inaccessible. There is a nice bonus, if you find a Comboz in 10 seconds, you will receive a bonus of 5 points
+
+"Comboz!" Superbly develops observation, concentration and responsiveness.
+
+Good luck to you game!

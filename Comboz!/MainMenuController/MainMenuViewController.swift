@@ -9,12 +9,7 @@
 import UIKit
 
 class MainMenuViewController: UIViewController {
-    
-    struct LocalizedText {
-        static let newGameButton  = NSLocalizedString("NEW GAME", comment: "newGameButton")
-        static let resumeButton   = NSLocalizedString("RESUME", comment: "resumeButton")
-    }
-    
+
     var animator: UIDynamicAnimator!
         
     override var prefersStatusBarHidden: Bool {
@@ -27,7 +22,29 @@ class MainMenuViewController: UIViewController {
     
     @IBOutlet weak var bottomView: UIView!
     
-    @IBOutlet weak var backgroundImage: UIImageView!
+    @IBOutlet weak var backgroundImage: UIImageView! = {
+        var backroundImage = UIImageView()
+        var image = String()
+        if UIDevice().userInterfaceIdiom == .phone
+        {
+            switch UIScreen.main.bounds.height {
+            case 812: //iphoneX
+                image = "background_iphoneX"
+            case 896: //iphone11
+                image = "background_iphonePlus"
+            case 736: //iphonePlus
+                image = "background_iphonePlus"
+            default:
+                image = "background_iphone"
+            }
+        } else if UIDevice().userInterfaceIdiom == .pad {
+            image = "background_ipad"
+        }
+        if var background = UIImage(named: image) {
+            backroundImage = UIImageView(image: background)
+        }
+        return backroundImage
+    }()
     
     var blurEffectView: UIVisualEffectView = {
         let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.dark)
@@ -37,6 +54,8 @@ class MainMenuViewController: UIViewController {
     }()
     
     var settingsView: SettingsView!
+    var purchaseView: PurchaseView!
+    var languageMenuView: LanguageMenuView!
     
     @IBOutlet weak var playButton: UIButton! {
         didSet {
@@ -49,17 +68,28 @@ class MainMenuViewController: UIViewController {
             settingsButton.titleLabel?.adjustsFontSizeToFitWidth = true
         }
     }
+    @IBOutlet var changeLanguageButton: UIButton!
+    
+    @IBAction func changeLanguage() {
+        languageMenuAdding()
+    }
+    
+    @IBAction func removeAdButton(_ sender: Any) {
+        purchaseViewAdding()
+    }
+    
+    @IBOutlet weak var removeAdButton: UIButton!
     
     var resumeButton: UIButton = {
         let button = UIButton()
-        button.setBackgroundImage(UIImage(named: "On_button"), for: .normal)
+        button.setBackgroundImage(UIImage(named: "def_button"), for: .normal)
         button.addTarget(self, action: #selector(pushButtonMenuAnimation), for: .touchUpInside)
         button.titleLabel?.adjustsFontSizeToFitWidth = true
         return button
     }()
     var newGameButton: UIButton = {
         let button = UIButton()
-        button.setBackgroundImage(UIImage(named: "Play_button"), for: .normal)
+        button.setBackgroundImage(UIImage(named: "def_button"), for: .normal)
         button.addTarget(self, action: #selector(startNewGame), for: .touchUpInside)
         button.titleLabel?.adjustsFontSizeToFitWidth = true
         return button
@@ -70,27 +100,54 @@ class MainMenuViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         mainMenuLogo.center = CGPoint(x: view.bounds.midX, y: view.bounds.minY)
         blurEffectView.frame = view.bounds
-//        animatedView.addView()
-//        animatedView.animationBackground()
+        animatedView.setBackgrounds()
+        animatedView.animateBackground()
+        let currentLang = LocalizationSystem.instance.getLanguage()
+        LocalizationSystem.instance.setLanguage(languageCode: currentLang)
+        setOutletButtons()
+        setHiddenButtons()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        NotificationCenter.default.addObserver(self, selector: #selector(willEnterForeground), name: NSNotification.Name("returnFromBackground"), object: nil)
+    }
+    
+    @objc func willEnterForeground() {
+        animatedView.animateBackground()
     }
     
     override func viewDidLayoutSubviews() {
         if settingsView?.helpView?.window == nil && settingsView != nil {
             settingsView!.helpView = nil
         }
+        let purchaseSave = UserDefaults.standard.bool(forKey: "Purchase")
+        if purchaseSave {
+            removeAdButton.alpha = 0
+        } else {
+            removeAdButton.alpha = 1
+        }
     }
     
+    @objc func updateView(){
+        setOutletButtons()
+        setHiddenButtons()
+        if languageMenuView != nil {
+            languageMenuView.removeFromSuperview()
+            languageMenuView = nil
+            languageMenuAdding()
+        }
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
-        animatedView.backgroundColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0)
-        
-        
-        setHiddenButtons()
         startVCMenuAnimation()
         animator = UIDynamicAnimator(referenceView: view)
+        AudioController.sharedController.viewController = "MainMenu"
         if !UserDefaults.standard.bool(forKey: "music") {
-        AudioController.sharedController.playBackgroundMusic(file: AudioController.SoundFile.tapIn.rawValue)
+        AudioController.sharedController.playBackgroundMusic(file: AudioController.SoundFile.menuMusic.rawValue)
         }
+        print(resumeButton.bounds.width)
+        print(stackMenuButtons.bounds.width)
+        print(removeAdButton.bounds.width)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -98,8 +155,21 @@ class MainMenuViewController: UIViewController {
     }
     
     override func viewWillLayoutSubviews() {
+        NotificationCenter.default.addObserver(self, selector: #selector(updateView), name: NSNotification.Name("languge_changed"), object: nil)
+        
         if settingsView?.window == nil  {
             settingsView = nil
+        }
+        
+        if purchaseView?.window == nil  {
+            purchaseView = nil
+        }
+        
+        if languageMenuView?.window == nil  {
+            languageMenuView = nil
+        }
+        
+        if purchaseView?.window == nil && settingsView?.window == nil && languageMenuView?.window == nil {
             blurEffectView.removeFromSuperview()
         }
     }
@@ -118,31 +188,14 @@ class MainMenuViewController: UIViewController {
     
     @IBOutlet weak var stackMenuButtons: UIStackView!
     
-    @IBOutlet weak var bestTimeLabel: UILabel! {
-        didSet {
-            if let timerArray = UserDefaults.standard.object(forKey: "TimeRecord") as? [Int] {
-                
-                var minuteString = "\(timerArray[1])"
-                if timerArray[1] < 10 {
-                    minuteString = "0\(timerArray[1])"
-                }
-                
-                var secondString = "\(timerArray[2])"
-                if timerArray[2] < 10 {
-                    secondString = "0\(timerArray[2])"
-                }
-                bestTimeLabel.text = "\(timerArray[0]):\(minuteString):\(secondString)"
+    @IBOutlet weak var hiScoreLabel: UILabel! {
+        didSet  {
+                    if let hiScore = UserDefaults.standard.object(forKey: "HiScore") {
+                           hiScoreLabel.text = "\(hiScore)"
+                    }
             }
-        }
     }
     
-    @IBOutlet weak var hiscoreLabel: UILabel! {
-        didSet {
-            if let hiScore = UserDefaults.standard.object(forKey: "HiScore") {
-                hiscoreLabel.text = "\(hiScore)"
-            }
-        }
-    }
     
     @IBOutlet weak var loadingBar: UIProgressView! {
         didSet {
@@ -161,24 +214,31 @@ class MainMenuViewController: UIViewController {
             UserDefaults.standard.removeObject(forKey: "SavedTimer")
             pushButtonMenuAnimation()
         }
+        
         soundFXPlay(sound: AudioController.SoundFile.tapIn.rawValue)
     }
     
     @IBAction func settingsButton(_ sender: UIButton) {
         settingsViewAdding()
         soundFXPlay(sound: AudioController.SoundFile.tapIn.rawValue)
-
     }
     
     private func setHiddenButtons() {
-        newGameButton.setAttributedTitle(TextFont.AttributeText(_size: view.bounds.width * 0.8, color: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), text: LocalizedText.newGameButton), for: .normal)
-        resumeButton.setAttributedTitle(TextFont.AttributeText(_size: view.bounds.width * 0.8, color: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), text: LocalizedText.resumeButton), for: .normal)
+        let edgeInset = UIEdgeInsets(top: 6, left: 10, bottom: 10, right: 10)
+        newGameButton.setAttributedTitle(TextFont.AttributeText(_size: view.bounds.width, color: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), text: LocalizationSystem.instance.localizedStringForKey(key: "NEW GAME", comment: ""), shadows: true), for: .normal)
+        
+        newGameButton.contentEdgeInsets = edgeInset
+        resumeButton.setAttributedTitle(TextFont.AttributeText(_size: view.bounds.width, color: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), text: LocalizationSystem.instance.localizedStringForKey(key: "RESUME", comment: ""), shadows: true), for: .normal)
+        resumeButton.contentEdgeInsets = edgeInset
         stackMenuButtons.addArrangedSubview(resumeButton)
         stackMenuButtons.addArrangedSubview(newGameButton)
+        
         resumeButton.alpha = 0
         newGameButton.alpha = 0
         resumeButton.isHidden = true
         newGameButton.isHidden = true
+        
+        
     }
     
     @objc func startNewGame() {
@@ -186,14 +246,18 @@ class MainMenuViewController: UIViewController {
         UserDefaults.standard.removeObject(forKey: "SavedGameModel")
         UserDefaults.standard.removeObject(forKey: "SavedTimer")
         pushButtonMenuAnimation()
+        if !UserDefaults.standard.bool(forKey: "music") {
+            AudioController.sharedController.backgroundMusic.setVolume(0, fadeDuration: 1)
+        }
     }
     
     private func hideButtonAnimation () {
-        
+    
         UIView.animate(withDuration: 0.3,
                        animations: {
                         self.playButton.alpha = 0
                         self.settingsButton.alpha = 0
+                        self.topView.alpha = 0
                         },
                        completion:
             { finished in
@@ -207,6 +271,12 @@ class MainMenuViewController: UIViewController {
                                 self.newGameButton.alpha = 1
                 })
             })
+        stackMenuButtons.widthAnchor.constraint(equalToConstant: removeAdButton.bounds.width).isActive = true
+        resumeButton.widthAnchor.constraint(equalToConstant: stackMenuButtons.bounds.width).isActive = true
+        newGameButton.widthAnchor.constraint(equalToConstant: stackMenuButtons.bounds.width).isActive = true
+        print(resumeButton.bounds.width)
+        print(stackMenuButtons.bounds.width)
+        print(removeAdButton.bounds.width)
     }
     
     private func startVCMenuAnimation() {
@@ -214,7 +284,8 @@ class MainMenuViewController: UIViewController {
                                                        delay: 0,
                                                        options:.curveEaseInOut,
                                                        animations: {
-                                                        self.mainMenuLogo.center = self.view.center },
+                                                        self.mainMenuLogo.center = self.view.center
+        },
                                                        completion: nil)
     }
     
@@ -225,7 +296,9 @@ class MainMenuViewController: UIViewController {
                                                        delay: 0,
                                                        options:.curveEaseInOut,
                                                        animations: {
-                                                        self.stackMenuButtons.center = pointForStackButtonHidding
+                                                        self.removeAdButton.isHidden = true
+
+                                                        self.bottomView.center = pointForStackButtonHidding
                                                         self.stackMenuButtons.alpha = 0
                                                         self.topView.alpha = 0
                                                         },
@@ -250,7 +323,7 @@ class MainMenuViewController: UIViewController {
                     self.mainMenuLogo.alpha = 0
                     self.loadingBar.alpha = 0
                     self.topView.alpha = 0
-                    self.hiscoreLabel.alpha = 0
+//                    self.hiscoreLabel.alpha = 0
                     self.transitionViews()
                         })
                     }
@@ -270,23 +343,20 @@ class MainMenuViewController: UIViewController {
         self.present(gameVC, animated: true, completion: nil)
     }
     
-    private func addParallaxToView(view: UIImageView) {
-        let screenSize = view.bounds.size
-        view.bounds.size = CGSize(width: screenSize.width * 1.2, height: screenSize.height * 1.2)
-        
-        let amount = 20
-        
-        let horizontal = UIInterpolatingMotionEffect(keyPath: "center.x", type: .tiltAlongHorizontalAxis)
-        horizontal.minimumRelativeValue = -amount
-        horizontal.maximumRelativeValue = amount
-        
-        let vertical = UIInterpolatingMotionEffect(keyPath: "center.y", type: .tiltAlongVerticalAxis)
-        vertical.minimumRelativeValue = -amount
-        vertical.maximumRelativeValue = amount
-        
-        let group = UIMotionEffectGroup()
-        group.motionEffects = [horizontal, vertical]
-        view.addMotionEffect(group)
+    private func languageMenuAdding() {
+        if languageMenuView == nil {
+            languageMenuView = LanguageMenuView(frame: view.frame)
+                   if languageMenuView != nil {
+                       view.addSubview(languageMenuView!)
+                       view.addSubview(blurEffectView)
+                       view.bringSubviewToFront(languageMenuView!)
+                       languageMenuView?.animatedAdd()
+                   }
+               } else {
+                   blurEffectView.removeFromSuperview()
+                   languageMenuView?.animatedRemove()
+                   languageMenuView = nil
+               }
     }
     
     private func settingsViewAdding() {
@@ -305,9 +375,46 @@ class MainMenuViewController: UIViewController {
         }
     }
     
+    private func purchaseViewAdding() {
+        if purchaseView == nil {
+            purchaseView = PurchaseView(frame: view.frame)
+            if purchaseView != nil {
+                view.addSubview(purchaseView!)
+                view.addSubview(blurEffectView)
+                view.bringSubviewToFront(purchaseView!)
+                purchaseView?.animatedAdd()
+            }
+        } else {
+            blurEffectView.removeFromSuperview()
+            purchaseView?.animatedRemove()
+            purchaseView = nil
+        }
+    }
+    
     private func soundFXPlay(sound: String) {
         if !UserDefaults.standard.bool(forKey: "soundFX") {
             AudioController.sharedController.playFXSound(file: sound)
+        }
+    }
+    
+    private func setOutletButtons() {
+        playButton.setTitle(LocalizationSystem.instance.localizedStringForKey(key: "PLAY!", comment: ""), for: .normal)
+        settingsButton.setTitle(LocalizationSystem.instance.localizedStringForKey(key: "SETTINGS", comment: ""), for: .normal)
+        removeAdButton.setTitle(LocalizationSystem.instance.localizedStringForKey(key: "REMOVE AD", comment: ""), for: .normal)
+        let currentLang = LocalizationSystem.instance.getLanguage()
+        switch currentLang {
+        case "en":
+            changeLanguageButton.setBackgroundImage(UIImage(named: "eng_btn"), for: .normal)
+        case "fr":
+            changeLanguageButton.setBackgroundImage(UIImage(named: "fra_btn"), for: .normal)
+        case "es":
+            changeLanguageButton.setBackgroundImage(UIImage(named: "esp_btn"), for: .normal)
+        case "ru":
+            changeLanguageButton.setBackgroundImage(UIImage(named: "rus_btn"), for: .normal)
+        case "zh":
+            changeLanguageButton.setBackgroundImage(UIImage(named: "chn_btn"), for: .normal)
+        default:
+            break
         }
     }
 }

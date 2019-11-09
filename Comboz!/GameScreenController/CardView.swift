@@ -60,6 +60,7 @@ class CardView: UIView {
             case 2: color = Colors.green
             case 3: color = Colors.red
             case 4: color = Colors.white
+            case 5: color = Colors.noColor
             default:
                     break
             }
@@ -212,7 +213,7 @@ class CardView: UIView {
         if isFaceUp {
             drawSymbols()
         } else {
-            if let cardBackImage = UIImage(named: "cardBack", in: Bundle(for: self.classForCoder), compatibleWith: traitCollection) {
+            if let cardBackImage = UIImage(named: "card_backside", in: Bundle(for: self.classForCoder), compatibleWith: traitCollection) {
                 cardBackImage.draw(in: bounds)
             }
         }
@@ -222,6 +223,10 @@ class CardView: UIView {
         isOpaque = false
         backgroundColor = .clear
         
+        layer.shadowOffset = CGSize(width: 1.0, height: 6.5)
+        layer.shadowRadius = 1.5
+        layer.shadowOpacity = 0.3
+        layer.shadowColor = UIColor.black.cgColor
         layer.cornerRadius = cornerRadius
         layer.borderWidth = borderWith
         layer.borderColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0)
@@ -285,6 +290,7 @@ class CardView: UIView {
         center = deck
         alpha = 1
         isFaceUp = false
+        superview!.bringSubviewToFront(self)
         UIViewPropertyAnimator.runningPropertyAnimator(withDuration: 0.6,
                                                        delay: delay,
                                                        options:[.curveEaseInOut],
@@ -303,8 +309,8 @@ class CardView: UIView {
     func inviseView(delay: TimeInterval) {
         UIView.animate(withDuration: 3,
                        delay: delay,
-                       options: [.curveEaseInOut, .repeat, .autoreverse],
-                       animations: { self.alpha = 0 },
+                       options: [.repeat, .autoreverse],
+                       animations: { self.alpha = 0.5 },
                        completion: nil)
     }
     
@@ -323,7 +329,8 @@ class CardView: UIView {
         static let matched = #colorLiteral(red: 0.3411764801, green: 0.6235294342, blue: 0.1686274558, alpha: 1).cgColor
         static let miss = #colorLiteral(red: 0.9254902005, green: 0.2352941185, blue: 0.1019607857, alpha: 1).cgColor
         
-        static let white = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+        static let white = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        static let noColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0)
     }
     
     private struct SizeRatio {
@@ -337,7 +344,7 @@ class CardView: UIView {
     }
     
     private var maxCardFrame: CGRect {
-        return bounds.zoomed(by: SizeRatio.maxCardSizeToBoundSize * 1.15)
+        return bounds.zoomed(by: SizeRatio.maxCardSizeToBoundSize * 1.05)
     }
     
     private var cardFrame: CGRect {

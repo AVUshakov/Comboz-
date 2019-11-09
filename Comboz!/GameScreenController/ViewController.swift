@@ -45,6 +45,7 @@ class ViewController: UIViewController, GADInterstitialDelegate {
         }
     }
     
+    
     @IBOutlet weak var backgroundView: UIImageView!
     @IBOutlet weak var score: UILabel! {
         didSet {
@@ -60,12 +61,13 @@ class ViewController: UIViewController, GADInterstitialDelegate {
     
     @IBOutlet weak var timeBonusLabel: UILabel!
     
-    @IBOutlet weak var pauseButton: UIButton!
+    @IBOutlet weak var pauseButton: UIButton! 
+    
     private func timeBonusAnimation() {
         let point = timeBonusLabel.center
         timeBonusLabel.center = CGPoint(x: view.center.x, y: view.frame.minY - score.frame.height)
         timeBonusLabel.isHidden = false
-        timeBonusLabel.blinkEffect()
+        timeBonusLabel.blinkEffect(_duration: 0.2)
         UIViewPropertyAnimator.runningPropertyAnimator(withDuration: 0.5,
                                                        delay: 0,
                                                        options: [.curveEaseInOut],
@@ -100,13 +102,13 @@ class ViewController: UIViewController, GADInterstitialDelegate {
         return true
     }
     
+    
     override func viewWillDisappear(_ animated: Bool) {
         if  endGameView == nil {
             gameModelJSON = game
-            print(game.endGameDetector)
         } else {
             UserDefaults.standard.removeObject(forKey: "SavedGameModel")
-            print("saved")
+//            print("saved")
         }
     }
     
@@ -116,6 +118,16 @@ class ViewController: UIViewController, GADInterstitialDelegate {
             updateViewFromModel()
         }
         blurEffectView.frame = view.bounds
+        if endGameView != nil {
+            endGameView?.newRecordLable.blinkEffect(_duration: 0.5)
+        }
+        let currentLang = LocalizationSystem.instance.getLanguage()
+        LocalizationSystem.instance.setLanguage(languageCode: currentLang)
+        setOutletButtons()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+         NotificationCenter.default.addObserver(self, selector: #selector(willEnterForeground), name: NSNotification.Name("returnFromBackground"), object: nil)
     }
     
     override func viewWillLayoutSubviews() {
@@ -123,14 +135,23 @@ class ViewController: UIViewController, GADInterstitialDelegate {
         scoreLableUpdate()
     }
     
+    
+    
     var interstitial: GADInterstitial!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        AudioController.sharedController.viewController = "GameScreen"
         updateViewFromModel()
-        interstitial = createAndLoadInterstitial()
+        let purchased = UserDefaults.standard.bool(forKey: "Purchase")
+        if purchased == false {
+            interstitial = createAndLoadInterstitial()
+        }
     
         NotificationCenter.default.addObserver(self, selector: #selector(backgroundPauseView), name: NSNotification.Name("goToBackground"), object: nil)
+        if !UserDefaults.standard.bool(forKey: "music") {
+            AudioController.sharedController.playBackgroundMusic(file: AudioController.SoundFile.menuMusic.rawValue)
+        }
     }
     
     func createAndLoadInterstitial() -> GADInterstitial {
@@ -145,15 +166,16 @@ class ViewController: UIViewController, GADInterstitialDelegate {
     }
     
     func showGADModView() {
-        if interstitial.isReady {
-            interstitial.present(fromRootViewController: self)
-        } else {
-            print("Ad not ready")
+        if interstitial != nil {
+            if interstitial.isReady {
+                interstitial.present(fromRootViewController: self)
+            } else {
+                print("Ad not ready")
+            }
         }
     }
     
     override func viewDidDisappear(_ animated: Bool) {
-       
     }
     
     lazy var animator = UIDynamicAnimator(referenceView: view)
@@ -200,6 +222,10 @@ class ViewController: UIViewController, GADInterstitialDelegate {
                 break
         }
         updateViewFromModel()
+    }
+    
+    @objc func willEnterForeground() {
+        print("oh no anim stops")
     }
     
     @IBAction func showHint() {
@@ -307,6 +333,8 @@ class ViewController: UIViewController, GADInterstitialDelegate {
         }
         
 //        if !game.endGameDetector && game.selectedCards.count == 2 {
+//            game.score = UserDefaults.standard.integer(forKey: "HiScore") + 1
+        
         if game.endGameDetector {
             endGameViewAdding()
         }
@@ -348,7 +376,7 @@ class ViewController: UIViewController, GADInterstitialDelegate {
         }
     }
     
-    @objc func presentMainMenuController(){
+    @objc func presentMainMenuController() {
         let mainMenuVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "MainMenuController")
         mainMenuVC.modalPresentationStyle = .fullScreen
         mainMenuVC.modalTransitionStyle = .crossDissolve
@@ -375,7 +403,6 @@ class ViewController: UIViewController, GADInterstitialDelegate {
         dealCardsAnimation()
         updateViewFromModel()
         soundFXPlay(sound: AudioController.SoundFile.tapIn.rawValue)
-        print(game.cardsDeckCount)
     }
   
     private func pauseViewAdding() {
@@ -414,7 +441,7 @@ class ViewController: UIViewController, GADInterstitialDelegate {
             }
         }
         if UserDefaults.standard.object(forKey: "HiScore") != nil {
-            let hiScore = UserDefaults.standard.object(forKey: "HiScore") as! Int
+            let hiScore = UserDefaults.standard.integer(forKey: "HiScore")
             if game.score > hiScore {
                 UserDefaults.standard.set(game.score, forKey: "HiScore")
             }
@@ -466,8 +493,6 @@ class ViewController: UIViewController, GADInterstitialDelegate {
     }
     
     private func minimizeAndDeleteAnimation() {
-      
-
         var cardsForScale: [CardView] {
             var cardsForScale = [CardView]()
             var tmpCard = CardView()
@@ -530,12 +555,9 @@ class ViewController: UIViewController, GADInterstitialDelegate {
     }
     
     @objc func backgroundPauseView() {
-        if pauseView == nil {
+        if pauseView == nil && endGameView == nil {
             pauseViewAdding()
             gameModelJSON = game
-        } else if endGameView != nil {
-            UserDefaults.standard.removeObject(forKey: "SavedGameModel")
-            
         }
     }
     
@@ -572,6 +594,11 @@ class ViewController: UIViewController, GADInterstitialDelegate {
             return
         }
     }
+    
+    private func setOutletButtons() {
+        score.text = LocalizationSystem.instance.localizedStringForKey(key: "SCORE: 0", comment: "")
+        pauseButton.setTitle(LocalizationSystem.instance.localizedStringForKey(key: "PAUSE", comment: ""), for: .normal)
+      }
 }
 
 extension Int {
@@ -615,9 +642,9 @@ extension UIView {
                        completion: { _ in self.removeFromSuperview()})
     }
     
-    func blinkEffect() {
+    func blinkEffect(_duration: TimeInterval) {
         UIView.transition(with: self,
-                          duration: 0.2,
+                          duration: _duration,
                           options: [.transitionCrossDissolve, .repeat],
                           animations: { [weak self] in self?.alpha = 1 },
                           completion: nil )

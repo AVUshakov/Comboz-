@@ -1,0 +1,61 @@
+/* textLabel_button */
+"ARE YOU SURE?" = "ВЫ vCHA?";
+
+/* backButton_button */
+"BACK" = "CHA";
+
+/* backToMenu_button */
+"MAIN MENU" = "CHA МЕНЮ";
+
+/* music_button */
+"MUSIC" = "CHA";
+
+/* cancel_button */
+"NO" = "НЕТ";
+
+/* parallaxButton_button */
+"VIBRATION" = "CHA ВИБРАЦИЯ";
+
+/* restart_button */
+"RESTART" = "ПЕРЕИГРАТЬ";
+
+/* resumeGameButton_button */
+"RESUME" = "ПРОДОЛЖИТЬ";
+
+/* rules_button */
+"RULES" = "ПРАВИЛА";
+
+/* scoreText_button */
+"SCORE" = "СЧЕТ";
+
+/* settings_button */
+"SETTINGS" = "НАСТРОЙКИ";
+
+/* soundFX_button */
+"SOUND FX" = "ЭФФЕКТЫ";
+
+/* timeText_button */
+"TIME" = "ВРЕМЯ";
+
+/* accept_button */
+"YES" = "ДА";
+
+/* newGameButton */
+"NEW GAME" = "НОВАЯ";
+
+/* pauseTextLabel_label */
+"PAUSE" = "ПАУЗА";
+
+/* buyButton */
+"REMOVE AD" = "УБРАТЬ РЕКЛАМУ";
+
+/* playButton */
+"PLAY!" = "ИГРАТЬ!";
+
+/* score label */
+"SCORE: 0" = "СЧЕТ: 0";
+
+
+
+
+

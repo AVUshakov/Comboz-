@@ -38,14 +38,7 @@ class PauseView: UIView {
     var backToMenuAnswerView: AnswerView?
     
     let scaleRatio : CGFloat = 0.12
-    
-    struct LocalizedText {
-        static let setting  = NSLocalizedString("SETTINGS", comment: "settings_button")
-        static let restart  = NSLocalizedString("RESTART", comment: "restart_button")
-        static let resume   = NSLocalizedString("RESUME", comment: "resumeGameButton_button")
-        static let mainMenu = NSLocalizedString("MAIN MENU", comment: "backToMenu_button")
-        static let pause    = NSLocalizedString("PAUSE", comment: "pauseTextLabel_label")
-    }
+    let edgeInset = UIEdgeInsets(top: 6, left: 10, bottom: 10, right: 10)
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -64,31 +57,46 @@ class PauseView: UIView {
     }
     
     private func viewSetup() {
+        var image = String()
+        if UIDevice().userInterfaceIdiom == .phone
+        {
+            switch UIScreen.main.bounds.height {
+            case 812: //iphoneX
+                image = "menu_frame_iphoneX"
+            case 896: //iphoneXS
+                image = "menu_frame_iphoneX"
+            default:
+                image = "menu_frame_iphoneX"
+            }
+        } else if UIDevice().userInterfaceIdiom == .pad {
+            image = "menu_frame_ipad"
+        }
  
         backgroundImage.frame.size = CGSize(width: frame.width * 0.8, height: frame.height * 0.6)
         backgroundImage.center = center
-        backgroundImage.image = UIImage(named: "Menu")
+        backgroundImage.image = UIImage(named: image)
         addSubview(backgroundImage)
         
         stackButtonsView.frame = backgroundImage.frame
         stackButtonsView.translatesAutoresizingMaskIntoConstraints = false
         stackButtonsView.spacing = 10
         stackButtonsView.axis = .vertical
+        stackButtonsView.center = center
         addSubview(stackButtonsView)
         
-        pauseTextLabel.attributedText = TextFont.AttributeText(_size: bounds.width * 1.4, color: #colorLiteral(red: 0.9997687936, green: 0.6423431039, blue: 0.009596501477, alpha: 1), text: LocalizedText.pause)
+        pauseTextLabel.attributedText = TextFont.AttributeText(_size: bounds.width * 1.3, color: #colorLiteral(red: 0.9997687936, green: 0.6423431039, blue: 0.009596501477, alpha: 1), text: LocalizationSystem.instance.localizedStringForKey(key: "PAUSE", comment: ""), shadows: true)
         pauseTextLabel.translatesAutoresizingMaskIntoConstraints = false
         pauseTextLabel.textAlignment = .center
         
-        restart.setBackgroundImage(UIImage(named: "Def_button"), for: .normal)
-        settings.setBackgroundImage(UIImage(named: "Def_button"), for: .normal)
-        resumeGameButton.setBackgroundImage(UIImage(named: "On_button"), for: .normal)
-        backToMenu.setBackgroundImage(UIImage(named: "Back_button"), for: .normal)
+        restart.setBackgroundImage(UIImage(named: "def_button"), for: .normal)
+        settings.setBackgroundImage(UIImage(named: "def_button"), for: .normal)
+        resumeGameButton.setBackgroundImage(UIImage(named: "def_button"), for: .normal)
+        backToMenu.setBackgroundImage(UIImage(named: "back_button"), for: .normal)
         
-        restart.setAttributedTitle(TextFont.AttributeText(_size: bounds.width, color: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), text: LocalizedText.restart), for: .normal)
-        settings.setAttributedTitle(TextFont.AttributeText(_size: bounds.width, color: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), text: LocalizedText.setting), for: .normal)
-        resumeGameButton.setAttributedTitle(TextFont.AttributeText(_size: bounds.width, color: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), text: LocalizedText.resume), for: .normal)
-        backToMenu.setAttributedTitle(TextFont.AttributeText(_size: bounds.width, color: #colorLiteral(red: 0.2392156869, green: 0.6745098233, blue: 0.9686274529, alpha: 1), text: LocalizedText.mainMenu), for: .normal)
+        restart.setAttributedTitle(TextFont.AttributeText(_size: bounds.width, color: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), text: LocalizationSystem.instance.localizedStringForKey(key: "RESTART", comment: ""), shadows: true), for: .normal)
+        settings.setAttributedTitle(TextFont.AttributeText(_size: bounds.width, color: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), text: LocalizationSystem.instance.localizedStringForKey(key: "SETTINGS", comment: ""), shadows: true), for: .normal)
+        resumeGameButton.setAttributedTitle(TextFont.AttributeText(_size: bounds.width, color: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), text: LocalizationSystem.instance.localizedStringForKey(key: "RESUME", comment: ""), shadows: true), for: .normal)
+        backToMenu.setAttributedTitle(TextFont.AttributeText(_size: bounds.width, color: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), text: LocalizationSystem.instance.localizedStringForKey(key: "MAIN MENU", comment: ""), shadows: true), for: .normal)
 
         restart.translatesAutoresizingMaskIntoConstraints = false
         settings.translatesAutoresizingMaskIntoConstraints = false
@@ -99,6 +107,11 @@ class PauseView: UIView {
         settings.titleLabel?.adjustsFontSizeToFitWidth = true
         resumeGameButton.titleLabel?.adjustsFontSizeToFitWidth = true
         backToMenu.titleLabel?.adjustsFontSizeToFitWidth = true
+        
+        restart.contentEdgeInsets = edgeInset
+        settings.contentEdgeInsets = edgeInset
+        resumeGameButton.contentEdgeInsets = edgeInset
+        backToMenu.contentEdgeInsets = edgeInset
 
         restart.addTarget(self, action: #selector(openAnswerView), for: .touchUpInside)
         settings.addTarget(self, action: #selector(settingsViewAdding), for: .touchUpInside)

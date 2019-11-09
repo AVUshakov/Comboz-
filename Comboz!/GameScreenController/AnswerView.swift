@@ -17,12 +17,7 @@ class AnswerView: UIView {
     var cancel = UIButton()
     var stackButton = UIStackView()
     var stackView = UIStackView()
-    
-    struct LocalizedText {
-        static let accept     = NSLocalizedString("YES", comment: "accept_button")
-        static let cancel     = NSLocalizedString("NO", comment: "cancel_button")
-        static let textLabel  = NSLocalizedString("ARE YOU SURE?", comment: "textLabel_button")
-    }
+    let edgeInset = UIEdgeInsets(top: 6, left: 10, bottom: 10, right: 10)
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -35,13 +30,27 @@ class AnswerView: UIView {
     }
     
     private func viewSetup() {
+        var image = String()
+        if UIDevice().userInterfaceIdiom == .phone
+        {
+            switch UIScreen.main.bounds.height {
+            case 812: //iphoneX
+                image = "qv_frame_iphoneX"
+            case 896: //iphoneXS
+                image = "qv_frame_iphoneX"
+            default:
+                image = "qv_frame_iphoneX"
+            }
+        } else if UIDevice().userInterfaceIdiom == .pad {
+            image = "qv_frame_ipad"
+        }
         
         rectView.frame.size = CGSize(width: bounds.width * 0.7, height: bounds.height * 0.2)
         rectView.center = center
         rectView.addSubview(backgroundImage)
         
         backgroundImage.frame.size = rectView.bounds.size
-        backgroundImage.image = UIImage(named: "Menu")
+        backgroundImage.image = UIImage(named: image)
         addSubview(rectView)
         
         stackButton.axis = .horizontal
@@ -59,22 +68,24 @@ class AnswerView: UIView {
         stackView.addArrangedSubview(stackButton)
         rectView.addSubview(stackView)
         
-        textLabel.attributedText = TextFont.AttributeText(_size: bounds.width, color: #colorLiteral(red: 0.9997687936, green: 0.6423431039, blue: 0.009596501477, alpha: 1), text: LocalizedText.textLabel)
+        textLabel.attributedText = TextFont.AttributeText(_size: bounds.width, color: #colorLiteral(red: 0.9997687936, green: 0.6423431039, blue: 0.009596501477, alpha: 1), text: LocalizationSystem.instance.localizedStringForKey(key: "ARE YOU SURE?", comment: ""), shadows: true)
         textLabel.textAlignment = .center
         textLabel.adjustsFontSizeToFitWidth = true
         textLabel.translatesAutoresizingMaskIntoConstraints = false
         textLabel.alpha = 1
         
-        cancel.setBackgroundImage(UIImage(named: "Off_button"), for: .normal)
-        cancel.setAttributedTitle(TextFont.AttributeText(_size: bounds.width, color: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), text: LocalizedText.cancel), for: .normal)
+        cancel.setBackgroundImage(UIImage(named: "off_button"), for: .normal)
+        cancel.setAttributedTitle(TextFont.AttributeText(_size: bounds.width, color: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), text: LocalizationSystem.instance.localizedStringForKey(key: "NO", comment: ""), shadows: true), for: .normal)
         cancel.translatesAutoresizingMaskIntoConstraints = false
         cancel.addTarget(self, action: #selector(closeView), for: .touchUpInside)
         cancel.titleLabel?.adjustsFontSizeToFitWidth = true
+        cancel.contentEdgeInsets = edgeInset
         
-        accept.setBackgroundImage(UIImage(named: "On_button"), for: .normal)
-        accept.setAttributedTitle(TextFont.AttributeText(_size: bounds.width - 0.03, color: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), text: LocalizedText.accept), for: .normal)
+        accept.setBackgroundImage(UIImage(named: "on_button"), for: .normal)
+        accept.setAttributedTitle(TextFont.AttributeText(_size: bounds.width - 0.03, color: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), text: LocalizationSystem.instance.localizedStringForKey(key: "YES", comment: ""), shadows: true), for: .normal)
         accept.translatesAutoresizingMaskIntoConstraints = false
         accept.titleLabel?.adjustsFontSizeToFitWidth = true
+        accept.contentEdgeInsets = edgeInset
 
         constraintsParameters()
     }

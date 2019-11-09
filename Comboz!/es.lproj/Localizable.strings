@@ -1,0 +1,62 @@
+/* textLabel_button */
+"ARE YOU SURE?" = "ESTÁS SEGURO?";
+
+/* backButton
+   backButton_button */
+"BACK" = "ESPALDA";
+
+/* backToMenu_button */
+"MAIN MENU" = "MENÚ PRINCIPAL";
+
+/* music_button */
+"MUSIC" = "MÚSICA";
+
+/* newGameButton */
+"NEW GAME" = "NUEVO JUEGO";
+
+/* newRecord_lable */
+"NEW RECORD!" = "NUEVO RECORD";
+
+/* cancel_button */
+"NO" = "NO";
+
+/* pauseTextLabel_label */
+"PAUSE" = "PAUSA";
+
+/* buyButton */
+"REMOVE AD" = "RETIRE EL ANUNCIO";
+
+/* restart_button */
+"RESTART" = "REINICIAR";
+
+/* resumeButton
+   resumeGameButton_button */
+"RESUME" = "CONTINIUAR";
+
+/* rules_button */
+"RULES" = "REGLAS";
+
+/* scoreText_button */
+"SCORE" = "PUNTUACIÓN";
+
+/* settigsLable_button
+   settings_button */
+"SETTINGS" = "AJUSTES";
+
+/* soundFX_button */
+"SOUND FX" = "SONIDO FX";
+
+/* timeText_button */
+"TIME" = "HORA";
+
+/* vibration_button */
+"VIBRATION" = "VIBRACIÓN";
+
+/* accept_button */
+"YES" = "SI";
+
+/* playButton */
+"PLAY!" = "ИГРАТЬ!";
+
+/* score label */
+"SCORE: 0" = "PUNTUACIÓN: 0";

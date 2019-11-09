@@ -1,0 +1,24 @@
+
+/* Class = "UILabel"; text = "time  bonus !"; ObjectID = "43h-pR-Z99"; */
+"43h-pR-Z99.text" = "time  bonus !";
+
+/* Class = "UIButton"; normalTitle = "SETTINGS"; ObjectID = "4EM-El-TDb"; */
+"4EM-El-TDb.normalTitle" = "LA SETTINGS";
+
+/* Class = "UIButton"; normalTitle = "Pause"; ObjectID = "4L4-JD-A2n"; */
+"4L4-JD-A2n.normalTitle" = "LA Pause";
+
+/* Class = "UILabel"; text = "0000"; ObjectID = "7EI-KV-DkH"; */
+"7EI-KV-DkH.text" = "0000";
+
+/* Class = "UIButton"; normalTitle = "Remove Ad"; ObjectID = "B6A-4r-llh"; */
+"B6A-4r-llh.normalTitle" = "LA Remove Ad";
+
+/* Class = "UILabel"; text = "Score: 0"; ObjectID = "CFx-r4-MPU"; */
+"CFx-r4-MPU.text" = "LA Score: 0";
+
+/* Class = "UILabel"; text = "0:00:00"; ObjectID = "d3b-RF-LXL"; */
+"d3b-RF-LXL.text" = "0:00:00";
+
+/* Class = "UIButton"; normalTitle = "PL"; ObjectID = "v4F-ey-Tr4"; */
+"v4F-ey-Tr4.normalTitle" = "LA PLLA";

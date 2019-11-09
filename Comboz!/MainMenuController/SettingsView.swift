@@ -22,21 +22,13 @@ class SettingsView: UIView {
     var settingsLable = UILabel()
     
     let scaleRatio : CGFloat = 0.12
+    let edgeInset = UIEdgeInsets(top: 6, left: 10, bottom: 10, right: 10)
     
     var stackButton = UIStackView()
     
     var helpView: HelpView?
     
     var oldRect = CGRect()
-    
-    struct LocalizedText {
-        static let parallaxButton  = NSLocalizedString("VIBRATION", comment: "vibration_button")
-        static let soundFX         = NSLocalizedString("SOUND FX", comment: "soundFX_button")
-        static let music           = NSLocalizedString("MUSIC", comment: "music_button")
-        static let rules           = NSLocalizedString("RULES", comment: "rules_button")
-        static let backButton      = NSLocalizedString("BACK", comment: "backButton_button")
-        static let settigsLable    = NSLocalizedString("SETTINGS", comment: "settigsLable_button")
-    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -55,10 +47,24 @@ class SettingsView: UIView {
     }
     
     private func viewSetup() {
+        var image = String()
+        if UIDevice().userInterfaceIdiom == .phone
+        {
+            switch UIScreen.main.bounds.height {
+            case 812: //iphoneX
+                image = "menu_frame_iphoneX"
+            case 896: //iphoneXS
+                image = "menu_frame_iphoneX"
+            default:
+                image = "menu_frame_iphoneX"
+            }
+        } else if UIDevice().userInterfaceIdiom == .pad {
+            image = "menu_frame_ipad"
+        }
                 
         backgroundImage.frame.size = CGSize(width: frame.width * 0.8, height: frame.height * 0.6)
         backgroundImage.center = center
-        backgroundImage.image = UIImage(named: "Menu")
+        backgroundImage.image = UIImage(named: image)
         addSubview(backgroundImage)
         
         stackButton.frame = backgroundImage.frame
@@ -67,7 +73,7 @@ class SettingsView: UIView {
         stackButton.spacing = 10
         addSubview(stackButton)
         
-        settingsLable.attributedText = TextFont.AttributeText(_size: bounds.width * 1.4, color: #colorLiteral(red: 0.9997687936, green: 0.6423431039, blue: 0.009596501477, alpha: 1), text: LocalizedText.settigsLable)
+        settingsLable.attributedText = TextFont.AttributeText(_size: bounds.width * 1.3, color: #colorLiteral(red: 0.9997687936, green: 0.6423431039, blue: 0.009596501477, alpha: 1), text: LocalizationSystem.instance.localizedStringForKey(key: "SETTINGS", comment: ""), shadows: true)
         settingsLable.adjustsFontSizeToFitWidth = true
         settingsLable.translatesAutoresizingMaskIntoConstraints = false
         settingsLable.textAlignment = .center
@@ -76,17 +82,19 @@ class SettingsView: UIView {
         setButtons(button: vibration)
         setButtons(button: soundFX)
         
-        rules.setBackgroundImage(UIImage(named: "Def_button"), for: .normal)
-        rules.setAttributedTitle(TextFont.AttributeText(_size: bounds.width, color: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), text: LocalizedText.rules), for: .normal)
+        rules.setBackgroundImage(UIImage(named: "def_button"), for: .normal)
+        rules.setAttributedTitle(TextFont.AttributeText(_size: bounds.width, color: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), text: LocalizationSystem.instance.localizedStringForKey(key: "RULES", comment: ""), shadows: true), for: .normal)
         rules.addTarget(self, action: #selector(helpViewAdding), for: .touchUpInside)
         rules.translatesAutoresizingMaskIntoConstraints = false
         rules.titleLabel?.adjustsFontSizeToFitWidth = true
+        rules.contentEdgeInsets = edgeInset
         
-        backButton.setBackgroundImage(UIImage(named: "Back_button"), for: .normal)
-        backButton.setAttributedTitle(TextFont.AttributeText(_size: bounds.width, color: #colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1), text: LocalizedText.backButton), for: .normal)
+        backButton.setBackgroundImage(UIImage(named: "back_button"), for: .normal)
+        backButton.setAttributedTitle(TextFont.AttributeText(_size: bounds.width, color: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), text: LocalizationSystem.instance.localizedStringForKey(key: "BACK", comment: ""), shadows: true), for: .normal)
         backButton.addTarget(self, action: #selector(closeView), for: .touchUpInside)
         backButton.translatesAutoresizingMaskIntoConstraints = false
         backButton.titleLabel?.adjustsFontSizeToFitWidth = true
+        backButton.contentEdgeInsets = edgeInset
 
         
         stackButton.addArrangedSubview(settingsLable)
@@ -102,12 +110,13 @@ class SettingsView: UIView {
     private func setButtons(button: UIButton) {
         button.setBackgroundImage(UIImage(named: buttonsImage(button: button)[0]), for: .normal)
         button.setBackgroundImage(UIImage(named: buttonsImage(button: button)[1]), for: .selected)
-        button.setAttributedTitle(TextFont.AttributeText(_size: bounds.width, color: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), text: "\(buttonsTitle(button: button))"), for: .normal)
-        button.setAttributedTitle(TextFont.AttributeText(_size: bounds.width, color: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), text: "\(buttonsTitle(button: button))"), for: .selected)
+        button.setAttributedTitle(TextFont.AttributeText(_size: bounds.width, color: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), text: "\(buttonsTitle(button: button))", shadows: true), for: .normal)
+        button.setAttributedTitle(TextFont.AttributeText(_size: bounds.width, color: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), text: "\(buttonsTitle(button: button))", shadows: true), for: .selected)
         button.isSelected =  UserDefaults.standard.bool(forKey: codingKeys(button: button))
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(pushedButton), for: .touchUpInside)
         button.titleLabel?.adjustsFontSizeToFitWidth = true
+        button.contentEdgeInsets = edgeInset
     }
     
     @objc func pushedButton(sender: UIButton) {
@@ -137,7 +146,16 @@ class SettingsView: UIView {
         switch button {
         case music:
             if !music.isSelected {
-                AudioController.sharedController.playBackgroundMusic(file: AudioController.SoundFile.tapIn.rawValue)
+                let vc = AudioController.sharedController.viewController
+                switch vc {
+                case "MainMenu":
+                    AudioController.sharedController.playBackgroundMusic(file: AudioController.SoundFile.menuMusic.rawValue)
+                case "GameScreen":
+                    AudioController.sharedController.playBackgroundMusic(file: AudioController.SoundFile.tapIn.rawValue)
+                default:
+                    break
+                }
+                
             } else {
                 AudioController.sharedController.backgroundMusic.stop()
             }
@@ -165,14 +183,14 @@ class SettingsView: UIView {
         var image = [String]()
         switch button {
         case vibration:
-            image.append("On_button")
-            image.append("Off_button")
+            image.append("on_button")
+            image.append("off_button")
         case music:
-            image.append("On_button")
-            image.append("Off_button")
+            image.append("on_button")
+            image.append("off_button")
         case soundFX:
-            image.append("On_button")
-            image.append("Off_button")
+            image.append("on_button")
+            image.append("off_button")
         default:
             break
         }
@@ -183,11 +201,11 @@ class SettingsView: UIView {
         var text = String()
         switch button {
         case vibration:
-            text = LocalizedText.parallaxButton
+            text = LocalizationSystem.instance.localizedStringForKey(key: "VIBRATION", comment: "")
         case music:
-            text = LocalizedText.music
+            text = LocalizationSystem.instance.localizedStringForKey(key: "MUSIC", comment: "")
         case soundFX:
-            text = LocalizedText.soundFX
+            text = LocalizationSystem.instance.localizedStringForKey(key: "SOUND FX", comment: "")
         default:
             break
         }

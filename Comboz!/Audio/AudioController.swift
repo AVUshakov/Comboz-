@@ -13,8 +13,10 @@ class AudioController {
     
     static let sharedController = AudioController()
     
-    var backgroundMusic = AVAudioPlayer()
-    var fx = AVAudioPlayer()
+    var backgroundMusic : AVAudioPlayer!
+    var fx : AVAudioPlayer!
+    
+    var viewController = String()
     
     func playBackgroundMusic(file: String) {
         do {
@@ -44,5 +46,6 @@ class AudioController {
         case dismathingComboz = "dismatchingComboz"
         case timeBonus = "timeBonusSound"
         case dealCards = "dealCards"
+        case menuMusic = "comboz"
     }
 }

@@ -45,3 +45,17 @@
 
 /* pauseTextLabel_label */
 "PAUSE" = "ПАУЗА";
+
+/* buyButton */
+"REMOVE AD" = "УБРАТЬ РЕКЛАМУ";
+
+/* playButton */
+"PLAY!" = "ИГРАТЬ!";
+
+/* score label */
+"SCORE: 0" = "СЧЕТ: 0";
+
+
+
+
+

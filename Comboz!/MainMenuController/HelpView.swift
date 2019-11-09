@@ -10,13 +10,17 @@ import UIKit
 
 class HelpView: UIView {
     
+    var backImage = UIImageView()
+    
+    let stackView = UIStackView()
+    
     let textView = UITextView()
 
     var imageLabels = [String : Int]()
     
-    var closeViewButton: UIButton = {
+    var backButton: UIButton = {
         let button = UIButton()
-        button.setBackgroundImage(UIImage(named: "Back_button"), for: .normal)
+        button.setBackgroundImage(UIImage(named: "back_button"), for: .normal)
         button.addTarget(self, action: #selector(closeView), for: .touchUpInside)
         return button
     }()
@@ -33,68 +37,86 @@ class HelpView: UIView {
     
     private func viewSetup() {
         
-        backgroundColor = #colorLiteral(red: 0.9764705896, green: 0.850980401, blue: 0.5490196347, alpha: 1)
-    
-        closeViewButton.frame.size = CGSize(width: bounds.width * 0.1, height: bounds.width * 0.1)
-        closeViewButton.frame.origin = CGPoint(x: bounds.maxX - closeViewButton.frame.width - 2, y: bounds.minY + 2)
-                
-        closeViewButton.isEnabled = true
-        closeViewButton.isUserInteractionEnabled = true
+        let image = "rules_frame_iphoneX"
+        backImage.image = UIImage(named: image)
+        backImage.frame = bounds
+        addSubview(backImage)
+        
+        addSubview(textView)
+        addSubview(backButton)
+        
+        textView.frame = CGRect(x: bounds.origin.x + bounds.width * 0.02,
+                                y: bounds.origin.y + bounds.height * 0.02,
+                                width: bounds.width * 0.97,
+                                height: bounds.height * 0.84)
+        
+        backButton.frame.size = CGSize(width: bounds.width * 0.4, height: bounds.width * 0.15)
+        backButton.frame.origin = CGPoint(x: bounds.midX - backButton.frame.width * 0.5, y: textView.bounds.maxY + ((bounds.maxY - textView.bounds.maxY) * 0.5) * 0.5)
+        
+        backButton.isEnabled = true
+        backButton.isUserInteractionEnabled = true
+        backButton.setAttributedTitle(TextFont.AttributeText(_size: bounds.width, color: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), text: LocalizationSystem.instance.localizedStringForKey(key: "BACK", comment: ""), shadows: true), for: .normal)
         
         textView.isSelectable = false
         textView.isEditable = false
         textView.allowsEditingTextAttributes = false
-        textView.font = UIFont(descriptor: .preferredFontDescriptor(withTextStyle: .body), size: 16.0)
-        textView.backgroundColor = #colorLiteral(red: 0.8078431487, green: 0.02745098062, blue: 0.3333333433, alpha: 1)
-        textView.textColor = #colorLiteral(red: 0.9998916984, green: 1, blue: 0.9998809695, alpha: 1)
-        
-        textView.frame = CGRect(origin: CGPoint(x: self.bounds.origin.x + 10, y: self.bounds.origin.y + 40) , size: CGSize(width: self.bounds.width - 20, height: self.bounds.height - 40))
 
-        var attributedString = NSMutableAttributedString()
+        textView.backgroundColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0)
+
+        let attributedString = NSMutableAttributedString()
         
-        let langStr = Locale.current.languageCode
-        
-        print(langStr!)
-        
-        switch langStr {
+        let currentLang = LocalizationSystem.instance.getLanguage()
+          
+        switch currentLang {
         case "en":
-            attributedString = NSMutableAttributedString(string: load(file: "rules"))
-            imageLabels = ["label1" : 772, "label2" : 904, "label3" : 1052]
+            attributedString.setAttributedString(TextFont.AttributeText(_size: bounds.width * 0.5, color: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), text: load(file: "rulesEN"), shadows: false))
+            imageLabels = ["ex1" : 672, "ex2" : 772, "ex3" : 908]
         case "ru":
-            attributedString = NSMutableAttributedString(string: load(file: "rulesRU"))
-            imageLabels = ["label1" : 12, "label2" : 234, "label3" : 236]
+            attributedString.setAttributedString(TextFont.AttributeText(_size: bounds.width * 0.55, color: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), text: load(file: "rulesRU"), shadows: false))
+            imageLabels = ["ex1" : 678, "ex2" : 782, "ex3" : 911]
+            
+        case "es":
+            attributedString.setAttributedString(TextFont.AttributeText(_size: bounds.width * 0.55, color: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), text: load(file: "rulesES"), shadows: false))
+            imageLabels = ["ex1" : 727, "ex2" : 857, "ex3" : 1002]
+        case "zh":
+            attributedString.setAttributedString(TextFont.AttributeText(_size: bounds.width * 0.4, color: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), text: load(file: "rulesRU"), shadows: false))
+            imageLabels = ["ex1" : 772, "ex2" : 234, "ex3" : 236]
+        case "fr":
+            attributedString.setAttributedString(TextFont.AttributeText(_size: bounds.width * 0.55, color: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), text: load(file: "rulesFR"), shadows: false))
+            imageLabels = ["ex1" : 796, "ex2" : 948, "ex3" : 1101]
         default:
             break
         }
 
-        let textAtachment = NSTextAttachment()
-        textAtachment.image = UIImage(named: "label1")
-
-        let oldWidth = textAtachment.image!.size.width
-
-        let scaleFactor = oldWidth/(textView.frame.size.width * 0.3)
-        textAtachment.image = UIImage(cgImage: (textAtachment.image?.cgImage)!, scale: scaleFactor, orientation: .up)
-
-        let attrStringWithImage = NSAttributedString(attachment: textAtachment)
-
-        attributedString.replaceCharacters(in: NSMakeRange(imageLabels["label1"]!, 1), with: attrStringWithImage)
-        attributedString.replaceCharacters(in: NSMakeRange(imageLabels["label2"]!, 1), with: attrStringWithImage)
-        attributedString.replaceCharacters(in: NSMakeRange(imageLabels["label3"]!, 1), with: attrStringWithImage)
+        attributedString.replaceCharacters(in: NSMakeRange(imageLabels["ex1"]!, 1), with: attrStringWithImage(string: "ex1", textView: textView) )
+        attributedString.replaceCharacters(in: NSMakeRange(imageLabels["ex2"]!, 1), with: attrStringWithImage(string: "ex2", textView: textView) )
+        attributedString.replaceCharacters(in: NSMakeRange(imageLabels["ex3"]!, 1), with: attrStringWithImage(string: "ex3", textView: textView)  )
 
         textView.attributedText = attributedString
-       // addSubview(textView)
-        self.addSubview(closeViewButton)
-
-
-        
     }
     
     @objc func closeView() {
         self.animatedRemove()
         soundFXPlay(sound: AudioController.SoundFile.tapIn.rawValue)
+        UserDefaults.standard.set(false, forKey: "Purchase")
     }
     
-    private func load(file name:String) -> String {
+    private func attrStringWithImage(string: String, textView: UITextView ) -> NSAttributedString {
+        
+        let textAtachment = NSTextAttachment()
+        textAtachment.image = UIImage(named: string)
+        
+        let oldWidth = textAtachment.image!.size.width
+        
+        let scaleFactor = oldWidth/(textView.frame.size.width * 0.2)
+        textAtachment.image = UIImage(cgImage: (textAtachment.image?.cgImage)!, scale: scaleFactor, orientation: .up)
+        
+        let attrStringWithImage = NSAttributedString(attachment: textAtachment)
+     
+        return attrStringWithImage
+    }
+    
+    private func load(file name: String) -> String {
         if let path = Bundle.main.path(forResource: name, ofType: "txt") {
             if let contents = try? String(contentsOfFile: path) {
                 return contents
