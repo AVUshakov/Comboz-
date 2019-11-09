@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 http://docs.oasis-open.org/xliff/v1.2/os/xliff-core-1.2-strict.xsd">
+  <file original="Comboz!/Base.lproj/Main.storyboard" source-language="en" target-language="it" datatype="plaintext">
+    <header>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="11.2" build-num="11B52"/>
+    </header>
+    <body>
+      <trans-unit id="4EM-El-TDb.normalTitle" xml:space="preserve">
+        <source>SETTINGS</source>
+        <target>LA SETTINGS</target>
+        <note>Class = "UIButton"; normalTitle = "SETTINGS"; ObjectID = "4EM-El-TDb";</note>
+      </trans-unit>
+      <trans-unit id="4L4-JD-A2n.normalTitle" xml:space="preserve">
+        <source>Pause</source>
+        <target>LA Pause</target>
+        <note>Class = "UIButton"; normalTitle = "Pause"; ObjectID = "4L4-JD-A2n";</note>
+      </trans-unit>
+      <trans-unit id="7EI-KV-DkH.text" xml:space="preserve">
+        <source>0000</source>
+        <target>0000</target>
+        <note>Class = "UILabel"; text = "0000"; ObjectID = "7EI-KV-DkH";</note>
+      </trans-unit>
+      <trans-unit id="43h-pR-Z99.text" xml:space="preserve">
+        <source>time  bonus !</source>
+        <target>time  bonus !</target>
+        <note>Class = "UILabel"; text = "time  bonus !"; ObjectID = "43h-pR-Z99";</note>
+      </trans-unit>
+      <trans-unit id="B6A-4r-llh.normalTitle" xml:space="preserve">
+        <source>Remove Ad</source>
+        <target>LA Remove Ad</target>
+        <note>Class = "UIButton"; normalTitle = "Remove Ad"; ObjectID = "B6A-4r-llh";</note>
+      </trans-unit>
+      <trans-unit id="CFx-r4-MPU.text" xml:space="preserve">
+        <source>Score: 0</source>
+        <target>LA Score: 0</target>
+        <note>Class = "UILabel"; text = "Score: 0"; ObjectID = "CFx-r4-MPU";</note>
+      </trans-unit>
+      <trans-unit id="d3b-RF-LXL.text" xml:space="preserve">
+        <source>0:00:00</source>
+        <target>0:00:00</target>
+        <note>Class = "UILabel"; text = "0:00:00"; ObjectID = "d3b-RF-LXL";</note>
+      </trans-unit>
+      <trans-unit id="v4F-ey-Tr4.normalTitle" xml:space="preserve">
+        <source>PL</source>
+        <target>LA PLLA</target>
+        <note>Class = "UIButton"; normalTitle = "PL"; ObjectID = "v4F-ey-Tr4";</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="Comboz!/en.lproj/InfoPlist.strings" source-language="en" target-language="it" datatype="plaintext">
+    <header>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="11.2" build-num="11B52"/>
+    </header>
+    <body>
+      <trans-unit id="CFBundleDisplayName" xml:space="preserve">
+        <source>Comboz!</source>
+        <target>Comboz!</target>
+        <note>Bundle display name</note>
+      </trans-unit>
+      <trans-unit id="CFBundleName" xml:space="preserve">
+        <source>Comboz!</source>
+        <target>Comboz!</target>
+        <note>Bundle name</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="Comboz!/en.lproj/Localizable.strings" source-language="en" target-language="it" datatype="plaintext">
+    <header>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="11.2" build-num="11B52"/>
+    </header>
+    <body>
+      <trans-unit id="BACK" xml:space="preserve">
+        <source>BACK</source>
+        <target>НАЗАД</target>
+        <note>backButton_button</note>
+      </trans-unit>
+      <trans-unit id="ENGLISH" xml:space="preserve">
+        <source>ENGLISH</source>
+        <note>en_button</note>
+      </trans-unit>
+      <trans-unit id="ESPAÑOL" xml:space="preserve">
+        <source>ESPAÑOL</source>
+        <note>es_button</note>
+      </trans-unit>
+      <trans-unit id="FRANÇAIS" xml:space="preserve">
+        <source>FRANÇAIS</source>
+        <note>music_button</note>
+      </trans-unit>
+      <trans-unit id="РУССКИЙ" xml:space="preserve">
+        <source>РУССКИЙ</source>
+        <note>rules_button</note>
+      </trans-unit>
+      <trans-unit id="中文" xml:space="preserve">
+        <source>中文</source>
+        <note>settigsLable_button</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

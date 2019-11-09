@@ -1,0 +1,61 @@
+/* textLabel_button */
+"ARE YOU SURE?" = "ARE YOU SURE?";
+
+/* backButton_button */
+"BACK" = "BACK";
+
+/* backToMenu_button */
+"MAIN MENU" = "MAIN MENU";
+
+/* music_button */
+"MUSIC" = "MUSIC";
+
+/* cancel_button */
+"NO" = "NO";
+
+/* parallaxButton_button */
+"VIBRATION" = "VIBRATION";
+
+/* restart_button */
+"RESTART" = "RESTART";
+
+/* resumeGameButton_button */
+"RESUME" = "RESUME";
+
+/* rules_button */
+"RULES" = "RULES";
+
+/* scoreText_button */
+"SCORE" = "SCORE";
+
+/* settings_button */
+"SETTINGS" = "SETTINGS";
+
+/* soundFX_button */
+"SOUND FX" = "SOUND FX";
+
+/* timeText_button */
+"TIME" = "TIME";
+
+/* accept_button */
+"YES" = "YES";
+
+/* newGameButton */
+"NEW GAME" = "NEW GAME";
+
+/* pauseTextLabel_label */
+"PAUSE" = "PAUSE";
+
+/* buyButton */
+"REMOVE AD" = "REMOVE AD";
+
+/* playButton */
+"PLAY!" = "PLAY!";
+
+/* score label */
+"SCORE: 0" = "SCORE: 0";
+
+
+
+
+

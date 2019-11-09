@@ -1,0 +1,40 @@
+Bienvenido a Comboz!
+
+El objetivo de este juego es encontrar la combinación Comboz. Al principio del juego se repartirán 12 cartas. La baraja es de 81 cartas. Cada carta tiene cuatro características:
+
+1) Color: rojo, verde o azul. 
+
+2) Símbolo: cuadrado, zigzag o triángulo.
+
+3) Cantidad: uno, dos o tres símbolos. 
+
+4) Relleno: de color, sin color o a rayas.
+
+La combinación Comboz consiste en tres cartas, cada uno de los signos de las cuales tienen las mismas o diferentes características para todas las cartas!
+
+Echa un vistazo a las posibles combinaciones Comboz:
+
+1) Color: diferente para todas, Símbolo: el mismo para todas (zigzag), Cantidad: la misma para todas (dos), relleno: el mismo para todas (relleno de color)
+
+
+
+
+2) Color: diferente para todas. Símbolo: diferente para todas, Cantidad: diferente para todas, Relleno: diferente para todas.
+
+
+
+
+3) Color: el mismo para todas (azul), Símbolo: el mismo para todas (cuadrado), Cantidad: diferente para todas, Relleno diferente para todas.
+
+
+
+
+Si encuentras un Comboz, recibirás 1 punto, si la combinación es errónea, perderás 1 punto.
+
+Si crees, que la Comboz no está en la mesa, pulsa el botón Deal, así recibirás 3 cartas adicionales, si hay 21 cartas en la mesa, entre ellas estará la Comboz, por tanto, el botón Deal no estará disponible.
+
+Tenemos un extra para ti, si encuentras el Comboz en 10 segundos, recibirás 5 puntos.
+
+“Comboz!” ayuda a desarrollar tu capacidad de observación, concentración y la rapidez de reacción.
+
+Suerte!

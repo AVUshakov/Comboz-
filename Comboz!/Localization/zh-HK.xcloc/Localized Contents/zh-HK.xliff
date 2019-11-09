@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 http://docs.oasis-open.org/xliff/v1.2/os/xliff-core-1.2-strict.xsd">
+  <file original="Comboz!/Base.lproj/Main.storyboard" source-language="en" target-language="zh-HK" datatype="plaintext">
+    <header>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="11.2" build-num="11B52"/>
+    </header>
+    <body>
+      <trans-unit id="4EM-El-TDb.normalTitle" xml:space="preserve">
+        <source>SETTINGS</source>
+        <target>SETTINGS</target>
+        <note>Class = "UIButton"; normalTitle = "SETTINGS"; ObjectID = "4EM-El-TDb";</note>
+      </trans-unit>
+      <trans-unit id="4L4-JD-A2n.normalTitle" xml:space="preserve">
+        <source>Pause</source>
+        <target>CHA</target>
+        <note>Class = "UIButton"; normalTitle = "Pause"; ObjectID = "4L4-JD-A2n";</note>
+      </trans-unit>
+      <trans-unit id="7EI-KV-DkH.text" xml:space="preserve">
+        <source>0</source>
+        <target>0</target>
+        <note>Class = "UILabel"; text = "0"; ObjectID = "7EI-KV-DkH";</note>
+      </trans-unit>
+      <trans-unit id="43h-pR-Z99.text" xml:space="preserve">
+        <source>time  bonus !</source>
+        <target>time  bonus !</target>
+        <note>Class = "UILabel"; text = "time  bonus !"; ObjectID = "43h-pR-Z99";</note>
+      </trans-unit>
+      <trans-unit id="B6A-4r-llh.normalTitle" xml:space="preserve">
+        <source>Remove Ad</source>
+        <target>Remove Ad</target>
+        <note>Class = "UIButton"; normalTitle = "Remove Ad"; ObjectID = "B6A-4r-llh";</note>
+      </trans-unit>
+      <trans-unit id="CFx-r4-MPU.text" xml:space="preserve">
+        <source>Score: 0</source>
+        <target>CHA: 0</target>
+        <note>Class = "UILabel"; text = "Score: 0"; ObjectID = "CFx-r4-MPU";</note>
+      </trans-unit>
+      <trans-unit id="d3b-RF-LXL.text" xml:space="preserve">
+        <source>0:00:00</source>
+        <target>0:00:00</target>
+        <note>Class = "UILabel"; text = "0:00:00"; ObjectID = "d3b-RF-LXL";</note>
+      </trans-unit>
+      <trans-unit id="v4F-ey-Tr4.normalTitle" xml:space="preserve">
+        <source>PLAY!</source>
+        <target>CHA</target>
+        <note>Class = "UIButton"; normalTitle = "PLAY!"; ObjectID = "v4F-ey-Tr4";</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="Comboz!/en.lproj/InfoPlist.strings" source-language="en" target-language="zh-HK" datatype="plaintext">
+    <header>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="11.2" build-num="11B52"/>
+    </header>
+    <body>
+      <trans-unit id="CFBundleDisplayName" xml:space="preserve">
+        <source>Comboz!</source>
+        <target>Comboz!</target>
+        <note>Bundle display name</note>
+      </trans-unit>
+      <trans-unit id="CFBundleName" xml:space="preserve">
+        <source>Comboz!</source>
+        <target>Comboz!</target>
+        <note>Bundle name</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="Comboz!/en.lproj/Localizable.strings" source-language="en" target-language="zh-HK" datatype="plaintext">
+    <header>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="11.2" build-num="11B52"/>
+    </header>
+    <body>
+      <trans-unit id="ARE YOU SURE?" xml:space="preserve">
+        <source>ARE YOU SURE?</source>
+        <target>ВЫ vCHA?</target>
+        <note>textLabel_button</note>
+      </trans-unit>
+      <trans-unit id="BACK" xml:space="preserve">
+        <source>BACK</source>
+        <target>CHA</target>
+        <note>backButton_button</note>
+      </trans-unit>
+      <trans-unit id="ENGLISH" xml:space="preserve">
+        <source>ENGLISH</source>
+        <note>en_button</note>
+      </trans-unit>
+      <trans-unit id="ESPAÑOL" xml:space="preserve">
+        <source>ESPAÑOL</source>
+        <note>es_button</note>
+      </trans-unit>
+      <trans-unit id="FRANÇAIS" xml:space="preserve">
+        <source>FRANÇAIS</source>
+        <note>music_button</note>
+      </trans-unit>
+      <trans-unit id="MAIN MENU" xml:space="preserve">
+        <source>MAIN MENU</source>
+        <target>CHA МЕНЮ</target>
+        <note>backToMenu_button</note>
+      </trans-unit>
+      <trans-unit id="MUSIC" xml:space="preserve">
+        <source>MUSIC</source>
+        <target>CHA</target>
+        <note>music_button</note>
+      </trans-unit>
+      <trans-unit id="NEW GAME" xml:space="preserve">
+        <source>NEW GAME</source>
+        <target>НОВАЯ</target>
+        <note>newGameButton</note>
+      </trans-unit>
+      <trans-unit id="NO" xml:space="preserve">
+        <source>NO</source>
+        <target>НЕТ</target>
+        <note>cancel_button</note>
+      </trans-unit>
+      <trans-unit id="PAUSE" xml:space="preserve">
+        <source>PAUSE</source>
+        <target>ПАУЗА</target>
+        <note>pauseTextLabel_label</note>
+      </trans-unit>
+      <trans-unit id="PLAY!" xml:space="preserve">
+        <source>PLAY!</source>
+        <target>ИГРАТЬ!</target>
+        <note>playButton</note>
+      </trans-unit>
+      <trans-unit id="REMOVE AD" xml:space="preserve">
+        <source>REMOVE AD</source>
+        <target>УБРАТЬ РЕКЛАМУ</target>
+        <note>buyButton</note>
+      </trans-unit>
+      <trans-unit id="RESTART" xml:space="preserve">
+        <source>RESTART</source>
+        <target>ПЕРЕИГРАТЬ</target>
+        <note>restart_button</note>
+      </trans-unit>
+      <trans-unit id="RESUME" xml:space="preserve">
+        <source>RESUME</source>
+        <target>ПРОДОЛЖИТЬ</target>
+        <note>resumeGameButton_button</note>
+      </trans-unit>
+      <trans-unit id="RULES" xml:space="preserve">
+        <source>RULES</source>
+        <target>ПРАВИЛА</target>
+        <note>rules_button</note>
+      </trans-unit>
+      <trans-unit id="SCORE" xml:space="preserve">
+        <source>SCORE</source>
+        <target>СЧЕТ</target>
+        <note>scoreText_button</note>
+      </trans-unit>
+      <trans-unit id="SCORE: 0" xml:space="preserve">
+        <source>SCORE: 0</source>
+        <target>СЧЕТ: 0</target>
+        <note>score label</note>
+      </trans-unit>
+      <trans-unit id="SETTINGS" xml:space="preserve">
+        <source>SETTINGS</source>
+        <target>НАСТРОЙКИ</target>
+        <note>settings_button</note>
+      </trans-unit>
+      <trans-unit id="SOUND FX" xml:space="preserve">
+        <source>SOUND FX</source>
+        <target>ЭФФЕКТЫ</target>
+        <note>soundFX_button</note>
+      </trans-unit>
+      <trans-unit id="TIME" xml:space="preserve">
+        <source>TIME</source>
+        <target>ВРЕМЯ</target>
+        <note>timeText_button</note>
+      </trans-unit>
+      <trans-unit id="VIBRATION" xml:space="preserve">
+        <source>VIBRATION</source>
+        <target>CHA ВИБРАЦИЯ</target>
+        <note>parallaxButton_button</note>
+      </trans-unit>
+      <trans-unit id="YES" xml:space="preserve">
+        <source>YES</source>
+        <target>ДА</target>
+        <note>accept_button</note>
+      </trans-unit>
+      <trans-unit id="РУССКИЙ" xml:space="preserve">
+        <source>РУССКИЙ</source>
+        <note>rules_button</note>
+      </trans-unit>
+      <trans-unit id="中文" xml:space="preserve">
+        <source>中文</source>
+        <note>settigsLable_button</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

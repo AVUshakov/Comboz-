@@ -332,8 +332,8 @@ class ViewController: UIViewController, GADInterstitialDelegate {
             minimizeAndDeleteAnimation()
         }
         
-//        if !game.endGameDetector && game.selectedCards.count == 2 {
-//            game.score = UserDefaults.standard.integer(forKey: "HiScore") + 1
+        if !game.endGameDetector && game.selectedCards.count == 2 {
+            game.score = UserDefaults.standard.integer(forKey: "HiScore") + 1
         
         if game.endGameDetector {
             endGameViewAdding()
